@@ -1,5 +1,9 @@
-<?php ob_start(); ?>    
-    
+<?php ob_start(); 
+// include session file for user authentication  
+$user = include(__DIR__ . '/user_session.php');
+echo $user["user"]["name"];
+?>
+
     <!-- ========================
         Start Page Content
     ========================= -->

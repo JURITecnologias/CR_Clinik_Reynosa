@@ -27,7 +27,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
                                                     <div class="input-group input-group-flat">
-                                                        <input type="text" value="" class="form-control border-end-0">
+                                                        <input type="text" value="" class="form-control border-end-0" id="email" placeholder="Enter your email">
                                                         <span class="input-group-text bg-white">
                                                             <i class="ti ti-mail fs-14 text-dark"></i>
                                                         </span>
@@ -36,27 +36,38 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Password<span class="text-danger ms-1">*</span></label>
                                                     <div class="input-group input-group-flat pass-group">
-                                                        <input type="password" class="form-control pass-input">
+                                                        <input type="password" class="form-control pass-input" id="password" placeholder="Enter your password">
                                                         <span class="input-group-text toggle-password ">
                                                             <i class="ti ti-eye-off"></i>
                                                         </span>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                                    <div class="d-flex align-items-center">
+                                                    <!-- <div class="d-flex align-items-center">
                                                         <div class="form-check form-check-md mb-0">
                                                             <input class="form-check-input" id="remember_me" type="checkbox">
                                                             <label for="remember_me" class="form-check-label mt-0 text-body">Remember Me</label>
                                                         </div>
-                                                    </div>
-                                                    <div class="text-end">
+                                                    </div> -->
+                                                    <!-- <div class="text-end">
                                                         <a href="forgot-password.php" class="text-body">Forgot Password?</a>
+                                                    </div> -->
+                                                </div>
+                                                <div class="mb-2" id="button_login">
+                                                    <button type="button" class="btn bg-primary text-white w-100" onclick="login();">Sign In</button>
+                                                </div>
+                                                <div class="d-none mb-3" id="loading">
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="spinner-border text-primary m-2" role="status"></div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-2">
-                                                    <button type="submit" class="btn bg-primary text-white w-100">Sign In</button>
+                                                <div id="alert_placeholder" class="d-none mb-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <strong> <span id="alert-message">A simple primary alert—check it out!</span></strong>
+                                                    </div>
                                                 </div>
-                                                <div class="login-or position-relative my-1 py-2 text-center fw-medium">
+                                                
+                                                <!-- <div class="login-or position-relative my-1 py-2 text-center fw-medium">
                                                     <span class="position-relative bg-white px-2 z-2">Or</span>
                                                 </div>
                                                 <div class="mb-3">
@@ -79,7 +90,7 @@
                                                     <h6 class="fw-normal fs-14 text-body mb-0">Don’t have an account?
                                                         <a href="sign-up.php" class="ms-1 text-primary">Sign Up</a>
                                                     </h6>
-                                                </div>
+                                                </div> -->
                                             </div><!-- end card body -->
                                         </div><!-- end card -->
                                     </div>
