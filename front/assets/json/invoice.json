@@ -1,0 +1,122 @@
+[
+  {
+    "invoice": "IV0025",
+    "name": "James Carter",
+    "email": "james@example.com",
+    "avatar": "assets/img/avatars/avatar-05.jpg",
+    "created_on": "17 Jun 2025, 09:00 AM",
+    "total": "$500",
+    "due": "$50",
+    "due_date": "17 Jun 2025, 09:00 AM",
+    "status": "Paid",
+    "status_class": "badge-soft-success"
+  },
+  {
+    "invoice": "IV0024",
+    "name": "Emily Davis",
+    "email": "emily@example.com",
+    "avatar": "assets/img/avatars/avatar-17.jpg",
+    "created_on": "10 Jun 2025, 10:30 AM",
+    "total": "$500",
+    "due": "$50",
+    "due_date": "10 Jun 2025, 10:30 AM",
+    "status": "Overdue",
+    "status_class": "badge-soft-danger"
+  },
+  {
+    "invoice": "IV0023",
+    "name": "Michael Johnson",
+    "email": "michael@example.com",
+    "avatar": "assets/img/avatars/avatar-06.jpg",
+    "created_on": "22 May 2025, 01:15 PM",
+    "total": "$300",
+    "due": "$30",
+    "due_date": "22 May 2025, 01:15 PM",
+    "status": "Draft",
+    "status_class": "badge-soft-info"
+  },
+  {
+    "invoice": "IV0022",
+    "name": "Olivia Miller",
+    "email": "olivia@example.com",
+    "avatar": "assets/img/avatars/avatar-04.jpg",
+    "created_on": "15 May 2025, 11:30 AM",
+    "total": "$200",
+    "due": "$20",
+    "due_date": "15 May 2025, 11:30 AM",
+    "status": "Pending",
+    "status_class": "badge-soft-warning"
+  },
+  {
+    "invoice": "IV0021",
+    "name": "David Smith",
+    "email": "david@example.com",
+    "avatar": "assets/img/avatars/avatar-15.jpg",
+    "created_on": "30 Apr 2025, 12:20 PM",
+    "total": "$100",
+    "due": "$10",
+    "due_date": "30 Apr 2025, 12:20 PM",
+    "status": "Paid",
+    "status_class": "badge-soft-success"
+  },
+  {
+    "invoice": "IV0020",
+    "name": "Sophia Wilson",
+    "email": "sophia@example.com",
+    "avatar": "assets/img/avatars/avatar-08.jpg",
+    "created_on": "25 Apr 2025, 03:15 PM",
+    "total": "$600",
+    "due": "$60",
+    "due_date": "25 Apr 2025, 03:15 PM",
+    "status": "Overdue",
+    "status_class": "badge-soft-danger"
+  },
+  {
+    "invoice": "IV0019",
+    "name": "Daniel Williams",
+    "email": "daniel@example.com",
+    "avatar": "assets/img/avatars/avatar-14.jpg",
+    "created_on": "13 Mar 2025, 02:40 PM",
+    "total": "$700",
+    "due": "$70",
+    "due_date": "13 Mar 2025, 02:40 PM",
+    "status": "Draft",
+    "status_class": "badge-soft-info"
+  },
+  {
+    "invoice": "IV0018",
+    "name": "Isabella Anderson",
+    "email": "isabella@example.com",
+    "avatar": "assets/img/avatars/avatar-08.jpg",
+    "created_on": "16 Feb 2025, 03:00 PM",
+    "total": "$800",
+    "due": "$80",
+    "due_date": "16 Feb 2025, 03:00 PM",
+    "status": "Pending",
+    "status_class": "badge-soft-warning"
+  },
+  {
+    "invoice": "IV0017",
+    "name": "William Brown",
+    "email": "william@example.com",
+    "avatar": "assets/img/avatars/avatar-23.jpg",
+    "created_on": "20 Jan 2025, 04:45 PM",
+    "total": "$900",
+    "due": "$90",
+    "due_date": "20 Jan 2025, 04:45 PM",
+    "status": "Paid",
+    "status_class": "badge-soft-success"
+  },
+  {
+    "invoice": "IV0016",
+    "name": "Charlotte Taylor",
+    "email": "charlotte@example.com",
+    "avatar": "assets/img/avatars/avatar-09.jpg",
+    "created_on": "15 Jan 2025, 05:30 PM",
+    "total": "$500",
+    "due": "$50",
+    "due_date": "15 Jan 2025, 05:30 PM",
+    "status": "Overdue",
+    "status_class": "badge-soft-danger"
+  }
+]

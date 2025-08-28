@@ -1,0 +1,102 @@
+[
+  {
+    "id": "#DR0025",
+    "name": "Dr. Andrew Clark",
+    "avatar": "assets/img/doctors/doctor-01.jpg",
+    "department": "Anaesthesiology",
+    "qualification": "MBBS",
+    "experience": "4+ years",
+    "appointments": 200,
+    "status": "Active"
+  },
+  {
+    "id": "#DR0024",
+    "name": "Dr. Katherine Brooks",
+    "avatar": "assets/img/doctors/doctor-02.jpg",
+    "department": "Dental Surgery",
+    "qualification": "MDS",
+    "experience": "3+ years",
+    "appointments": 350,
+    "status": "Inactive"
+  },
+  {
+    "id": "#DR0023",
+    "name": "Dr. Benjamin Harris",
+    "avatar": "assets/img/doctors/doctor-03.jpg",
+    "department": "Dermatology",
+    "qualification": "MS",
+    "experience": "6+ years",
+    "appointments": 400,
+    "status": "Active"
+  },
+  {
+    "id": "#DR0022",
+    "name": "Dr. Laura Mitchell",
+    "avatar": "assets/img/doctors/doctor-04.jpg",
+    "department": "ENT Surgery",
+    "qualification": "MBBS",
+    "experience": "2+ years",
+    "appointments": 150,
+    "status": "Active"
+  },
+  {
+    "id": "#DR0021",
+    "name": "Dr. Christopher Lewis",
+    "avatar": "assets/img/doctors/doctor-05.jpg",
+    "department": "General Medicine",
+    "qualification": "MS",
+    "experience": "3+ years",
+    "appointments": 380,
+    "status": "Active"
+  },
+  {
+    "id": "#DR0020",
+    "name": "Dr. Natalie Foster",
+    "avatar": "assets/img/doctors/doctor-06.jpg",
+    "department": "Ophthalmology",
+    "qualification": "MBBS",
+    "experience": "2+ years",
+    "appointments": 450,
+    "status": "Active"
+  },
+  {
+    "id": "#DR0019",
+    "name": "Dr. Jonathan Adams",
+    "avatar": "assets/img/doctors/doctor-07.jpg",
+    "department": "Orthopaedics",
+    "qualification": "MS",
+    "experience": "3+ years",
+    "appointments": 330,
+    "status": "Inactive"
+  },
+  {
+    "id": "#DR0018",
+    "name": "Dr. Rebecca Scott",
+    "avatar": "assets/img/doctors/doctor-08.jpg",
+    "department": "Pediatrics",
+    "qualification": "MBBS",
+    "experience": "4+ years",
+    "appointments": 270,
+    "status": "Active"
+  },
+  {
+    "id": "#DR0017",
+    "name": "Dr. Samuel Turner",
+    "avatar": "assets/img/doctors/doctor-09.jpg",
+    "department": "Radiology",
+    "qualification": "MS",
+    "experience": "4+ years",
+    "appointments": 510,
+    "status": "Inactive"
+  },
+  {
+    "id": "#DR0016",
+    "name": "Dr. Victoria Evans",
+    "avatar": "assets/img/doctors/doctor-10.jpg",
+    "department": "Cardiology",
+    "qualification": "MBBS",
+    "experience": "3+ years",
+    "appointments": 480,
+    "status": "Active"
+  }
+]

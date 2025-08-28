@@ -1,0 +1,112 @@
+[
+  {
+    "id": "#PR0025",
+    "name": "Acetaminophen",
+    "price": "$500",
+    "offer_price": "$50",
+    "purchase_date": "17 Jun 2025",
+    "expiry_date": "22 Jun 2025",
+    "stock": 280,
+    "description": "Prevents heart attacks and strokes",
+    "unit": "20mg"
+  },
+  {
+    "id": "#PR0024",
+    "name": "Cymbalta",
+    "price": "$500",
+    "offer_price": "$50",
+    "purchase_date": "10 Jun 2025",
+    "expiry_date": "15 Jun 2025",
+    "stock": 468,
+    "description": "Treats hypertension, angina, and heart failure",
+    "unit": "17mg"
+  },
+  {
+    "id": "#PR0023",
+    "name": "Dupixent",
+    "price": "$300",
+    "offer_price": "$30",
+    "purchase_date": "22 May 2025",
+    "expiry_date": "27 May 2025",
+    "stock": 261,
+    "description": "Used for muscle spasms and spasticity",
+    "unit": "40mg"
+  },
+  {
+    "id": "#PR0022",
+    "name": "Entresto",
+    "price": "$200",
+    "offer_price": "$20",
+    "purchase_date": "15 May 2025",
+    "expiry_date": "20 May 2025",
+    "stock": 550,
+    "description": "Treats depression and panic disorder",
+    "unit": "28mg"
+  },
+  {
+    "id": "#PR0021",
+    "name": "Rybelsus",
+    "price": "$100",
+    "offer_price": "$10",
+    "purchase_date": "30 Apr 2025",
+    "expiry_date": "5 May 2025",
+    "stock": 303,
+    "description": "Treats angina by dilating blood vessels.",
+    "unit": "30ml"
+  },
+  {
+    "id": "#PR0020",
+    "name": "Pantoprazole",
+    "price": "$600",
+    "offer_price": "$60",
+    "purchase_date": "25 Apr 2025",
+    "expiry_date": "30 Apr 2025",
+    "stock": 468,
+    "description": "Used for schizophrenia and bipolar disorder",
+    "unit": "10mg"
+  },
+  {
+    "id": "#PR0019",
+    "name": "Prednisone",
+    "price": "$700",
+    "offer_price": "$70",
+    "purchase_date": "13 Mar 2025",
+    "expiry_date": "18 Mar 2025",
+    "stock": 100,
+    "description": "Reduces stomach acid",
+    "unit": "20ml"
+  },
+  {
+    "id": "#PR0018",
+    "name": "Entyvio",
+    "price": "$800",
+    "offer_price": "$80",
+    "purchase_date": "16 Feb 2025",
+    "expiry_date": "21 Feb 2025",
+    "stock": 250,
+    "description": "For chest pain associated with heart conditions",
+    "unit": "25mg"
+  },
+  {
+    "id": "#PR0017",
+    "name": "Farxiga",
+    "price": "$900",
+    "offer_price": "$90",
+    "purchase_date": "20 Jan 2025",
+    "expiry_date": "25 Jan 2025",
+    "stock": 180,
+    "description": "Treats bacterial infections",
+    "unit": "35mg"
+  },
+  {
+    "id": "#PR0016",
+    "name": "Apexitecan",
+    "price": "$500",
+    "offer_price": "$50",
+    "purchase_date": "15 Jan 2025",
+    "expiry_date": "20 Jan 2025",
+    "stock": 220,
+    "description": "Reduces stomach acid, treats acid reflux",
+    "unit": "45mg"
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "patient_id": "#PT0025",
+    "name": "James Carter",
+    "gender": "Male",
+    "department": "Anaesthesiology",
+    "avatar": "assets/img/avatars/avatar-31.jpg",
+    "doctor_name": "Dr. Andrew Clark",
+    "doctor_avatar": "assets/img/doctors/doctor-01.jpg",
+    "last_visit": "17 Jun 2025",
+    "status": "Out Patient",
+    "status_class": "orange"
+  },
+  {
+    "patient_id": "#PT0024",
+    "name": "Emily Davis",
+    "gender": "Female",
+    "department": "Dental Surgery",
+    "avatar": "assets/img/avatars/avatar-54.jpg",
+    "doctor_name": "Dr. Katherine Brooks",
+    "doctor_avatar": "assets/img/doctors/doctor-03.jpg",
+    "last_visit": "10 Jun 2025",
+    "status": "In Patient",
+    "status_class": "purple"
+  },
+  {
+    "patient_id": "#PT0023",
+    "name": "Michael Johnson",
+    "gender": "Male",
+    "department": "Dermatology",
+    "avatar": "assets/img/avatars/avatar-45.jpg",
+    "doctor_name": "Dr. Benjamin Harris",
+    "doctor_avatar": "assets/img/doctors/doctor-04.jpg",
+    "last_visit": "22 May 2025",
+    "status": "Out Patient",
+    "status_class": "orange"
+  },
+  {
+    "patient_id": "#PT0022",
+    "name": "Olivia Miller",
+    "gender": "Female",
+    "department": "ENT Surgery",
+    "avatar": "assets/img/avatars/avatar-51.jpg",
+    "doctor_name": "Dr. Laura Mitchell",
+    "doctor_avatar": "assets/img/doctors/doctor-05.jpg",
+    "last_visit": "15 May 2025",
+    "status": "In Patient",
+    "status_class": "purple"
+  },
+  {
+    "patient_id": "#PT0021",
+    "name": "David Smith",
+    "gender": "Male",
+    "department": "General Medicine",
+    "avatar": "assets/img/avatars/avatar-41.jpg",
+    "doctor_name": "Dr. Christopher Lewis",
+    "doctor_avatar": "assets/img/doctors/doctor-06.jpg",
+    "last_visit": "30 Apr 2025",
+    "status": "Out Patient",
+    "status_class": "orange"
+  },
+  {
+    "patient_id": "#PT0020",
+    "name": "Sophia Wilson",
+    "gender": "Female",
+    "department": "Ophthalmology",
+    "avatar": "assets/img/avatars/avatar-48.jpg",
+    "doctor_name": "Dr. Natalie Foster",
+    "doctor_avatar": "assets/img/doctors/doctor-07.jpg",
+    "last_visit": "25 Apr 2025",
+    "status": "In Patient",
+    "status_class": "purple"
+  },
+  {
+    "patient_id": "#PT0019",
+    "name": "Daniel Williams",
+    "gender": "Male",
+    "department": "Orthopaedics",
+    "avatar": "assets/img/avatars/avatar-53.jpg",
+    "doctor_name": "Dr. Jonathan Adams",
+    "doctor_avatar": "assets/img/doctors/doctor-10.jpg",
+    "last_visit": "13 Mar 2025",
+    "status": "Out Patient",
+    "status_class": "orange"
+  },
+  {
+    "patient_id": "#PT0018",
+    "name": "Isabella Anderson",
+    "gender": "Female",
+    "department": "Pediatrics",
+    "avatar": "assets/img/avatars/avatar-50.jpg",
+    "doctor_name": "Dr. Rebecca Scott",
+    "doctor_avatar": "assets/img/doctors/doctor-08.jpg",
+    "last_visit": "16 Feb 2025",
+    "status": "In Patient",
+    "status_class": "purple"
+  },
+  {
+    "patient_id": "#PT0017",
+    "name": "William Brown",
+    "gender": "Male",
+    "department": "Radiology",
+    "avatar": "assets/img/avatars/avatar-42.jpg",
+    "doctor_name": "Dr. Samuel Turner",
+    "doctor_avatar": "assets/img/doctors/doctor-12.jpg",
+    "last_visit": "20 Jan 2025",
+    "status": "Out Patient",
+    "status_class": "orange"
+  },
+  {
+    "patient_id": "#PT0016",
+    "name": "Charlotte Taylor",
+    "gender": "Female",
+    "department": "Cardiology",
+    "avatar": "assets/img/avatars/avatar-56.jpg",
+    "doctor_name": "Dr. Victoria Evans",
+    "doctor_avatar": "assets/img/doctors/doctor-11.jpg",
+    "last_visit": "15 Jan 2025",
+    "status": "In Patient",
+    "status_class": "purple"
+  }
+]

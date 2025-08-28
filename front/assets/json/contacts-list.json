@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "name": "James Jackson",
+    "email": "jamesjackson@example.com",
+    "phone": "(123) 4567 890",
+    "avatar": "assets/img/avatars/avatar-72.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "2",
+    "name": "Robin Coffin",
+    "email": "robin@example.com",
+    "phone": "(179) 7382 829",
+    "avatar": "assets/img/avatars/avatar-63.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "3",
+    "name": "Vincent Thornburg",
+    "email": "vincent@example.com",
+    "phone": "(184) 2719 738",
+    "avatar": "assets/img/avatars/avatar-58.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "4",
+    "name": "Fran Faulkner",
+    "email": "franfaulker@example.com",
+    "phone": "(184) 2719 738",
+    "avatar": "assets/img/avatars/avatar-61.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "5",
+    "name": "Ernestine Waller",
+    "email": "waller@example.com",
+    "phone": "(183) 9302 890",
+    "avatar": "assets/img/avatars/avatar-60.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "6",
+    "name": "Jared Adams",
+    "email": "jaredadams@example.com",
+    "phone": "(120) 3728 039",
+    "avatar": "assets/img/avatars/avatar-73.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "7",
+    "name": "Reyna Pelfrey",
+    "email": "reynapelfrey@example.com",
+    "phone": "(102) 8480 832",
+    "avatar": "assets/img/avatars/avatar-66.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "8",
+    "name": "Rafael Lowe",
+    "email": "rafeallowe@example.com",
+    "phone": "(162) 8920 713",
+    "avatar": "assets/img/avatars/avatar-65.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "9",
+    "name": "Enrique Ratcliff",
+    "email": "enrique@example.com",
+    "phone": "(189) 0920 723",
+    "avatar": "assets/img/avatars/avatar-74.jpg",
+    "status": "Active"
+  },
+  {
+    "id": "10",
+    "name": "Elizabeth Pegues",
+    "email": "elizabeth@example.com",
+    "phone": "(168) 8392 823",
+    "avatar": "assets/img/avatars/avatar-64.jpg",
+    "status": "Active"
+  }
+]

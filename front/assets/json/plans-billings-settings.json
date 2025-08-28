@@ -1,0 +1,37 @@
+[
+  {
+    "invoice_id": "#IV0020",
+    "created_date": "22 Jun 2025",
+    "amount": "$299",
+    "plan": "Basic",
+    "status": "Success"
+  },
+  {
+    "invoice_id": "#IV0019",
+    "created_date": "10 Jun 2025",
+    "amount": "$399",
+    "plan": "Standard",
+    "status": "Success"
+  },
+  {
+    "invoice_id": "#IV0018",
+    "created_date": "22 May 2025",
+    "amount": "$499",
+    "plan": "Professional",
+    "status": "Success"
+  },
+  {
+    "invoice_id": "#IV0017",
+    "created_date": "15 May 2025",
+    "amount": "$355",
+    "plan": "Basic",
+    "status": "Success"
+  },
+  {
+    "invoice_id": "#IV0016",
+    "created_date": "05 May 2025",
+    "amount": "$499",
+    "plan": "Standard",
+    "status": "Success"
+  }
+]
