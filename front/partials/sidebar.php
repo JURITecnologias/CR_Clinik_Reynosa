@@ -2,6 +2,8 @@
 $link = $_SERVER[ 'PHP_SELF' ];
 $link_array = explode( '/', $link );
 $page = end( $link_array );
+$user= include(__DIR__ . '/../src/user_session.php');
+
 ?>    
     
     <!-- Sidenav Menu Start -->

@@ -2,6 +2,7 @@
 $link = $_SERVER[ 'PHP_SELF' ];
 $link_array = explode( '/', $link );
 $page = end( $link_array );
+$user= include(__DIR__ . '/../src/user_session.php');
 ?>    
     
     <!-- Topbar Start -->
@@ -252,8 +253,8 @@ $page = end( $link_array );
                         <div class="d-flex align-items-center bg-light rounded p-2 mb-2">
                             <img src="assets/img/avatars/avatar-31.jpg" class="rounded-circle" width="42" height="42" alt="patient">
                             <div class="ms-2">
-                                <p class="fw-medium text-dark mb-0">Jimmy Anderson</p>
-                                <span class="d-block fs-13">Administrator</span>
+                                <p class="fw-medium text-dark mb-0"><?php echo $user['user']['name'] ?></p>
+                                <span class="d-block fs-13"><?php echo $user['roles'][0]?></span>
                             </div>
                         </div>
 
