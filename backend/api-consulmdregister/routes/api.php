@@ -9,6 +9,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\InformacionDoctorController;
 use App\Http\Controllers\ServicioMedicoController;
+use App\Http\Controllers\MedicamentoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,4 +124,25 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor','check.per
     Route::put('/servicios-medicos/{id}', [ServicioMedicoController::class, 'update']);
     Route::delete('/servicios-medicos/{id}', [ServicioMedicoController::class, 'destroy']);
     Route::post('/servicios-medicos/{id}/restore', [ServicioMedicoController::class, 'restore']);
+});
+
+// Medicamentos catalogo
+
+Route::middleware([
+    'basic.auth',
+    'check.role:Main Admin|Admon|Doctor|Enfermera|Ventas',
+    'check.permission:ver'
+])->group(function () {
+    Route::get('/medicamentos', [MedicamentoController::class, 'index']);
+    Route::get('/medicamentos/{id}', [MedicamentoController::class, 'show']);
+});
+
+Route::middleware([
+    'basic.auth',
+    'check.role:Main Admin|Admon|Doctor',
+    'check.permission:modificar|escribir|borrar'
+])->group(function () {
+    Route::post('/medicamentos', [MedicamentoController::class, 'store']);
+    Route::put('/medicamentos/{id}', [MedicamentoController::class, 'update']);
+    Route::delete('/medicamentos/{id}', [MedicamentoController::class, 'destroy']);
 });

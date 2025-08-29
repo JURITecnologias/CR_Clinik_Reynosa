@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use Database\Seeders\MedicamentoSeeder as SeedersMedicamentoSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,7 +20,8 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             RolePermissionSeeder::class,
             UsersTableSeeder::class,
-            ServiciosMedicosSeeder::class
+            ServiciosMedicosSeeder::class,
+            SeedersMedicamentoSeeder::class,
         ]);
     }
 }
