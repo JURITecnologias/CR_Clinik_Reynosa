@@ -4,6 +4,17 @@ $link_array = explode( '/', $link );
 $page = end( $link_array );
 $user= include(__DIR__ . '/../src/user_session.php');
 
+function userHasAnyRole($user, $roles)
+{
+    if (isset($user['roles']) && is_array($user['roles'])) {
+        foreach ($roles as $role) {
+            if (in_array($role, $user['roles'])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 ?>    
     
     <!-- Sidenav Menu Start -->
@@ -144,7 +155,7 @@ $user= include(__DIR__ . '/../src/user_session.php');
                         </a>
                     </li>
 
-                    <li class="menu-title" aria-disabled="true"><span>MANAGE</span></li>
+                    <li class="menu-title" aria-disabled="true"><span>Administraci&oacuten</span></li>
 
                     <li>
                         <a href="staffs.php" class="<?php echo ($page =='staffs.php') ? 'active' : '' ;?>">
@@ -164,6 +175,19 @@ $user= include(__DIR__ . '/../src/user_session.php');
                         </a>
                     </li>
 
+                    <?php
+                        
+                        $requiredRoles = ['Admon', 'Main Admin', 'Doctor'];
+                        if (userHasAnyRole($user, $requiredRoles)) {
+                    ?>
+                    <li>
+                        <a href="usuarios-settings.php" class="<?php echo ($page =='usuarios-settings.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-settings"></i><span>Usuarios</span>
+                        </a>
+                    </li>
+                    <?php
+                        }
+                    ?>
                     <li class="menu-title" aria-disabled="true"><span>PAGES</span></li>
 
                     <li class="submenu">

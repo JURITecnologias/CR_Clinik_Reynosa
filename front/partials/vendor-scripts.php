@@ -172,6 +172,9 @@ $page = end( $link_array );
     <script src="assets/js/script.js"></script>
 
     <!-- App JS -->
+    <script src="assets/js/app/common.js"></script>
     <script src="assets/js/app/config.js"></script>
     <script src="assets/js/app/auth.js"></script>
     <script src="assets/js/app/login.js"></script>
+    <script src="assets/js/app/users.js"></script>
+    <script src="assets/js/app/roles.js"></script>
