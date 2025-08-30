@@ -61,7 +61,7 @@ function userHasAnyRole($user, $roles)
                         </a>
                     </li>
 
-                    <li class="submenu">
+                    <!-- <li class="submenu">
                         <a href="javascript:void(0);" class="<?php echo ($page =='chat.php' || $page =='voice-call.php' || $page =='video-call.php' || $page =='calendar.php' || $page =='email.php' || $page =='email-details.php' || $page =='email-compose.php' || $page =='contacts.php' || $page =='contact-list.php' || $page =='invoice.php' || $page =='add-invoice.php' || $page =='edit-invoice.php' || $page =='invoice-details.php' || $page =='invoice-details.php' || $page =='todo.php' || $page =='notes.php' || $page =='kanban-view.php' || $page =='file-manager.php' || $page =='social-feed.php' || $page =='search-result.php') ? 'active subdrop' : '' ;?>">
                             <i class="ti ti-apps"></i><span>Applications</span>
                             <span class="menu-arrow"></span>
@@ -107,51 +107,51 @@ function userHasAnyRole($user, $roles)
                             <li><a href="layout-rtl.php" class="<?php echo ($page =='layout-rtl.php') ? 'active' : '' ;?>">RTL</a></li>
                             <li><a href="layout-dark.php" class="<?php echo ($page =='layout-dark.php') ? 'active' : '' ;?>">Dark</a></li>
                         </ul>
-                    </li>
+                    </li> -->
 
-                    <li class="menu-title" aria-disabled="true"><span>HEALTHCARE</span></li>
+                    <li class="menu-title" aria-disabled="true"><span>SALUD</span></li>
 
                     <li>
                         <a href="patients.php" class="<?php echo ($page =='patients.php' || $page =='all-patients-list.php' || $page =='add-patient.php' || $page =='edit-patient.php' || $page =='patient-details.php' || $page =='patient-details-appointments.php' || $page =='patient-details-vital-signs.php' || $page =='patient-details-visit-history.php' || $page =='patient-details-lab-results.php' || $page =='patient-details-prescription.php' || $page =='patient-details-medical-history.php' || $page =='patient-details-documents.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-users"></i><span>Patients</span>
+                            <i class="ti ti-users"></i><span>Pacientes</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="doctors.php" class="<?php echo ($page =='doctors.php' || $page =='all-doctors-list.php' || $page =='add-doctors.php' || $page =='edit-doctors.php' || $page =='doctor-details.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-stethoscope"></i><span>Doctors</span>
+                            <i class="ti ti-stethoscope"></i><span>Médicos</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="appointments.php" class="<?php echo ($page =='appointments.php' || $page =='appointment-consultation.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-calendar-time"></i><span>Appointments</span>
+                            <i class="ti ti-calendar-time"></i><span>Citas</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="visits.php" class="<?php echo ($page =='visits.php' || $page =='start-visits.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-e-passport"></i><span>Visits</span>
+                            <i class="ti ti-e-passport"></i><span>Visitas</span>
                         </a>
                     </li>
 
                     <li class="submenu">
                         <a href="javascript:void(0);" class="<?php echo ($page =='lab-results.php' || $page =='medical-results.php') ? 'active subdrop' : '' ;?>">
-                            <i class="ti ti-test-pipe"></i><span>Laboratory</span><span class="menu-arrow"></span>
+                            <i class="ti ti-test-pipe"></i><span>Laboratorio</span><span class="menu-arrow"></span>
                         </a>
                         <ul>
                             <li>
-                                <a href="lab-results.php" class="<?php echo ($page =='lab-results.php') ? 'active' : '' ;?>">Lab Results</a>
+                                <a href="lab-results.php" class="<?php echo ($page =='lab-results.php') ? 'active' : '' ;?>">Resultados de Laboratorio</a>
                             </li>
                             <li>
-                                <a href="medical-results.php" class="<?php echo ($page =='medical-results.php') ? 'active' : '' ;?>">Medical Rsults</a>
+                                <a href="medical-results.php" class="<?php echo ($page =='medical-results.php') ? 'active' : '' ;?>">Resultados Médicos</a>
                             </li>
                         </ul>
                     </li>
 
                     <li>
                         <a href="pharmacy.php" class="<?php echo ($page =='pharmacy.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-prescription"></i><span>Pharmacy</span>
+                            <i class="ti ti-prescription"></i><span>Farmacia</span>
                         </a>
                     </li>
 
@@ -188,6 +188,16 @@ function userHasAnyRole($user, $roles)
                     <?php
                         }
                     ?>
+                    <li>
+                        <a href="medicamentos-catalog.php" class="<?php echo ($page =='medicamentos-catalog.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-spray"></i><span>Medicamentos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="servicios-medicos-catalog.php" class="<?php echo ($page =='servicios-medicos-catalog.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-activity"></i><span>Servicios Medicos</span>
+                        </a>
+                    </li>
                     <li class="menu-title" aria-disabled="true"><span>PAGES</span></li>
 
                     <li class="submenu">

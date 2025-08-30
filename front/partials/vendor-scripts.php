@@ -24,7 +24,7 @@ $page = end( $link_array );
     <script src="assets/plugins/flatpickr/flatpickr.min.js"></script>
 <?php }?>
 
-<?php if ($page == 'all-doctors-list.php' || $page == 'appointment-consultation.php' || $page == 'data-tables.php' || $page == 'lab-results.php' || $page == 'widgets.php') {   ?>     
+<?php if ($page == 'all-doctors-list.php' || $page == 'appointment-consultation.php' || $page == 'data-tables.php' || $page == 'lab-results.php' || $page == 'widgets.php' || 'medicamentos-catalog.php') {   ?>     
     <!-- Datatable JS -->
     <script src="assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
     <script src="assets/plugins/datatables/js/dataTables.bootstrap5.min.js"></script>
@@ -175,6 +175,16 @@ $page = end( $link_array );
     <script src="assets/js/app/common.js"></script>
     <script src="assets/js/app/config.js"></script>
     <script src="assets/js/app/auth.js"></script>
+    
+    <?php if ($page == 'login.php') {   ?>
     <script src="assets/js/app/login.js"></script>
+    <?php } ?>
+
+    <?php if ($page == 'usuarios-settings.php') {   ?>
     <script src="assets/js/app/users.js"></script>
     <script src="assets/js/app/roles.js"></script>
+    <?php } ?>
+
+    <?php if ($page == 'medicamentos-catalog.php') {   ?>
+    <script src="assets/js/app/medicamentos.js"></script>
+    <?php } ?>

@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class MedicamentoController extends Controller
 {
-    // 📥 Listar todos los medicamentos
+    //  Listar todos los medicamentos
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
-        $query = Medicamento::query();
+        $query = Medicamento::query()->whereNull('deleted_at');
 
         if ($request->has('nombre')) {
             $nombre = $request->get('nombre');
@@ -21,10 +21,10 @@ class MedicamentoController extends Controller
         return $query->paginate($perPage);
     }
 
-    // 🔍 Mostrar un medicamento específico
+    //  Mostrar un medicamento específico
     public function show($id)
     {
-        $medicamento = Medicamento::find($id);
+        $medicamento = Medicamento::find($id)->whereNull('deleted_at');
 
         if (!$medicamento) {
             return response()->json(['error' => 'Medicamento no encontrado'], 404);
@@ -33,7 +33,7 @@ class MedicamentoController extends Controller
         return $medicamento;
     }
 
-    // 🧾 Crear un nuevo medicamento
+    // Crear un nuevo medicamento
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -52,7 +52,7 @@ class MedicamentoController extends Controller
         return response()->json($medicamento, 201);
     }
 
-    // ✏️ Actualizar un medicamento existente
+    //  Actualizar un medicamento existente
     public function update(Request $request, $id)
     {
         $medicamento = Medicamento::find($id);
@@ -77,7 +77,7 @@ class MedicamentoController extends Controller
         return response()->json($medicamento);
     }
 
-    // 🗑️ Eliminar (soft delete) un medicamento
+    //  Eliminar (soft delete) un medicamento
     public function destroy($id)
     {
         $medicamento = Medicamento::find($id);
