@@ -23,7 +23,7 @@
             </div>
         </div>
         <!-- End Page Header -->
-
+         
         <!-- card start -->
         <div class="card mb-0">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
@@ -33,11 +33,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="d-none mb-3" id="loading">
-                    <div class="d-flex justify-content-center">
-                        <div class="spinner-border text-primary m-2" role="status"></div>
-                    </div>
-                </div>
+                <?php include_once '../partials/loading-section.php'; ?>
                 <div class="table-responsive table-nowrap">
                     <table class="d-none table border mb-0" id="user_table">
                         <thead class="table-light">
@@ -66,11 +62,11 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Registor de Usuario</h4>
+                    <h4 class="modal-title" id="myLargeModalLabel">Registro de Usuario</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="loading_user_info" class="d-none"> 
+                    <div id="loading_user_info" class="d-none">
                         <div class="d-flex justify-content-center">
                             <div class="spinner-border text-primary m-2" role="status"></div>
                         </div>

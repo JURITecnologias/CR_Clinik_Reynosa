@@ -52,6 +52,19 @@ async function editUserRequest(userId, userData) {
     return await response.json();
 }
 
+async function removeUser(userId) {
+    const response = await fetch(`${apiHost}${apiPath}/users/${userId}`, {
+        method: 'DELETE',
+        headers: headersRequest,
+    });
+
+    if (!response.ok) {
+        throw new Error('failed to delete user: ' + response.statusText);
+    }
+
+    return await response.json();
+}
+
 async function LoadUsers() {
     showLoading();
     try {
@@ -72,6 +85,7 @@ async function LoadUsers() {
                 }</td>
                 <td>
                     <button class="btn btn-primary btn-sm" onclick="LoadUserInfo(${user.id})">Editar</button>
+                    ${user.id !== 1 ? `<button class="btn btn-danger btn-sm" onclick="DeleteUser(${user.id})">Eliminar</button>` : ''}
                 </td>
             `;
             userTableBody.appendChild(row);
@@ -164,6 +178,15 @@ async function EditUser() {
         document.getElementById('edit_user_id').value = '';
     } catch (error) {
         console.error('Error editing user:', error);
+    }
+}
+
+async function DeleteUser(userId) {
+    try {
+        await removeUser(userId);
+        LoadUsers();
+    } catch (error) {
+        console.error('Error deleting user:', error);
     }
 }
 
