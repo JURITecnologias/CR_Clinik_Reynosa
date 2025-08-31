@@ -1,4 +1,7 @@
-<?php ob_start(); ?>
+<?php
+ob_start(); 
+$user= include(__DIR__ . '/../src/user_session.php');
+?>
 
 <!-- ========================
         Start Page Content
@@ -29,7 +32,9 @@
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
                 <h5 class="d-inline-flex align-items-center mb-0">Total de Usuarios<span class="badge bg-danger ms-2" id="total_users">0</span></h5>
                 <div>
+                    <?php if (in_array('escribir', $user['permissions'])): ?>
                     <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_user"><i class="ti ti-square-rounded-plus me-1"></i>Nuevo Usuario</a>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="card-body">

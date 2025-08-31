@@ -84,8 +84,8 @@ async function LoadUsers() {
                         : (typeof user.roles === 'object' ? user.roles.name || JSON.stringify(user.roles) : user.roles)
                 }</td>
                 <td>
-                    <button class="btn btn-primary btn-sm" onclick="LoadUserInfo(${user.id})">Editar</button>
-                    ${user.id !== 1 ? `<button class="btn btn-danger btn-sm" onclick="DeleteUser(${user.id})">Eliminar</button>` : ''}
+                    ${user.permissions.includes('editar') ? `<button class="btn btn-primary btn-sm" onclick="LoadUserInfo(${user.id})">Editar</button>` : ''}
+                    ${user.id !== 1 && user.permissions.includes('borrar') ? `<button class="btn btn-danger btn-sm" onclick="DeleteUser(${user.id})">Eliminar</button>` : ''}
                 </td>
             `;
             userTableBody.appendChild(row);
