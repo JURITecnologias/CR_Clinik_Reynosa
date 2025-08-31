@@ -24,7 +24,7 @@ class MedicamentoController extends Controller
     //  Mostrar un medicamento específico
     public function show($id)
     {
-        $medicamento = Medicamento::find($id)->whereNull('deleted_at');
+        $medicamento = Medicamento::query()->whereNull('deleted_at')->find($id);
 
         if (!$medicamento) {
             return response()->json(['error' => 'Medicamento no encontrado'], 404);

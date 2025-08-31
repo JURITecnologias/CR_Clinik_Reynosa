@@ -1,4 +1,7 @@
-<?php ob_start(); ?>
+<?php
+ob_start();
+$user = include(__DIR__ . '/../src/user_session.php');
+?>
 
 <!-- ========================
         Start Page Content
@@ -34,9 +37,13 @@
         <div class="card mb-0">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
                 <h5 class="d-inline-flex align-items-center mb-0">Total de Medicamentos<span class="badge bg-danger ms-2" id="total_medicamentos">0</span></h5>
-                <div>
-                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_medicamento"><i class="ti ti-square-rounded-plus me-1"></i>Agregar Medicamento</a>
-                </div>
+                <?php if (in_array('escribir', $user['permissions'])): ?>
+                    <div>
+                        <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_medicamento">
+                            <i class="ti ti-square-rounded-plus me-1"></i>Agregar Medicamento
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="card-body">
                 <?php include_once '../partials/loading-section.php'; ?>
@@ -108,7 +115,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col">
-                            
+
                         </div>
                         <div class="col">
                             <!-- Columna 3: Puedes agregar contenido aquí -->
@@ -155,7 +162,7 @@
 <!-- End Content -->
 
 
-<!-- modal add user-->
+<!-- modal add or edit medicamento-->
 <div class="modal fade" id="add_medicamento" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -196,7 +203,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="controlado" class="form-label">Medicamento Controlado</label>
-                        <select class="form-select" id="controlado" >
+                        <select class="form-select" id="controlado">
                             <option value="0">No</option>
                             <option value="1">Sí</option>
                         </select>
@@ -214,8 +221,45 @@
         </div> <!-- end modal content -->
     </div> <!-- end modal dialog -->
 </div> <!-- end modal -->
-
-
+<!-- modal view medicamento-->
+<div class="modal fade" id="view_medicamento" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-dark modal-title fw-bold text-truncate">Detalle de Medicamento</h5>
+                <button type="button" class="btn-close btn-close-modal" data-bs-dismiss="modal" aria-label="Close"><i class="ti ti-circle-x-filled"></i></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h6><span id="view_nombre"></span></h6>
+                </div>
+                <div class="">
+                    Nombre Genérico: <span id="view_nombre_generico"></span>
+                </div>
+                <div class="">
+                    Presentación: <span id="view_presentacion"></span>
+                </div>
+                <div class="">
+                    Vía de Administración: <span id="view_via_administracion"></span>
+                </div>
+                <div class="">
+                    Concentración: <span id="view_concentracion"></span>
+                </div>
+                <div class="">
+                    Unidad: <span id="view_unidad"></span>
+                </div>
+                <div class="">
+                    Medicamento Controlado: <span id="view_controlado"></span>
+                </div>
+                <div class="">
+                    Descripción: <span id="view_descripcion"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -232,7 +276,7 @@
 
         // Puedes agregar más parámetros si lo necesitas
 
-        renderMedicamentosTable(registros, pagina, busqueda );
+        renderMedicamentosTable(registros, pagina, busqueda);
     }
 </script>
 <?php require_once '../partials/footer.php'; ?>

@@ -147,15 +147,20 @@ async function renderMedicamentosTable(perPage = 50, page = 1, search = '') {
 
     medicamentos.data.forEach((medicamento, index) => {
         const row = document.createElement('tr');
+        const user = sessionStorage.user ? JSON.parse(sessionStorage.user) : null;
         row.innerHTML = `
             <td>${(page - 1) * perPage + index + 1}</td>
-            <td>${medicamento.nombre}</td>
+            <td> <a href="javascript:void(0);" class="text-primary" onclick="LoadMedicamentoToView(${medicamento.id});">${medicamento.nombre}</a></td>
             <td>${medicamento.nombre_generico}</td>
             <td>${medicamento.presentacion}</td>
             <td>${medicamento.controlado ? 'Sí' : 'No'}</td>
             <td>
-                <a href="javascript:LoadMedicamentoToEdit(${medicamento.id});" class="btn btn-sm btn-primary">Editar</a>
-                <a href="javascript:DeleteMedicamento(${medicamento.id});" class="btn btn-sm btn-danger">Eliminar</a>
+             ${(user && user.permissions && user.permissions.includes('modificar')) ?
+                `<a href="javascript:LoadMedicamentoToEdit(${medicamento.id});" class="btn btn-sm btn-primary">Editar</a>` : '&nbsp;'
+            }
+            ${(user && user.permissions && user.permissions.includes('borrar')) ? 
+                `<a href="javascript:DeleteMedicamento(${medicamento.id});" class="btn btn-sm btn-danger">Eliminar</a>` : '&nbsp;'
+            }
             </td>
         `;
         tableBody.appendChild(row);
@@ -274,6 +279,26 @@ async function DeleteMedicamento(id){
     }
 }
 
+async function LoadMedicamentoToView(id) {
+    const medicamento = await getMedicamento(id);
+    if (!medicamento) {
+        console.error('Medicamento no encontrado');
+        return;
+    }
+
+    // Rellenar el formulario de vista con los datos del medicamento
+    document.getElementById('view_nombre').textContent = medicamento.nombre;
+    document.getElementById('view_nombre_generico').textContent = medicamento.nombre_generico;
+    document.getElementById('view_presentacion').textContent = medicamento.presentacion;
+    document.getElementById('view_via_administracion').textContent = medicamento.via_administracion;
+    document.getElementById('view_concentracion').textContent = medicamento.concentracion;
+    document.getElementById('view_unidad').textContent = medicamento.unidad;
+    document.getElementById('view_controlado').textContent = medicamento.controlado ? 'Sí' : 'No';
+    document.getElementById('view_descripcion').textContent = medicamento.descripcion;
+
+    // Mostrar el modal de vista
+    $('#view_medicamento').modal('show');
+}
 
 function cleanForm() {
     document.getElementById('nombre').value = '';

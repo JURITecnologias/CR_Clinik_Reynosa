@@ -177,12 +177,12 @@ function userHasAnyRole($user, $roles)
 
                     <?php
                         
-                        $requiredRoles = ['Admon', 'Main Admin', 'Doctor'];
+                        $requiredRoles = ['Admon', 'Main Admin'];
                         if (userHasAnyRole($user, $requiredRoles)) {
                     ?>
                     <li>
                         <a href="usuarios-settings.php" class="<?php echo ($page =='usuarios-settings.php' ) ? 'active' : '' ;?>">
-                            <i class="ti ti-settings"></i><span>Usuarios</span>
+                            <i class="ti ti-user-circle"></i><span>Usuarios</span>
                         </a>
                     </li>
                     <?php
