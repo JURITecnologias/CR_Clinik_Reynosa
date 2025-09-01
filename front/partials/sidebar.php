@@ -3,6 +3,7 @@ $link = $_SERVER[ 'PHP_SELF' ];
 $link_array = explode( '/', $link );
 $page = end( $link_array );
 $user= include(__DIR__ . '/../src/user_session.php');
+define('CR_CLINIK_ENV', getenv('CR_CLINIK_ENV') ?: 'local');
 
 function userHasAnyRole($user, $roles)
 {
@@ -60,10 +61,14 @@ function userHasAnyRole($user, $roles)
                             <i class="ti ti-layout-board"></i><span>Dashboard</span>
                         </a>
                     </li>
-
-                    <!-- <li class="submenu">
+                    <?php
+                        $env = CR_CLINIK_ENV;
+                        if (!$env || strtolower($env) === 'local') {
+                    ?>
+                    
+                    <li class="submenu">
                         <a href="javascript:void(0);" class="<?php echo ($page =='chat.php' || $page =='voice-call.php' || $page =='video-call.php' || $page =='calendar.php' || $page =='email.php' || $page =='email-details.php' || $page =='email-compose.php' || $page =='contacts.php' || $page =='contact-list.php' || $page =='invoice.php' || $page =='add-invoice.php' || $page =='edit-invoice.php' || $page =='invoice-details.php' || $page =='invoice-details.php' || $page =='todo.php' || $page =='notes.php' || $page =='kanban-view.php' || $page =='file-manager.php' || $page =='social-feed.php' || $page =='search-result.php') ? 'active subdrop' : '' ;?>">
-                            <i class="ti ti-apps"></i><span>Applications</span>
+                            <i class="ti ti-apps"></i><span>Applications <?php echo $env; ?></span>
                             <span class="menu-arrow"></span>
                         </a>
                         <ul>
@@ -107,8 +112,10 @@ function userHasAnyRole($user, $roles)
                             <li><a href="layout-rtl.php" class="<?php echo ($page =='layout-rtl.php') ? 'active' : '' ;?>">RTL</a></li>
                             <li><a href="layout-dark.php" class="<?php echo ($page =='layout-dark.php') ? 'active' : '' ;?>">Dark</a></li>
                         </ul>
-                    </li> -->
-
+                    </li>
+                    <?php
+                    }
+                    ?>
                     <li class="menu-title" aria-disabled="true"><span>SALUD</span></li>
 
                     <li>
@@ -198,6 +205,11 @@ function userHasAnyRole($user, $roles)
                             <i class="ti ti-activity"></i><span>Servicios Medicos</span>
                         </a>
                     </li>
+
+                    <?php
+                        $env = CR_CLINIK_ENV;
+                        if (!$env || strtolower($env) === 'local') {
+                    ?>
                     <li class="menu-title" aria-disabled="true"><span>PAGES</span></li>
 
                     <li class="submenu">
@@ -375,7 +387,7 @@ function userHasAnyRole($user, $roles)
                             <i class="ti ti-components"></i><span>Widgets</span>
                         </a>
                     </li> 
-
+                    
                     <li class="menu-title" aria-disabled="true"><span>HELP</span></li>
 
                     <li>
@@ -411,7 +423,9 @@ function userHasAnyRole($user, $roles)
                             <li><a href="javascript:void(0);">Multilevel 3</a></li>
                         </ul>
                     </li>
-
+                     <?php
+                    }
+                    ?>           
                 </ul>                   
             </div>
         </div>

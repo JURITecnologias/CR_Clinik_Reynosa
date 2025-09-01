@@ -19,6 +19,18 @@ class ServicioMedicoController extends Controller
         return response()->json($servicios);
     }
 
+    // Obtener un servicio médico por ID
+    public function show($id)
+    {
+        $servicio = ServicioMedico::withTrashed()->find($id);
+
+        if (!$servicio) {
+            return response()->json(['message' => 'Servicio no encontrado'], 404);
+        }
+
+        return response()->json($servicio);
+    }
+
     // Crear un nuevo servicio
     public function store(Request $request)
     {

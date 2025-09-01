@@ -188,3 +188,7 @@ $page = end( $link_array );
     <?php if ($page == 'medicamentos-catalog.php') {   ?>
     <script src="assets/js/app/medicamentos.js"></script>
     <?php } ?>
+    
+    <?php if ($page == 'servicios-medicos-catalog.php') {   ?>
+    <script src="assets/js/app/servicios.js"></script>
+    <?php } ?>

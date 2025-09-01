@@ -117,6 +117,7 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.pe
 // Servicios medicos catalogo
 Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera|Ventas','check.permission:ver'])->group(function () {
     Route::get('/servicios-medicos', [ServicioMedicoController::class, 'index']);
+    Route::get('/servicios-medicos/{id}', [ServicioMedicoController::class, 'show']);
 });
 
 Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor','check.permission:modificar|escribir|borrar'])->group(function () {
