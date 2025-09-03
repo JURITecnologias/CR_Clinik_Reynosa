@@ -55,13 +55,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('basic.auth','check.permission:ver')->group(function () {
   Route::get('/users', [UserController::class, 'index']);
   Route::get('/users/{id}', [UserController::class, 'show']);
+  Route::post('/users/buscar/email', [UserController::class, 'findByEmail']);
 });
 
 
-Route::middleware('basic.auth','check.role:Main Admin|Admon|Doctor','check.permission:modificar|escribir|borrar')->group(function () {
-              Route::post('/users', [UserController::class, 'store']);
-              Route::put('/users/{id}', [UserController::class, 'update']);
-              Route::delete('/users/{id}', [UserController::class, 'destroy']);
+Route::middleware('basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:modificar|escribir|borrar')->group(function () {
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 });
 
 
@@ -100,13 +101,18 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera',
 
 // Información Doctor routes
 
-Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:ver'])->group(function () {
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/doctores', [InformacionDoctorController::class, 'index']);
     Route::get('/doctores/{id}', [InformacionDoctorController::class, 'show']);
+    Route::post('/doctores/buscar/email', [InformacionDoctorController::class, 'buscarPorEmail']);
+    Route::get('/doctores/todos', [InformacionDoctorController::class, 'indexConEliminados']);
+    Route::get('/doctores/eliminados', [InformacionDoctorController::class, 'soloEliminados']);
 });
 
 Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor','check.permission:modificar|escribir'])->group(function () {
     Route::post('/doctores', [InformacionDoctorController::class, 'store']);
+    Route::post('/doctores/{id}/restore', [InformacionDoctorController::class, 'restore']);
+    Route::post('/doctores/{id}/firma', [InformacionDoctorController::class, 'subirFirma']);
     Route::put('/doctores/{id}', [InformacionDoctorController::class, 'update']);
 });
 

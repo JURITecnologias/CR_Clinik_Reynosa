@@ -52,6 +52,20 @@ async function editUserRequest(userId, userData) {
     return await response.json();
 }
 
+async function searchUserByEmail(email) {
+    const response = await fetch(`${apiHost}${apiPath}/users/buscar/email`, {
+        method: 'POST',
+        headers: headersRequest,
+        body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+        throw new Error('failed to search user: ' + response.statusText);
+    }
+
+    return await response.json();
+}
+
 async function removeUser(userId) {
     const response = await fetch(`${apiHost}${apiPath}/users/${userId}`, {
         method: 'DELETE',

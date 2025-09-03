@@ -62,5 +62,17 @@ class UserController extends Controller
         User::findOrFail($id)->delete();
         return response()->json(['message' => 'Usuario eliminado']);
     }
+
+    public function findByEmail(Request $request)
+    {
+        $email = $request->input('email');
+        $user = User::with('roles')->where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        return response()->json($user);
+    }
 }
 

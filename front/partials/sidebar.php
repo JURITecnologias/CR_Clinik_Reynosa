@@ -126,7 +126,7 @@ function userHasAnyRole($user, $roles)
 
                     <li>
                         <a href="doctors.php" class="<?php echo ($page =='doctors.php' || $page =='all-doctors-list.php' || $page =='add-doctors.php' || $page =='edit-doctors.php' || $page =='doctor-details.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-stethoscope"></i><span>Médicos</span>
+                            <i class="ti ti-stethoscope"></i><span>Doctores</span>
                         </a>
                     </li>
 

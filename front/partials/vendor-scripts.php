@@ -171,6 +171,11 @@ $page = end( $link_array );
     <!-- Main JS -->
     <script src="assets/js/script.js"></script>
 
+    <!-- custom js -->
+    <?php if($page == 'doctor-details.php' || $page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php') {   ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <?php } ?> 
+
     <!-- App JS -->
     <script src="assets/js/app/common.js"></script>
     <script src="assets/js/app/config.js"></script>
@@ -180,7 +185,7 @@ $page = end( $link_array );
     <script src="assets/js/app/login.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'usuarios-settings.php') {   ?>
+    <?php if ($page == 'usuarios-settings.php' || $page == 'add-doctors.php') {   ?>
     <script src="assets/js/app/users.js"></script>
     <script src="assets/js/app/roles.js"></script>
     <?php } ?>
@@ -191,4 +196,8 @@ $page = end( $link_array );
     
     <?php if ($page == 'servicios-medicos-catalog.php') {   ?>
     <script src="assets/js/app/servicios.js"></script>
+    <?php } ?>
+
+    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page == "doctor-details.php") {   ?>
+    <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
