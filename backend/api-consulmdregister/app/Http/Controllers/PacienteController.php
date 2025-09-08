@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 class PacienteController extends Controller
 {
     // Listar todos los pacientes
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Paciente::all());
+        $perPage = $request->get('per_page', 15);
+        $pacientes = Paciente::paginate($perPage);
+        return response()->json($pacientes);
     }
 
     // Mostrar un paciente específico
@@ -75,33 +77,30 @@ class PacienteController extends Controller
     // Buscar pacientes por varios campos
     public function buscar(Request $request)
     {
+        $perPage = $request->get('per_page', 15);
         $query = Paciente::query();
 
-        if ($request->filled('nombre')) {
-            $query->where('nombre', 'LIKE', '%' . $request->nombre . '%');
+        if ($nombreCompleto = $request->query('nombre')) {
+            $query->whereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ['%' . $nombreCompleto . '%']);
         }
 
-        if ($request->filled('apellido')) {
-            $query->where('apellido', 'LIKE', '%' . $request->apellido . '%');
+        if ($telefono = $request->query('telefono')) {
+            $query->where('telefono', 'LIKE', '%' . $telefono . '%');
         }
 
-        if ($request->filled('telefono')) {
-            $query->where('telefono', 'LIKE', '%' . $request->telefono . '%');
+        if ($email = $request->query('email')) {
+            $query->where('email', 'LIKE', '%' . $email . '%');
         }
 
-        if ($request->filled('email')) {
-            $query->where('email', 'LIKE', '%' . $request->email . '%');
+        if ($curp = $request->query('curp')) {
+            $query->where('curp', 'LIKE', '%' . $curp . '%');
         }
 
-        if ($request->filled('curp')) {
-            $query->where('curp', 'LIKE', '%' . $request->curp . '%');
+        if ($numero_seguro = $request->query('numero_seguro')) {
+            $query->where('numero_seguro', 'LIKE', '%' . $numero_seguro . '%');
         }
 
-        if ($request->filled('numero_seguro')) {
-            $query->where('numero_seguro', 'LIKE', '%' . $request->numero_seguro . '%');
-        }
-
-        $resultados = $query->get();
+        $resultados = $query->paginate($perPage);
 
         if ($resultados->isEmpty()) {
             return response()->json(['mensaje' => 'Paciente no encontrado'], 404);

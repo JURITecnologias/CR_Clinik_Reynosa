@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('curp')->nullable(); // México 🇲🇽
             $table->string('numero_seguro')->nullable(); // Seguro social
             $table->timestamps();
+            $table->softDeletes();
         });
 
 

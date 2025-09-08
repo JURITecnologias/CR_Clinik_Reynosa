@@ -201,3 +201,8 @@ $page = end( $link_array );
     <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page == "doctor-details.php") {   ?>
     <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
+
+    <?php if ($page == 'patients.php' || $page == 'add-patient.php' || $page == 'edit-patient.php' || $page == "patient-details-appointments.php" || $page == "patient-details-visit-history.php") {   ?>
+    <script src="assets/js/app/pacientes.js"></script>
+    <script src="assets/js/app/historial-paciente.js"></script>
+    <?php } ?>

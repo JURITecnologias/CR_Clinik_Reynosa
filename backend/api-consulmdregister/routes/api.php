@@ -153,3 +153,20 @@ Route::middleware([
     Route::put('/medicamentos/{id}', [MedicamentoController::class, 'update']);
     Route::delete('/medicamentos/{id}', [MedicamentoController::class, 'destroy']);
 });
+
+// Paciente Historial Medico routes
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera'])->group(function () {
+    Route::post('/historial-medico', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'store']);
+    Route::put('/historial-medico/{id}', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'update']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor','check.permission:borrar'])->group(function () {
+    Route::delete('/historial-medico/{id}', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'destroy']);
+});
+
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
+    Route::get('/historial-medico/buscar', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'buscar']);
+    Route::get('/historial-medico', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'index']);
+    Route::get('/historial-medico/{id}', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'show']);
+});
+

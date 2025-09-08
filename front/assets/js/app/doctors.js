@@ -259,14 +259,17 @@ function RenderDoctorList(doctores) {
             <td>${doctor.user.email}</td>
             <td>${doctor.telefono === null ? 'N/A' : doctor.telefono}</td>
             <td>
-                <div class="dropdown">
+            ${
+                user && user.roles && user.roles.includes('Enfermera')
+                ? ''
+                : `<div class="dropdown">
                     <a href="javascript:void(0);" class="btn btn-icon btn-outline-light border-0" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></a>
-                    </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        ${hasEditPermission ? `<li><a href="edit-doctors.php?b=${btoa(doctor.id)}" class="dropdown-item">Editar</a></li>` : ''}
-                        ${hasDeletePermission ? `<li><a href="javascript:void(0);" class="dropdown-item" onclick="ConfirmDeleteDoctor(${doctor.id});">Eliminar</a></li>` : ''}
+                    ${hasEditPermission ? `<li><a href="edit-doctors.php?b=${btoa(doctor.id)}" class="dropdown-item">Editar</a></li>` : ''}
+                    ${hasDeletePermission ? `<li><a href="javascript:void(0);" class="dropdown-item" onclick="ConfirmDeleteDoctor(${doctor.id});">Eliminar</a></li>` : ''}
                     </ul>
-                </div>
+                </div>`
+            }
             </td>
         `;
         tbody.appendChild(tr);
