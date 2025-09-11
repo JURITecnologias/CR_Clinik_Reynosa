@@ -20,7 +20,7 @@ class PacienteController extends Controller
     // Mostrar un paciente específico
     public function show($id)
     {
-        $paciente = Paciente::find($id);
+        $paciente = Paciente::with('historialMedico')->find($id);
 
         if (!$paciente) {
             return response()->json(['mensaje' => 'Paciente no encontrado'], 404);

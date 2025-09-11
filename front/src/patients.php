@@ -1,6 +1,6 @@
 <?php
 ob_start();
-$userRole = $_SESSION['user_role'] ?? 'Guest';
+include(__DIR__ . '/../src/user_session.php');
 ?>
 
 <!-- ========================
@@ -24,8 +24,8 @@ $userRole = $_SESSION['user_role'] ?? 'Guest';
                 </div>
             </div>
             <div class="gap-2 d-flex align-items-center flex-wrap">
-                <a href="patients.php" class="btn btn-icon btn-white active" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Grid" data-bs-original-title="Grid View"><i class="ti ti-layout-grid"></i></a>
-                <a href="all-patients-list.php" class="btn btn-icon btn-white" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="List" data-bs-original-title="List View"><i class="ti ti-layout-list"></i></a>
+                <a href="patients.php" class="btn btn-icon btn-white active" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Grid" data-bs-original-title="Cuadricula"><i class="ti ti-layout-grid"></i></a>
+                <a href="all-patients-list.php" class="btn btn-icon btn-white" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="List" data-bs-original-title="Lista"><i class="ti ti-layout-list"></i></a>
                 <!-- <a href="javascript:void(0);" class="btn btn-icon btn-white" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"><i class="ti ti-refresh"></i></a>
                     <a href="javascript:void(0);" class="btn btn-icon btn-white" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print" data-bs-original-title="Print"><i class="ti ti-printer"></i></a>
                     <a href="javascript:void(0);" class="btn btn-icon btn-white" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Download" data-bs-original-title="Download"><i class="ti ti-cloud-download"></i></a> -->
@@ -125,6 +125,7 @@ $userRole = $_SESSION['user_role'] ?? 'Guest';
                     <p class="mb-3">¿Estás seguro que deseas eliminar este registro?</p>
                     <div class="d-flex justify-content-center gap-2">
                         <input type="hidden" id="delete_paciente_id" value="">
+                        <input type="hidden" id="delete_paciente_referer" value="">
                         <a href="javascript:void(0);" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                         <a href="javascript:RemovePaciente();" class="btn btn-danger w-100" id="confirm_delete_paciente">Sí, Eliminar</a>
                     </div>

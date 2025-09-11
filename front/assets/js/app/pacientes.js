@@ -76,6 +76,42 @@ async function insertPaciente(pacienteData) {
     }
 }
 
+async function updatePacienteInfo(id, pacienteData) {
+    try {
+        const response = await fetch(apiHost + apiPath + '/pacientes/' + id, {
+            method: 'PUT',
+            headers: headersRequest,
+            body: JSON.stringify(pacienteData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update patient: ' + response.statusText);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating patient:', error);
+    }
+}
+
+async function getPacienteById(id) {
+    try {
+        const response = await fetch(apiHost + apiPath + '/pacientes/' + id, {
+            method: 'GET',
+            headers: headersRequest
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch patient: ' + response.statusText);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching patient:', error);
+        throw error;
+    }
+}
+
 async function DeletePaciente(id) {
     try {
         const response = await fetch(apiHost + apiPath + '/pacientes/' + id, {
@@ -87,6 +123,24 @@ async function DeletePaciente(id) {
             throw new Error('Failed to delete patient: ' + response.statusText);
         }
 
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function UpdatePaciente(id, pacienteData) {
+    try {
+        const response = await fetch(apiHost + apiPath + '/pacientes/' + id, {
+            method: 'PUT',
+            headers: headersRequest,
+            body: JSON.stringify(pacienteData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update patient: ' + response.statusText);
+        }
+
+        return await response.json();
     } catch (error) {
         throw error;
     }
@@ -110,6 +164,15 @@ async function renderPacienteInfoCardList(pacientes) {
 
 
     pacientes.forEach(paciente => {
+
+        const fechaNacimiento = paciente.fecha_nacimiento
+            ? new Date(paciente.fecha_nacimiento)
+            : null;
+        const opcionesFecha = { day: '2-digit', month: 'short', year: 'numeric' };
+        const fechaNacimientoFormateada = fechaNacimiento
+            ? fechaNacimiento.toLocaleDateString('es-MX', opcionesFecha)
+            : '';
+
         const card = document.createElement('div');
         card.className = 'col-xl-4 col-md-6 d-flex';
         card.innerHTML = `
@@ -120,22 +183,22 @@ async function renderPacienteInfoCardList(pacientes) {
                     <a href="javascript:void(0);" class="btn btn-icon btn-outline-light border-0" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></a>
                     <ul class="dropdown-menu p-2">
                         <li>
-                        <a href="patient-details.php" class="dropdown-item d-flex align-items-center"><i class="ti ti-eye me-1"></i>Ver detalles</a>
+                        <a href="paciente-detalle.php?b=${btoa(paciente.id)}" class="dropdown-item d-flex align-items-center"><i class="ti ti-eye me-1"></i>Ver detalles</a>
                         </li>
-                        ${hasEditPermission ? `<li><a href="edit-patient.php" class="dropdown-item d-flex align-items-center"><i class="ti ti-edit me-1"></i>Editar</a></li>` : ''}
-                        ${hasDeletePermission ? `<li><a href="javascript:ConfirmDeletePaciente(${paciente.id});" class="dropdown-item d-flex align-items-center"><i class="ti ti-trash me-1"></i>Eliminar</a></li>` : ''}
+                        ${hasEditPermission ? `<li><a href="edit-patient.php?b=${btoa(paciente.id)}" class="dropdown-item d-flex align-items-center"><i class="ti ti-edit me-1"></i>Editar</a></li>` : ''}
+                        ${hasDeletePermission ? `<li><a href="javascript:ConfirmDeletePaciente(${paciente.id},'patients.php');" class="dropdown-item d-flex align-items-center"><i class="ti ti-trash me-1"></i>Eliminar</a></li>` : ''}
                     </ul>
                     </div>
                     <div class="text-center mb-3">
-                    
-                    <a href="patient-details.php" class="d-inline-block mb-1">#PT0025</a>
-                    <h6 class="mb-0"><a href="patient-details.php">${paciente.nombre} ${paciente.apellido}</a></h6>
+
+                    <a href="paciente-detalle.php?b=${btoa(paciente.id)}" class="d-inline-block mb-1 badge badge-soft-primary">#PT${paciente.id}</a>
+                    <h6 class="mb-0"><a href="paciente-detalle.php?b=${btoa(paciente.id)}">${paciente.nombre} ${paciente.apellido}</a></h6>
                     </div>
                     <div class="border p-1 rounded mb-3">
                     <div class="row g-0">
                         <div class="col-4 text-center border-end p-1">
-                        <h6 class="fw-semibold fs-14 text-truncate mb-1">Última visita</h6>
-                        <p class="fs-13 mb-0"></p>
+                        <h6 class="fw-semibold fs-14 text-truncate mb-1">Fecha de nacimiento</h6>
+                        <p class="fs-13 mb-0">${fechaNacimientoFormateada}</p>
                         </div>
                         <div class="col-4 text-center border-end p-1">
                         <h6 class="fw-semibold fs-14 text-truncate mb-1">Género</h6>
@@ -163,6 +226,110 @@ async function renderPacienteInfoCardList(pacientes) {
     });
 }
 
+async function renderPacienteInfoTable(pacientes) {
+    showLoading();
+    // Asegura que el contenedor esté visible antes de buscar la tabla
+    document.getElementById('patients_container').classList.remove('d-none');
+
+    const tbody = document.querySelector('#table_pacientes tbody');
+    if (!tbody) {
+        hideLoading();
+        console.error('No se encontró el elemento tbody en #table_pacientes');
+        return;
+    }
+    tbody.innerHTML = ''; // Clear existing rows
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const hasEditPermission = user && user.permissions && user.permissions.includes('modificar');
+    const hasDeletePermission = user && user.permissions && user.permissions.includes('borrar');
+    pacientes.forEach(paciente => {
+        const fechaNacimiento = paciente.fecha_nacimiento
+            ? new Date(paciente.fecha_nacimiento)
+            : null;
+        const opcionesFecha = { day: '2-digit', month: 'short', year: 'numeric' };
+        const fechaNacimientoFormateada = fechaNacimiento
+            ? fechaNacimiento.toLocaleDateString('es-MX', opcionesFecha)
+            : '';
+        const edad = calcularEdad(paciente.fecha_nacimiento);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>#PT${paciente.id}</td>
+            <td>${paciente.nombre} ${paciente.apellido}</td>
+            <td>${paciente.sexo}</td>
+            <td>${fechaNacimientoFormateada}</td>
+            <td>${edad}</td>
+            <td>
+                <a href="paciente-detalle.php?b=${btoa(paciente.id)}" class="btn btn-sm btn-primary">Ver detalles</a>
+                ${hasEditPermission ? `<a href="edit-patient.php?b=${btoa(paciente.id)}" class="btn btn-sm btn-secondary">Editar</a>` : ''}
+                ${hasDeletePermission ? `<a href="javascript:ConfirmDeletePaciente(${paciente.id},'all-patients-list.php');" class="btn btn-sm btn-danger">Eliminar</a>` : ''}
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    hideLoading();
+    document.getElementById('patients_container').classList.remove('d-none');
+    $('#patients_table').DataTable();
+}
+
+async function renderPacienteInfoLayout(paciente) {
+    if (!paciente) {
+        console.error('No patient data provided');
+        return;
+    }
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const hasEditPermission = user && user.permissions && user.permissions.includes('modificar');
+    const hasDeletePermission = user && user.permissions && user.permissions.includes('borrar');
+    const fechaNacimiento = paciente.fecha_nacimiento
+        ? new Date(paciente.fecha_nacimiento)
+        : null;
+    const opcionesFecha = { day: '2-digit', month: 'short', year: 'numeric' };
+    const fechaNacimientoFormateada = fechaNacimiento
+        ? fechaNacimiento.toLocaleDateString('es-MX', opcionesFecha)
+        : '';
+    const edad = calcularEdad(paciente.fecha_nacimiento);
+
+    const fechaAgregado = paciente.created_at
+        ? new Date(paciente.created_at)
+        : null;
+    const opcionesFechaAgregado = { day: '2-digit', month: 'short', year: 'numeric' };
+    const fechaAgregadoFormateada = fechaAgregado
+        ? fechaAgregado.toLocaleDateString('es-MX', opcionesFechaAgregado)
+        : '';
+
+    document.getElementById('patient-fecha-agregado-label').textContent = fechaAgregadoFormateada;
+
+    document.getElementById('patient-nombres-label').textContent = `${paciente.nombre} ${paciente.apellido}`;
+    document.getElementById('patient-id-label').textContent = `#PT${paciente.id}`;
+    document.getElementById('patient-genero-label').textContent = paciente.sexo || '';
+    document.getElementById('patient-fecha-nacimiento-label').textContent = fechaNacimientoFormateada;
+    document.getElementById('patient-edad-label').textContent = edad ? `${edad} años` : '';
+    document.getElementById('patient-telefono-label').textContent = paciente.telefono || '';
+    document.getElementById('patient-email-label').textContent = paciente.email || '';
+    document.getElementById('patient-direccion-label').textContent = paciente.direccion || '';
+    document.getElementById('patient-curp-label').textContent = paciente.curp || '';
+    document.getElementById('patient-nss-label').textContent = paciente.numero_seguro || '';
+    document.getElementById('patient-contacto-emergencia-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].contacto_emergencia || '' : '';
+    document.getElementById('patient-estado-civil-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].estado_civil || '' : '';
+
+    document.getElementById('patient-enfermedades-cronicas-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].enfermedades_cronicas || '' : '';
+    document.getElementById('patient-hospitalizaciones-previas-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].hospitalizaciones_previas || '' : '';
+    document.getElementById('patient-medicamentos-actuales-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].medicamentos_actuales || '' : '';
+    document.getElementById('patient-alergias-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].alergias || '' : '';
+    document.getElementById('patient-vacunas-recientes-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].vacunas_recientes || '' : '';
+    document.getElementById('patient-antecedentes-familiares-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].antecedentes_familiares || '' : '';
+
+    document.getElementById('patient-transfusiones-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? (paciente.historial_medico[0].transfusiones ? 'Sí' : 'No') : '';
+    document.getElementById('patient-fuma-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? (paciente.historial_medico[0].fuma ? 'Sí' : 'No') : '';
+    document.getElementById('patient-alcohol-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? (paciente.historial_medico[0].alcohol ? 'Sí' : 'No') : '';
+    document.getElementById('patient-apoyo-psicologico-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? (paciente.historial_medico[0].apoyo_psicologico ? 'Sí' : 'No') : '';
+    document.getElementById('patient-frecuencia-alcohol-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].frecuencia_alcohol || '' : '';
+    document.getElementById('patient-frecuencia-tabaco-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].frecuencia_tabaco || '' : '';
+    document.getElementById('patient-sustancias-psicoactivas-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].sustancias_psicoactivas || '' : '';
+    document.getElementById('patient-alimentacion-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].alimentacion || '' : '';
+    document.getElementById('patient-actividad-fisica-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].actividad_fisica || '' : '';
+    document.getElementById('patient-notas-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].notas || '' : '';
+
+}
+
 async function loadPacientesGrid(registros, pagina,buscar) {
     showLoading();
     if(buscar && buscar.trim()!==''){
@@ -185,6 +352,120 @@ async function loadPacientesGrid(registros, pagina,buscar) {
     LoadPagesControl(pacientes.last_page, registros, pagina);
     hideLoading();
     document.getElementById('pacientes_grid_section').classList.remove('d-none');
+}
+
+async function loadPacienteInForm(id) {
+    showLoading();
+    document.getElementById('save-basic-info').classList.add('d-none');
+    try {
+        const paciente = await getPacienteById(id);
+        if (!paciente) {
+            throw new Error('Paciente no encontrado');
+            return; 
+        }
+
+        if (paciente.fecha_nacimiento) {
+            const fecha = new Date(paciente.fecha_nacimiento);
+            const opcionesFecha = { day: '2-digit', month: 'short', year: 'numeric' };
+            const fechaFormateada = fecha.toLocaleDateString('es-MX', opcionesFecha).replace(/(\d{2}) ([^.]+)\. (\d{4})/, '$1 $2,$3');
+            document.getElementById('frm_add_paciente_fecha_nacimiento').value = fechaFormateada;
+        }
+
+        let edad=calcularEdad(paciente.fecha_nacimiento);
+        console.log('Calculated age:', edad);
+
+        document.getElementById('paciente_id').value = paciente.id;
+        document.getElementById('frm_add_paciente_nombres').value = paciente.nombre || '';
+        document.getElementById('frm_add_paciente_apellidos').value = paciente.apellido || '';
+        document.getElementById('frm_add_paciente_sexo').value = paciente.sexo || '';
+        document.getElementById('frm_add_paciente_fecha_nacimiento').value = paciente.fecha_nacimiento || '';
+        document.getElementById('frm_add_paciente_edad').value = edad;
+        document.getElementById('frm_add_paciente_telefono').value = paciente.telefono || '';
+        document.getElementById('frm_add_paciente_email').value = paciente.email || '';
+        document.getElementById('frm_add_paciente_direccion').value = paciente.direccion || '';
+        document.getElementById('frm_add_paciente_curp').value = paciente.curp || '';
+        document.getElementById('frm_add_paciente_nss').value = paciente.numero_seguro || '';
+        if (paciente.historial_medico) {
+            const historial = paciente.historial_medico[0];
+            document.getElementById('paciente_historial_id').value = historial.id || '';
+            const estadoCivilSelect = document.getElementById('frm_add_paciente_estado_civil');
+            if (estadoCivilSelect) {
+                const valorHistorial = (historial.estado_civil || '').trim();
+                estadoCivilSelect.value = valorHistorial;
+                // Dispara el evento change para Select2
+                $('#frm_add_paciente_estado_civil').val(valorHistorial).trigger('change');
+            }
+            document.getElementById('frm_add_paciente_contacto_emergencia').value = historial.contacto_emergencia || '';
+            document.getElementById('frm_add_paciente_enfermedades_cronicas').value = historial.enfermedades_cronicas || '';
+            document.getElementById('frm_add_paciente_hospitalizaciones_previas').value = historial.hospitalizaciones_previas || '';
+            document.getElementById('frm_add_paciente_medicamentos_actuales').value = historial.medicamentos_actuales || '';
+            document.getElementById('frm_add_paciente_alergias').value = historial.alergias || '';
+            
+            document.getElementById('frm_add_paciente_transfusiones').checked = !!historial.transfusiones;
+            document.getElementById('frm_add_paciente_fuma').checked = !!historial.fuma;
+            document.getElementById('frm_add_paciente_alcohol').checked = !!historial.alcohol;
+            document.getElementById('frm_add_paciente_apoyo_psicologico').checked = !!historial.apoyo_psicologico;
+
+
+            document.getElementById('frm_add_paciente_vacunas_recientes').value = historial.vacunas_recientes || '';
+           
+            
+            document.getElementById('frm_add_paciente_actividad_fisica').value = historial.actividad_fisica || '';
+            document.getElementById('frm_add_paciente_alimentacion').value = historial.alimentacion || '';
+            document.getElementById('frm_add_paciente_frecuencia_tabaco').value = historial.frecuencia_tabaco || '';
+            document.getElementById('frm_add_paciente_frecuencia_alcohol').value = historial.frecuencia_alcohol || '';
+            document.getElementById('frm_add_paciente_sustancias_psicoactivas').value = historial.sustancias_psicoactivas || '';
+            document.getElementById('frm_add_paciente_antecedentes_familiares').value = historial.antecedentes_familiares || '';
+            document.getElementById('frm_add_paciente_notas').value = historial.notas || '';
+            document.getElementById('frm_add_paciente_ocupacion').value = historial.ocupacion || '';
+        }
+        document.getElementById('save-basic-info').classList.remove('d-none');
+
+    } catch (error) {
+        console.error('Error loading patient data into form:', error);
+    } finally {
+        hideLoading();
+    }
+}
+
+async function loadPacientesTable(registros, pagina,buscar) {
+    showLoading();
+    document.getElementById('patients_container').classList.add('d-none');
+    if(buscar && buscar.trim()!==''){
+        const pacientes = await searchPatientByName(registros, pagina, buscar);
+        if(!pacientes || !pacientes.data || pacientes.data.length===0){
+            document.getElementById('patients_container').innerHTML = '<p>No se encontraron pacientes</p>';
+            document.getElementById('controls_row').classList.add('d-none');
+        } else {
+            renderPacienteInfoTable(pacientes.data);
+            document.getElementById('patients_container').classList.remove('d-none');
+            LoadPagesControl(pacientes.last_page, registros, pagina);
+        }
+
+        document.getElementById('total-pacientes').textContent = pacientes.total || 0;
+        hideLoading();
+        return;
+    }
+    const pacientes = await getPacientes(registros, pagina);
+    renderPacienteInfoTable(pacientes.data);
+     document.getElementById('total-pacientes').textContent = pacientes.total || 0;
+    return;
+}
+
+async function loadPacienteLayout(id) {
+    showLoading();
+    try {
+        const paciente = await getPacienteById(id);
+        if (!paciente) {
+            throw new Error('Paciente no encontrado');
+            return;
+        }
+        await renderPacienteInfoLayout(paciente);
+        document.getElementById('patient-detail-container').classList.remove('d-none');
+        hideLoading();
+    } catch (error) {
+        console.error('Error loading patient layout:', error);
+    }
 }
 
 function calcularEdad(fechaNacimiento) {
@@ -224,7 +505,7 @@ async function AddPacienteBasicInfo(){
         email: document.getElementById('frm_add_paciente_email').value,
         direccion: document.getElementById('frm_add_paciente_direccion').value,
         curp: document.getElementById('frm_add_paciente_curp').value,
-        numero_seguro_social: document.getElementById('frm_add_paciente_nss').value
+        numero_seguro: document.getElementById('frm_add_paciente_nss').value
     };
 
     try {
@@ -236,6 +517,52 @@ async function AddPacienteBasicInfo(){
         document.getElementById('error-message').textContent = error.message || 'Error al agregar paciente.';
         document.getElementById('error-message-container').classList.remove('d-none');
         console.error('Error adding patient:', error);
+        throw error;
+    }
+}
+
+async function EditPacienteBasicInfo(){
+    showLoading();
+    document.getElementById('save-basic-info').classList.add('d-none');
+    id = document.getElementById('paciente_id').value;
+    document.getElementById('error-message-container').classList.add('d-none');
+
+    // Obtener la fecha de nacimiento y formatearla a yyyy-mm-dd
+    let fechaNacimientoInput = document.getElementById('frm_add_paciente_fecha_nacimiento').value;
+    let fechaNacimientoFormateada = '';
+    let fechaAGuardar = '';
+    if (fechaNacimientoInput) {
+        const fecha = new Date(fechaNacimientoInput);
+        const yyyy = fecha.getFullYear();
+        const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+        const dd = String(fecha.getDate()).padStart(2, '0');
+        fechaNacimientoFormateada = `${yyyy}-${mm}-${dd}`;
+        fechaAGuardar = fechaNacimientoFormateada;
+    }
+
+    const pacienteData = {
+        nombre: document.getElementById('frm_add_paciente_nombres').value,
+        apellido: document.getElementById('frm_add_paciente_apellidos').value,
+        sexo: document.getElementById('frm_add_paciente_sexo').value,
+        fecha_nacimiento: fechaAGuardar,
+        telefono: document.getElementById('frm_add_paciente_telefono').value,
+        email: document.getElementById('frm_add_paciente_email').value,
+        direccion: document.getElementById('frm_add_paciente_direccion').value,
+        curp: document.getElementById('frm_add_paciente_curp').value,
+        numero_seguro: document.getElementById('frm_add_paciente_nss').value
+    };
+
+    try {
+        await UpdatePaciente(id,pacienteData);
+        console.log('Patient updated successfully:', pacienteData);
+        document.getElementById('save-basic-info').classList.remove('d-none');
+        hideLoading();
+        nextTab();
+    } catch (error) {
+        console.log('Error updating patient:', error);
+        document.getElementById('error-message').textContent = error.message || 'Error al actualizar paciente.';
+        document.getElementById('error-message-container').classList.remove('d-none');
+        console.error('Error updating patient:', error);
         throw error;
     }
 }
@@ -255,6 +582,26 @@ async function AddPacienteAndHistorial() {
         throw error;
     }finally {
         document.getElementById('save-vitals').classList.remove('disabled');
+    }
+}
+
+async function EditHistorialPaciente() {
+    showLoading();
+    document.getElementById('save-vitals').classList.add('d-none');
+    const idhistorialData = document.getElementById('paciente_historial_id').value;
+    console.log('Editing medical history with ID:', idhistorialData);
+    if (!idhistorialData) {
+        console.error('Medical History ID is missing');
+        return;
+    }
+    try {
+        const updatedHistorial = await EditHistorialMedicoPaciente(idhistorialData);
+        console.log('Medical history updated successfully:', updatedHistorial);
+        window.location.href = 'patients.php';
+    } catch (error) {
+        document.getElementById('save-vitals').classList.remove('d-none');
+        hideLoading();
+        console.error('Error updating medical history:', error);
     }
 }
 
@@ -368,13 +715,13 @@ function nextTab() {
     }
 }
 
-async function LookForUserByName(){
+async function LookForUserByName(page='patients.php'){
 
     const urlParams = new URLSearchParams(window.location.search);
     const registros = urlParams.get('registros') ? parseInt(urlParams.get('registros'), 10) : 50;
     const pagina = urlParams.get('pagina') ? parseInt(urlParams.get('pagina'), 10) : 1;
 
-    window.location.href = 'patients.php?registros='+registros+'&pagina='+pagina+'&busqueda='+document.getElementById('searchInput').value;
+    window.location.href = page+'?registros='+registros+'&pagina='+pagina+'&busqueda='+document.getElementById('searchInput').value;
 }
 
 async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
@@ -412,14 +759,16 @@ async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
     });
 }
 
-function ConfirmDeletePaciente(id){
+function ConfirmDeletePaciente(id,refererer='patients.php'){
     document.getElementById('delete_paciente_id').value = id;
+    document.getElementById('delete_paciente_referer').value = refererer;
     const deleteModal = new bootstrap.Modal(document.getElementById('delete_paciente_modal'));
     deleteModal.show();
 }
 async function RemovePaciente(){
     try {
         const deleteModal = bootstrap.Modal.getInstance(document.getElementById('delete_paciente_modal'));
+        const refererer = document.getElementById('delete_paciente_referer').value || 'patients.php';
         deleteModal.hide();
         id= document.getElementById('delete_paciente_id').value;
         console.log('Removing patient with ID:', id);
@@ -429,7 +778,11 @@ async function RemovePaciente(){
         const busqueda = urlParams.get('busqueda') || '';
         const pagina = urlParams.get('pagina') ? parseInt(urlParams.get('pagina'), 10) : 1;
 
-        loadPacientesGrid(registros, pagina, busqueda);
+        if(refererer && refererer.trim()!==''){
+            if(refererer=='patients.php') loadPacientesGrid(registros, pagina, busqueda);
+            if(refererer=='all-patients-list.php') loadPacientesTable(registros, pagina, busqueda);
+        }
+        
     } catch (error) {
         console.error('Error removing patient:', error);
     } finally {
