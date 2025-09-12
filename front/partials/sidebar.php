@@ -3,7 +3,7 @@ $link = $_SERVER[ 'PHP_SELF' ];
 $link_array = explode( '/', $link );
 $page = end( $link_array );
 $user= include(__DIR__ . '/../src/user_session.php');
-define('CR_CLINIK_ENV', getenv('CR_CLINIK_ENV') ?: 'local');
+define('CR_CLINIK_ENV', getenv('CR_CLINIK_ENV') ?: 'Production');
 
 function userHasAnyRole($user, $roles)
 {
@@ -26,17 +26,17 @@ function userHasAnyRole($user, $roles)
             <div>
                 <!-- Logo Normal -->
                 <a href="index.php" class="logo logo-normal">
-                    <img src="assets/img/logo.svg" alt="Logo">
+                    <img src="assets/img/LogoCruzRoja-nb-wl.png" alt="Logo" style="width:110px;">
                 </a>
 
                 <!-- Logo Small -->
                 <a href="index.php" class="logo-small">
-                    <img src="assets/img/logo-small.svg" alt="Logo">
+                    <img src="assets/img/LogoCruzRoja-nb.png" alt="Logo" style="height:55px;">
                 </a>
 
                 <!-- Logo Dark -->
                 <a href="index.php" class="dark-logo">
-                    <img src="assets/img/logo-dark.svg" alt="Logo">
+                    <img src="assets/img/LogoCruzRoja-nb.png" alt="Logo" style="width:110px;">
                 </a>
             </div>
             <button class="sidenav-toggle-btn btn border-0 p-0 active" id="toggle_btn"> 
@@ -51,7 +51,7 @@ function userHasAnyRole($user, $roles)
         <!-- End Logo -->
 
         <!-- Sidenav Menu -->
-        <div class="sidebar-inner" data-simplebar>                
+        <div class="sidebar-inner m-2" data-simplebar>                
             <div id="sidebar-menu" class="sidebar-menu">
                 <ul role="menu" aria-label="Main navigation menu">
                     <li class="menu-title" aria-disabled="true"><span>MAIN</span></li>
@@ -138,7 +138,7 @@ function userHasAnyRole($user, $roles)
 
                     <li>
                         <a href="visits.php" class="<?php echo ($page =='visits.php' || $page =='start-visits.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-e-passport"></i><span>Visitas</span>
+                            <i class="ti ti-e-passport"></i><span>Consultas</span>
                         </a>
                     </li>
 
@@ -166,19 +166,19 @@ function userHasAnyRole($user, $roles)
 
                     <li>
                         <a href="staffs.php" class="<?php echo ($page =='staffs.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-users-group"></i><span>Staffs</span>
+                            <i class="ti ti-users-group"></i><span>Personal</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="notifications.php" class="<?php echo ($page =='notifications.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-bell"></i><span>Notifications</span>
+                            <i class="ti ti-bell"></i><span>Notificaciones</span>
                         </a>
                     </li>                    
 
                     <li>
                         <a href="general-settings.php" class="<?php echo ($page =='general-settings.php' || $page =='security-settings.php' || $page =='preferences-settings.php' || $page =='appearance-settings.php' || $page =='security-settings.php' || $page =='notifications-settings.php' || $page =='user-permissions-settings.php' || $page =='permission-settings.php' || $page =='plans-billings-settings.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-settings"></i><span>Settings</span>
+                            <i class="ti ti-settings"></i><span>Configuración</span>
                         </a>
                     </li>
 

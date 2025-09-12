@@ -18,11 +18,10 @@
                                             <div class="card-body">
                                                 <div class="mb-4">
                                                     <a href="index.php">
-                                                        <img src="assets/img/logo-dark.svg" class="img-fluid logo m-atuo" alt="Logo">
-                                                    </a>
+                                                        <img class="img-fluid logo m-auto" src="assets/img/logoCruzRoja.jpg" /></a>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <h5 class="mb-1 fw-bold">Hi, Welcome Back</h5>
+                                                    <h5 class="mb-1 fw-bold">Hola, Bienvenido de nuevo</h5>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
@@ -100,16 +99,16 @@
                         
                     </div>
                     <div class="col-lg-6 p-0">
-                        <div class="login-backgrounds login-covers bg-primary d-lg-flex align-items-center justify-content-center d-none flex-wrap position-relative h-100 z-0">
+                        <div class="login-backgrounds login-covers bg-danger d-lg-flex align-items-center justify-content-center d-none flex-wrap position-relative h-100 z-0">
                             <div class="authentication-card">
 								<div class="authen-overlay-item w-100">
                                     <div class="authen-head text-center">
-                                        <h1 class="text-white fs-28 fw-bold mb-2">Your Wellness Journey Starts Here</h1>
-                                        <p class="text-light fw-normal text-light mb-0">Our Medical Website Admin Template offers an intuitive interface for efficient administration and organization of medical data</p>
+                                        <h1 class="text-white fs-28 fw-bold mb-2">Tu viaje hacia el bienestar comienza aquí</h1>
+                                        <p class="text-light fw-normal text-light mb-0">Nuestra plantilla de administración para sitios médicos ofrece una interfaz intuitiva para una gestión y organización eficiente de datos médicos</p>
                                     </div>
 								</div>
                                 <div class="auth-person">
-                                    <img src="assets/img/auth/auth-img-06.png" alt="doctor" class="img-fluid">
+                                    <img alt="doctor" class="img-fluid" src="assets/img/front_cover.jpg" />
                                 </div>
 							</div>
                             <img src="assets/img/auth/auth-img-01.png" alt="shadow" class="position-absolute top-0 start-0">
@@ -118,7 +117,7 @@
                             <img src="assets/img/auth/auth-img-04.png" alt="bubble" class="img-fluid position-absolute auth-img-02">
                             <img src="assets/img/auth/auth-img-05.png" alt="bubble" class="img-fluid position-absolute bottom-0">
                         </div>
-                    </div> <!-- end row-->
+                    </div> end row
                     
                 </div>
                 <!-- end row-->
