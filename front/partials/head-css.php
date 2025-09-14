@@ -8,7 +8,7 @@ $page = end( $link_array );
     <link rel="shortcut icon" href="assets/img/favicon.png">
 
     <!-- Apple Icon -->
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="apple-touch-icon" href="assets/img/cruz-roja-ico.ico">
 
 <?php if ($page !== 'layout-mini.php' && $page !== 'layout-hoverview.php' && $page !== 'layout-hidden.php' && $page !== 'layout-fullwidth.php' && $page !== 'layout-rtl.php' && $page !== 'layout-dark.php' && $page !== 'login.php' && $page !== 'sign-up.php' && $page !== 'forgot-password.php' && $page !== 'change-password.php' && $page !== 'error-404.php' && $page !== 'error-500.php' && $page !== 'coming-soon.php' && $page !== 'under-maintenance.php' && $page !== 'lock-screen.php') {   ?> 
     <!-- Theme Config Js -->
