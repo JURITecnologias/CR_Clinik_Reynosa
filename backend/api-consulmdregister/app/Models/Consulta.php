@@ -23,6 +23,7 @@ class Consulta extends Model
         'medicamentos',
         'servicios_medicos',
         'estatus',
+        'fuera_de_horario',
     ];
 
     protected $casts = [

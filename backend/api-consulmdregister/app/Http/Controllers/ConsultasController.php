@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Consulta;
+use App\Models\HorarioDoctor;
 use App\Models\SignosVitales;
 use App\Models\Paciente;
 use App\Models\InformacionDoctor;
+use Carbon\Carbon;
 
 use function Psy\debug;
 
@@ -94,6 +96,24 @@ class ConsultasController extends Controller
             return response()->json(['mensaje' => 'Error en la validación de los datos'], 422);
         }
 
+        $horaConsulta = Carbon::parse($request->fecha_consulta)->format('H:i');
+        $diaConsulta = Carbon::parse($request->fecha_consulta)->locale('es')->dayName; // ej. "lunes"
+        $diaConsulta = str_replace(
+            ['á', 'é', 'í', 'ó', 'ú'], 
+            ['a', 'e', 'i', 'o', 'u'], 
+            $diaConsulta
+        );
+
+        $horario = HorarioDoctor::where('doctor_id', $request->doctor_id)
+            ->where('dia_semana', $diaConsulta)
+            ->where('activo', true)
+            ->whereTime('hora_inicio', '<=', $horaConsulta)
+            ->whereTime('hora_fin', '>=', $horaConsulta)
+            ->first();
+
+        $fueraDeHorario = $horario ? false : true;
+
+
         // Crear la consulta
         $consulta = Consulta::create($request->only([
             'paciente_id',
@@ -107,6 +127,8 @@ class ConsultasController extends Controller
             'servicios_medicos',
             'estatus',
         ]));
+        $consulta->fuera_de_horario = $fueraDeHorario;
+        $consulta->save();
 
         // Crear los signos vitales asociados
         $signos = new SignosVitales($request->only([

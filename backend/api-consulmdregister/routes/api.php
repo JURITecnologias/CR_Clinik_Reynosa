@@ -188,3 +188,18 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/consultas/{id}', [\App\Http\Controllers\ConsultasController::class, 'show']); // Ver una consulta
    
 });
+
+//horarios doctores
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon', 'check.permission:modificar|escribir'])->group(function () {
+    Route::post('/horarios-doctores', [\App\Http\Controllers\HorariosDoctoresController::class, 'store']);
+    Route::put('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'update']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon', 'check.permission:borrar'])->group(function () {
+    Route::delete('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'destroy']);
+});
+
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
+    Route::get('/horarios-doctores', [\App\Http\Controllers\HorariosDoctoresController::class, 'index']);
+    Route::get('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'show']);
+});
