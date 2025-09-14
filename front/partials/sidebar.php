@@ -3,7 +3,7 @@ $link = $_SERVER[ 'PHP_SELF' ];
 $link_array = explode( '/', $link );
 $page = end( $link_array );
 $user= include(__DIR__ . '/../src/user_session.php');
-define('CR_CLINIK_ENV', getenv('CR_CLINIK_ENV') ?: 'Production');
+define('CR_CLINIK_ENV', getenv('CR_CLINIK_ENV') ?: 'local');
 
 function userHasAnyRole($user, $roles)
 {
