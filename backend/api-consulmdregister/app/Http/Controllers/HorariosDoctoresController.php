@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class HorariosDoctoresController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $horarios = HorarioDoctor::all();
+        $perPage = $request->query('per_page', 10); // Default to 10 items per page
+        $horarios = HorarioDoctor::with('doctor')->paginate($perPage);
         return response()->json($horarios);
     }
 
@@ -51,7 +52,7 @@ class HorariosDoctoresController extends Controller
 
     public function show($id)
     {
-        $horario = HorarioDoctor::find($id);
+        $horario = HorarioDoctor::with('doctor')->find($id);
 
         if (!$horario) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
@@ -89,5 +90,16 @@ class HorariosDoctoresController extends Controller
 
         $horario->delete();
         return response()->json(['message' => 'Horario eliminado correctamente']);
+    }
+
+    public function getHorariosByDoctorId($doctorId)
+    {
+        $horarios = HorarioDoctor::where('doctor_id', $doctorId)->get();
+
+        if ($horarios->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron horarios para este doctor'], 404);
+        }
+
+        return response()->json($horarios);
     }
 }

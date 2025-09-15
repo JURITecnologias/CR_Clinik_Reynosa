@@ -201,5 +201,6 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon', 'check.permissio
 
 Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/horarios-doctores', [\App\Http\Controllers\HorariosDoctoresController::class, 'index']);
+    Route::get('/horarios-doctores/doctor/{doctorId}', [\App\Http\Controllers\HorariosDoctoresController::class, 'getHorariosByDoctorId']);
     Route::get('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'show']);
 });

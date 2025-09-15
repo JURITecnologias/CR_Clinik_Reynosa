@@ -205,7 +205,13 @@ function userHasAnyRole($user, $roles)
                             <i class="ti ti-activity"></i><span>Servicios Medicos</span>
                         </a>
                     </li>
-
+                    <?php if(userHasAnyRole($user, $requiredRoles)) { ?>
+                    <li>
+                        <a href="horarios-doctores.php" class="<?php echo ($page =='horarios-doctores.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-calendar"></i><span>Horarios Doctores</span>
+                        </a>
+                    </li>
+                    <?php } ?>
                     <?php
                         $env = CR_CLINIK_ENV;
                         if (!$env || strtolower($env) === 'local') {
