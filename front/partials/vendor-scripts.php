@@ -198,11 +198,15 @@ $page = end( $link_array );
     <script src="assets/js/app/servicios.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page == "doctor-details.php") {   ?>
+    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page == "doctor-details.php" || $page == 'horarios-doctores.php') {   ?>
     <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
 
     <?php if ($page == 'patients.php' || $page == 'add-patient.php' || $page == 'edit-patient.php' || $page == "patient-details-appointments.php" || $page == "patient-details-visit-history.php" || $page == "all-patients-list.php" || $page == "paciente-detalle.php") {   ?>
     <script src="assets/js/app/pacientes.js"></script>
     <script src="assets/js/app/historial-paciente.js"></script>
+    <?php } ?>
+
+    <?php if ($page == 'horarios-doctores.php') {   ?>
+    <script src="assets/js/app/horario-doctores.js"></script>
     <?php } ?>
