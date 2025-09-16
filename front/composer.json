@@ -1,6 +1,6 @@
 {
   "name": "dreamstechnologies/dreams-emr",
-  "description": "Dreams EMR - Electronic Medical Records System",
+  "description": "CR Clinik - Electronic Medical Records System",
   "require": {
     "php": "^8.1",
     "phpmailer/phpmailer": "^6.10",

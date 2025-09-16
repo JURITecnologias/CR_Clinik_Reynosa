@@ -1,7 +1,6 @@
 <?php ob_start(); 
 // include session file for user authentication  
 $user = include(__DIR__ . '/user_session.php');
-echo $user["user"]["name"];
 ?>
 
     <!-- ========================
@@ -16,11 +15,11 @@ echo $user["user"]["name"];
             <!-- Page Header -->
             <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
                 <div class="breadcrumb-arrow">
-                    <h4 class="mb-1">Welcome, Admin</h4>
-                    <p class="mb-0">Today you have 10 visits, <a href="visits.php" class="text-decoration-underline">View Details</a></p>
+                    <h4 class="mb-1">Bienvenido, Administrador</h4>
+                    <p class="mb-0">Hoy tienes 10 visitas, <a href="visits.php" class="text-decoration-underline">Ver Detalles</a></p>
                 </div>
                 <div id="reportrange" class="reportrange-picker bg-white d-flex align-items-center">
-                    <i class="ti ti-calendar text-body fs-14 me-1"></i><span class="reportrange-picker-field">16 Apr 25 - 16 Apr 25</span>
+                    <i class="ti ti-calendar text-body fs-14 me-1"></i><span class="reportrange-picker-field">16 Abr 25 - 16 Abr 25</span>
                 </div>
             </div>
             <!-- End Page Header -->
@@ -35,7 +34,7 @@ echo $user["user"]["name"];
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-primary rounded-circle flex-shrink-0"><i class="ti ti-user-exclamation fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
-                                    <p class="mb-1 text-truncate">Patients</p>
+                                    <p class="mb-1 text-truncate">Pacientes</p>
                                     <h5 class="mb-0">108</h5>
                                 </div>
                             </div>
@@ -55,7 +54,7 @@ echo $user["user"]["name"];
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-orange rounded-circle flex-shrink-0"><i class="ti ti-calendar-check fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
-                                    <p class="mb-1 text-truncate">Appointments</p>
+                                    <p class="mb-1 text-truncate">Citas</p>
                                     <h5 class="mb-0">658</h5>
                                 </div>
                             </div>
@@ -75,7 +74,7 @@ echo $user["user"]["name"];
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-purple rounded-circle flex-shrink-0"><i class="ti ti-stethoscope fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
-                                    <p class="mb-1 text-truncate">Doctors</p>
+                                    <p class="mb-1 text-truncate">Doctores</p>
                                     <h5 class="mb-0">565</h5>
                                 </div>
                             </div>
@@ -95,7 +94,7 @@ echo $user["user"]["name"];
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-pink rounded-circle flex-shrink-0"><i class="ti ti-moneybag fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
-                                    <p class="mb-1 text-truncate">Transactions</p>
+                                    <p class="mb-1 text-truncate">Transacciones</p>
                                     <h5 class="mb-0">$5,523.56</h5>
                                 </div>
                             </div>
@@ -118,8 +117,8 @@ echo $user["user"]["name"];
                 <div class="col-xl-6 d-flex">
                     <div class="card flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="fw-bold mb-0">Appointment Request</h5> 
-                            <a href="appointments.php" class="btn btn-sm btn-white flex-shrink-0">All Appointments</a>
+                            <h5 class="fw-bold mb-0">Solicitud de Cita</h5> 
+                            <a href="appointments.php" class="btn btn-sm btn-white flex-shrink-0">Todas las Citas</a>
                         </div>
                         <div class="card-body p-1 py-2">
                             <!-- table start -->
@@ -259,15 +258,15 @@ echo $user["user"]["name"];
                 <div class="col-xl-6 d-flex">
                     <div class="card shadow flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
-                            <h5 class="fw-bold mb-0">Patients Statistics</h5> 
-                            <a href="all-patients-list.php" class="btn btn-sm btn-white">View All</a>
+                            <h5 class="fw-bold mb-0">Estadísticas de Pacientes</h5> 
+                            <a href="all-patients-list.php" class="btn btn-sm btn-white">Ver Todos</a>
                         </div>
                         <div class="card-body pb-0">
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <h6 class="fs-14 fw-semibold mb-0">Total No of Patients : 480</h6>
+                                <h6 class="fs-14 fw-semibold mb-0">Total de Pacientes : 480</h6>
                                 <div class="d-flex align-items-center gap-3">
-                                    <p class="mb-0 text-dark"><i class="ti ti-point-filled me-1 text-primary"></i>New Patients</p>
-                                    <p class="mb-0 text-dark"><i class="ti ti-point-filled me-1 text-soft-primary"></i>Old Patients</p>
+                                    <p class="mb-0 text-dark"><i class="ti ti-point-filled me-1 text-primary"></i>Nuevos Pacientes</p>
+                                    <p class="mb-0 text-dark"><i class="ti ti-point-filled me-1 text-soft-primary"></i>Pacientes Antiguos</p>
                                 </div>
                             </div>
                             <div id="chart-5" class="chart-set"></div>
@@ -287,7 +286,7 @@ echo $user["user"]["name"];
                     <a href="patients.php" class="card">
                         <div class="card-body text-center">
                             <span class="badge-soft-primary rounded w-100 d-flex p-3 justify-content-center fs-32 mb-2"><i class="ti ti-users"></i></span>
-                            <h6 class="fs-14 fw-semibold text-truncate mb-0">All Patient</h6>
+                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Todos los Pacientes</h6>
                         </div>
                     </a>
                 </div>
@@ -298,7 +297,7 @@ echo $user["user"]["name"];
                     <a href="doctors.php" class="card">
                         <div class="card-body text-center">
                             <span class="badge-soft-success rounded w-100 d-flex p-3 justify-content-center fs-32 mb-2"><i class="ti ti-topology-bus"></i></span>
-                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Doctors</h6>
+                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Doctores</h6>
                         </div>
                     </a>
                 </div>
@@ -309,7 +308,7 @@ echo $user["user"]["name"];
                     <a href="lab-results.php" class="card">
                         <div class="card-body text-center">
                             <span class="badge-soft-warning rounded w-100 d-flex p-3 justify-content-center fs-32 mb-2"><i class="ti ti-test-pipe-2"></i></span>
-                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Labs Results</h6>
+                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Resultados de Laboratorio</h6>
                         </div>
                     </a>
                 </div>
@@ -320,7 +319,7 @@ echo $user["user"]["name"];
                     <a href="pharmacy.php" class="card">
                         <div class="card-body text-center">
                             <span class="badge-soft-danger rounded w-100 d-flex p-3 justify-content-center fs-32 mb-2"><i class="ti ti-prescription"></i></span>
-                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Prescriptions</h6>
+                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Recetas</h6>
                         </div>
                     </a>
                 </div>
@@ -331,7 +330,7 @@ echo $user["user"]["name"];
                     <a href="visits.php" class="card">
                         <div class="card-body text-center">
                             <span class="badge-soft-purple rounded w-100 d-flex p-3 justify-content-center fs-32 mb-2"><i class="ti ti-e-passport"></i></span>
-                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Visits</h6>
+                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Visitas</h6>
                         </div>
                     </a>
                 </div>
@@ -342,7 +341,7 @@ echo $user["user"]["name"];
                     <a href="medical-results.php" class="card">
                         <div class="card-body text-center">
                             <span class="badge-soft-teal rounded w-100 d-flex p-3 justify-content-center fs-32 mb-2"><i class="ti ti-file-description"></i></span>
-                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Medical Results</h6>
+                            <h6 class="fs-14 fw-semibold text-truncate mb-0">Resultados Médicos</h6>
                         </div>
                     </a>
                 </div>
@@ -354,12 +353,12 @@ echo $user["user"]["name"];
             <!-- row start -->
             <div class="row">
 
-                <!-- col start -->
+                <!-- inicio columna -->
                 <div class="col-xl-4 d-flex">
                     <div class="card flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="mb-0">Patient Reports</h5> 
-                            <a href="lab-results.php" class="btn btn-sm btn-white flex-shrink-0">View All</a>
+                            <h5 class="mb-0">Reportes de Pacientes</h5> 
+                            <a href="lab-results.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
                         </div>
                         <div class="card-body pb-1">
                             <div class="d-flex align-items-center justify-content-between mb-3">
@@ -369,7 +368,7 @@ echo $user["user"]["name"];
                                     </a>
                                     <div>
                                         <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">David Marshall</a></h6>
-                                        <p class="mb-0 fs-13">Hemoglobin</p>
+                                        <p class="mb-0 fs-13">Hemoglobina</p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
@@ -381,7 +380,7 @@ echo $user["user"]["name"];
                                     </a>
                                     <div>
                                         <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Thomas McLean</a></h6>
-                                        <p class="mb-0 fs-13">X Ray</p>
+                                        <p class="mb-0 fs-13">Rayos X</p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
@@ -393,7 +392,7 @@ echo $user["user"]["name"];
                                     </a>
                                     <div>
                                         <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Greta Kinney</a></h6>
-                                        <p class="mb-0 fs-13">MRI Scan</p>
+                                        <p class="mb-0 fs-13">Resonancia Magnética</p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
@@ -405,7 +404,7 @@ echo $user["user"]["name"];
                                     </a>
                                     <div>
                                         <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Larry Wilburn</a></h6>
-                                        <p class="mb-0 fs-13">Blood Test</p>
+                                        <p class="mb-0 fs-13">Análisis de Sangre</p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
@@ -417,7 +416,7 @@ echo $user["user"]["name"];
                                     </a>
                                     <div>
                                         <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Reyan Verol</a></h6>
-                                        <p class="mb-0 fs-13">CT Scan</p>
+                                        <p class="mb-0 fs-13">Tomografía</p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
@@ -431,8 +430,8 @@ echo $user["user"]["name"];
                 <div class="col-xl-4 col-md-6 d-flex">
                     <div class="card shadow flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="mb-0">Patient Visits</h5> 
-                            <a href="visits.php" class="btn btn-sm btn-white flex-shrink-0">View All</a>
+                            <h5 class="mb-0">Visitas de Pacientes</h5> 
+                            <a href="visits.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todas</a>
                         </div>
                         <div class="card-body">                                
                             <div id="patients-visits" class="mb-3"></div>
@@ -440,8 +439,8 @@ echo $user["user"]["name"];
                                 <div class="d-flex align-items-center">
                                     <span class="avatar bg-primary rounded-circle flex-shrink-0"><i class="ti ti-gender-male fs-20"></i></span>
                                     <div class="ms-2">
-                                        <h6 class="mb-1 fs-14 fw-semibold">Male</h6>
-                                        <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Since Last Week</p>
+                                        <h6 class="mb-1 fs-14 fw-semibold">Hombres</h6>
+                                        <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Desde la semana pasada</p>
                                     </div>
                                 </div>
                                 <h6 class="mb-0">69%</h6>
@@ -450,8 +449,8 @@ echo $user["user"]["name"];
                                 <div class="d-flex align-items-center">
                                     <span class="avatar bg-purple rounded-circle flex-shrink-0"><i class="ti ti-gender-female fs-20"></i></span>
                                     <div class="ms-2">
-                                        <h6 class="mb-1 fs-14 fw-semibold">Female</h6>
-                                        <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Since Last Week</p>
+                                        <h6 class="mb-1 fs-14 fw-semibold">Mujeres</h6>
+                                        <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Desde la semana pasada</p>
                                     </div>
                                 </div>
                                 <h6 class="mb-0">56%</h6>
@@ -465,8 +464,8 @@ echo $user["user"]["name"];
                 <div class="col-xl-4 col-md-6 d-flex">
                     <div class="card shadow flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="mb-0">Doctors</h5> 
-                            <a href="doctors.php" class="btn btn-sm btn-white flex-shrink-0">View All</a>
+                            <h5 class="mb-0">Doctores</h5> 
+                            <a href="doctors.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
                         </div>
                         <div class="card-body">
                             <div class="overflow-auto">
@@ -478,12 +477,12 @@ echo $user["user"]["name"];
                                         <div class="ms-2">
                                             <div>
                                                 <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. William Harrison</a></h6>
-                                                <p class="fs-13 mb-0">Cardiology</p>
+                                                <p class="fs-13 mb-0">Cardiología</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 ms-2">
-                                        <span class="badge badge-soft-success">Available</span> 
+                                        <span class="badge badge-soft-success">Disponible</span> 
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -494,12 +493,12 @@ echo $user["user"]["name"];
                                         <div class="ms-2">
                                             <div>
                                                 <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Victoria Adams</a></h6>
-                                                <p class="fs-13 mb-0">Urology</p>
+                                                <p class="fs-13 mb-0">Urología</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 ms-2">
-                                        <span class="badge badge-soft-danger">Unavailable</span> 
+                                        <span class="badge badge-soft-danger">No disponible</span> 
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -510,12 +509,12 @@ echo $user["user"]["name"];
                                         <div class="ms-2">
                                             <div>
                                                 <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Jonathan Bennett</a></h6>
-                                                <p class="fs-13 mb-0">Radiology</p>
+                                                <p class="fs-13 mb-0">Radiología</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 ms-2">
-                                        <span class="badge badge-soft-success">Available</span> 
+                                        <span class="badge badge-soft-success">Disponible</span> 
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -526,12 +525,12 @@ echo $user["user"]["name"];
                                         <div class="ms-2">
                                             <div>
                                                 <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Natalie Brooks</a></h6>
-                                                <p class="fs-13 mb-0">ENT Surgery</p>
+                                                <p class="fs-13 mb-0">Cirugía de ORL</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 ms-2">
-                                        <span class="badge badge-soft-success">Available</span> 
+                                        <span class="badge badge-soft-success">Disponible</span> 
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-0">
@@ -542,12 +541,12 @@ echo $user["user"]["name"];
                                         <div class="ms-2">
                                             <div>
                                                 <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Samuel Reed</a></h6>
-                                                <p class="fs-13 mb-0">Dermatology</p>
+                                                <p class="fs-13 mb-0">Dermatología</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 ms-2">
-                                        <span class="badge badge-soft-success">Available</span> 
+                                        <span class="badge badge-soft-success">Disponible</span> 
                                     </div>
                                 </div>
                             </div>
@@ -565,8 +564,8 @@ echo $user["user"]["name"];
                 <div class="col-xl-5 d-flex">
                     <div class="card shadow flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0">Top Departments</h5> 
-                            <a href="javascript:void(0);" class="btn btn-sm btn-white flex-shrink-0">View All</a>
+                            <h5 class="mb-0">Departamentos Principales</h5> 
+                            <a href="javascript:void(0);" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
                         </div>
                         <div class="card-body">
                             <div class="row row-gap-3 align-items-center mb-4">
@@ -574,19 +573,19 @@ echo $user["user"]["name"];
                                     <div class="position-relative">
                                         <canvas id="attendance" height="180"></canvas>
                                         <div class="position-absolute text-center top-50 start-50 translate-middle">
-                                            <p class="fs-13 mb-1">Appointments</p>
+                                            <p class="fs-13 mb-1">Citas</p>
                                             <h3>3656</h3>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="text-sm-start text-center">
-                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-info fs-13 me-1"></i>Cardiology</p>
-                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-cyan fs-13 me-1"></i>Neurology</p>
-                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-purple fs-13 me-1"></i>Dermatology</p>
-                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-orange fs-13 me-1"></i>Orthopedics</p>
-                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-warning fs-13 me-1"></i>Urology</p>
-                                        <p class="text-dark mb-0"><i class="ti ti-circle-filled text-indigo fs-13 me-1"></i>Radiology</p>
+                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-info fs-13 me-1"></i>Cardiología</p>
+                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-cyan fs-13 me-1"></i>Neurología</p>
+                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-purple fs-13 me-1"></i>Dermatología</p>
+                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-orange fs-13 me-1"></i>Ortopedia</p>
+                                        <p class="text-dark mb-2"><i class="ti ti-circle-filled text-warning fs-13 me-1"></i>Urología</p>
+                                        <p class="text-dark mb-0"><i class="ti ti-circle-filled text-indigo fs-13 me-1"></i>Radiología</p>
                                     </div>
                                 </div>
                             </div>
@@ -594,11 +593,11 @@ echo $user["user"]["name"];
                                 <div class="row g-0">
                                     <div class="col-6 p-2 border-end text-center">
                                         <h5 class="mb-1">$2512.32</h5>
-                                        <p class="mb-0 text-body">Revenue Generated</p>
+                                        <p class="mb-0 text-body">Ingresos Generados</p>
                                     </div>
                                     <div class="col-6 p-2 text-center">
                                         <h5 class="mb-1">3125+</h5>
-                                        <p class="mb-0 text-body">Appointments last month</p>
+                                        <p class="mb-0 text-body">Citas el mes pasado</p>
                                     </div>
                                 </div>
                             </div>
@@ -609,22 +608,22 @@ echo $user["user"]["name"];
 
                 <!-- col start -->
                 <div class="col-xl-7 d-flex">
-                    <!-- card start -->
+                    <!-- tarjeta inicio -->
                     <div class="card shadow flex-fill w-100">
                         <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="mb-0">Patient Record</h5> 
-                            <a href="medical-results.php" class="btn btn-sm btn-white flex-shrink-0">View All</a>
+                            <h5 class="mb-0">Registro de Pacientes</h5> 
+                            <a href="medical-results.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
                         </div>
                         <div class="card-body">
-                            <!-- table start -->
+                            <!-- tabla inicio -->
                             <div class="table-responsive table-nowrap">
                                 <table class="table border mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Patient Name</th>
-                                            <th>Diagnosis</th>
-                                            <th>Department</th>
-                                            <th>Last Visit</th>
+                                            <th>Nombre del Paciente</th>
+                                            <th>Diagnóstico</th>
+                                            <th>Departamento</th>
+                                            <th>Última Visita</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -632,49 +631,49 @@ echo $user["user"]["name"];
                                             <td>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">James Carter</a></h6>
                                             </td>
-                                            <td>Male</td>
-                                            <td><span class="badge badge-soft-info">Cardiology</span></td>
+                                            <td>Masculino</td>
+                                            <td><span class="badge badge-soft-info">Cardiología</span></td>
                                             <td>17 Jun 2025</td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Emily Davis</a></h6>
                                             </td>
-                                            <td>Female</td>
-                                            <td><span class="badge badge-soft-success">Urology</span></td>
+                                            <td>Femenino</td>
+                                            <td><span class="badge badge-soft-success">Urología</span></td>
                                             <td>10 Jun 2025</td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Michael John</a></h6>
                                             </td>
-                                            <td>Male</td>
-                                            <td><span class="badge badge-soft-info">Radiology</span></td>
+                                            <td>Masculino</td>
+                                            <td><span class="badge badge-soft-info">Radiología</span></td>
                                             <td>22 May 2025</td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Olivia Miller</a></h6>
                                             </td>
-                                            <td>Female</td>
-                                            <td><span class="badge badge-soft-purple">ENT Surgery</span></td>
+                                            <td>Femenino</td>
+                                            <td><span class="badge badge-soft-purple">Cirugía de ORL</span></td>
                                             <td>15 May 2025</td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">David Smith</a></h6>
                                             </td>
-                                            <td>Male</td>
-                                            <td><span class="badge badge-soft-teal">Dermatology</span></td>
-                                            <td>30 Apr 2025</td>
+                                            <td>Masculino</td>
+                                            <td><span class="badge badge-soft-teal">Dermatología</span></td>
+                                            <td>30 Abr 2025</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- table start -->
+                            <!-- tabla fin -->
                         </div>
                     </div>
-                    <!-- card end -->
+                    <!-- tarjeta fin -->
                 </div>
                 <!-- col end -->
 
@@ -684,21 +683,21 @@ echo $user["user"]["name"];
             <!-- card start -->
             <div class="card shadow flex-fill w-100 mb-0">
                 <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                    <h5 class="mb-0">Latest Appointments</h5> 
-                    <a href="appointments.php" class="btn btn-sm btn-white flex-shrink-0">View All</a>
+                    <h5 class="mb-0">Últimas Citas</h5> 
+                    <a href="appointments.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todas</a>
                 </div>
                 <div class="card-body">
-                    <!-- table start -->
+                    <!-- tabla inicio -->
                     <div class="table-responsive table-nowrap">
                         <table class="table border mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Patient ID</th>
-                                    <th>Patient Name</th>
-                                    <th>Session Type</th>
-                                    <th>Doctor Name</th>
-                                    <th>Date & Time</th>
-                                    <th>Status</th>
+                                    <th>ID del Paciente</th>
+                                    <th>Nombre del Paciente</th>
+                                    <th>Tipo de Sesión</th>
+                                    <th>Nombre del Doctor</th>
+                                    <th>Fecha y Hora</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -707,26 +706,26 @@ echo $user["user"]["name"];
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                                <img src="assets/img/avatars/avatar-31.jpg" alt="patient" class="rounded">
+                                                <img src="assets/img/avatars/avatar-31.jpg" alt="paciente" class="rounded">
                                             </a>
                                             <div>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">James Carter</a></h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>Visit</td>
+                                    <td>Visita</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="doctor-details.php" class="avatar avatar-xs me-2">
-                                                <img src="assets/img/doctors/doctor-01.jpg" alt="patient" class="rounded">
+                                                <img src="assets/img/doctors/doctor-01.jpg" alt="doctor" class="rounded">
                                             </a>
                                             <div>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="doctor-details.php">Dr. Andrew Clark</a></h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>17 Jun 2025, 09:00 AM to 10:00 AM</td>
-                                    <td><span class="badge badge-soft-purple">Inprogress</span></td>
+                                    <td>17 Jun 2025, 09:00 AM a 10:00 AM</td>
+                                    <td><span class="badge badge-soft-purple">En progreso</span></td>
                                     
                                 </tr>
                                 <tr>
@@ -734,14 +733,14 @@ echo $user["user"]["name"];
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                                <img src="assets/img/avatars/avatar-54.jpg" alt="patient" class="rounded">
+                                                <img src="assets/img/avatars/avatar-54.jpg" alt="paciente" class="rounded">
                                             </a>
                                             <div>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Emily Davis</a></h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>Consultation</td>
+                                    <td>Consulta</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="doctor-details.php" class="avatar avatar-xs me-2">
@@ -752,8 +751,8 @@ echo $user["user"]["name"];
                                             </div>
                                         </div>
                                     </td>
-                                    <td>10 Jun 2025, 10:30 AM to 11:30 AM</td>
-                                    <td><span class="badge badge-soft-purple">Inprogress</span></td>
+                                    <td>10 Jun 2025, 10:30 AM a 11:30 AM</td>
+                                    <td><span class="badge badge-soft-purple">En progreso</span></td>
                                     
                                 </tr>
                                 <tr>
@@ -761,14 +760,14 @@ echo $user["user"]["name"];
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                                <img src="assets/img/avatars/avatar-38.jpg" alt="patient" class="rounded">
+                                                <img src="assets/img/avatars/avatar-38.jpg" alt="paciente" class="rounded">
                                             </a>
                                             <div>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Michael Johnson</a></h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>Visit</td>
+                                    <td>Visita</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="doctor-details.php" class="avatar avatar-xs me-2">
@@ -779,8 +778,8 @@ echo $user["user"]["name"];
                                             </div>
                                         </div>
                                     </td>
-                                    <td>22 May 2025, 01:15 PM to 02:15 PM</td>
-                                    <td><span class="badge badge-soft-success">Completed</span></td>
+                                    <td>22 May 2025, 01:15 PM a 02:15 PM</td>
+                                    <td><span class="badge badge-soft-success">Completado</span></td>
                                     
                                 </tr>
                                 <tr>
@@ -788,14 +787,14 @@ echo $user["user"]["name"];
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                                <img src="assets/img/avatars/avatar-43.jpg" alt="patient" class="rounded">
+                                                <img src="assets/img/avatars/avatar-43.jpg" alt="paciente" class="rounded">
                                             </a>
                                             <div>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Olivia Miller</a></h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>Consultation</td>
+                                    <td>Consulta</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="doctor-details.php" class="avatar avatar-xs me-2">
@@ -806,8 +805,8 @@ echo $user["user"]["name"];
                                             </div>
                                         </div>
                                     </td>
-                                    <td>15 May 2025, 11:30 AM to 12:30 PM</td>
-                                    <td><span class="badge badge-soft-success">Completed</span></td>
+                                    <td>15 May 2025, 11:30 AM a 12:30 PM</td>
+                                    <td><span class="badge badge-soft-success">Completado</span></td>
                                     
                                 </tr>
                                 <tr>
@@ -815,14 +814,14 @@ echo $user["user"]["name"];
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                                <img src="assets/img/avatars/avatar-41.jpg" alt="patient" class="rounded">
+                                                <img src="assets/img/avatars/avatar-41.jpg" alt="paciente" class="rounded">
                                             </a>
                                             <div>
                                                 <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">David Smith</a></h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>Consultation</td>
+                                    <td>Consulta</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <a href="doctor-details.php" class="avatar avatar-xs me-2">
@@ -833,14 +832,14 @@ echo $user["user"]["name"];
                                             </div>
                                         </div>
                                     </td>
-                                    <td>30 Apr 2025, 12:20 PM to 01:20 PM</td>
-                                    <td><span class="badge badge-soft-success">Completed</span></td>
+                                    <td>30 Abr 2025, 12:20 PM a 01:20 PM</td>
+                                    <td><span class="badge badge-soft-success">Completado</span></td>
                                     
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <!-- table end -->
+                    <!-- tabla fin -->
                 </div>
             </div>
             <!-- card end -->

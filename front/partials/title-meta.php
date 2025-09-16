@@ -46,8 +46,8 @@ if ($filename === 'index') {
 	<!-- Meta Tags -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> <?= $title ?> | Dreams EMR - Responsive Bootstrap 5 Medical Admin Template</title>
+    <title> <?= $title ?> | CR Clinik - Sistema de Registro Medico</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DreamsEMR is a flexible, powerful, modern, and responsive Bootstrap 5 admin template with endless potential.">
-    <meta name="keywords" content="DreamsEMR admin template, admin template, dashboard template, responsive admin template, medical admin template, web app">
-    <meta name="author" content="dreamstechnologies">
+    <meta name="description" content="CR Clinik es un sistema de registro medico completo y fácil de usar, diseñado para ayudar a las clínicas y consultorios a gestionar sus operaciones diarias de manera eficiente.">
+    <meta name="keywords" content="CR Clinik , sistema de registro medico, EMR, gestión de clínicas, gestión de consultorios, software médico, historia clínica electrónica, citas médicas, facturación médica">
+    <meta name="author" content="crclinik.com">

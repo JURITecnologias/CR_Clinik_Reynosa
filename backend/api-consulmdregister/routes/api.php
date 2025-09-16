@@ -10,7 +10,6 @@ use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\InformacionDoctorController;
 use App\Http\Controllers\ServicioMedicoController;
 use App\Http\Controllers\MedicamentoController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,14 +34,16 @@ Route::middleware('basic.auth','check.permission:ver')->group(function () {
                             ->pluck('name')
                             ->unique();
 
+        $doctorInfo = \App\Models\InformacionDoctor::where('user_id', $user->id)->first();
+
         return response()->json([
             'user' => $user->only(['id', 'name', 'email']),
             'roles' => $roles,
             'permissions' => $permissions,
+            'doctor_info' => $doctorInfo,
         ]);
     });
 });
-
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -170,3 +171,36 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/historial-medico/{id}', [\App\Http\Controllers\PacienteHistorialMedicoController::class, 'show']);
 });
 
+//consultas
+Route::middleware(['basic.auth', 'check.role:Doctor', 'check.permission:escribir'])->group(function () {
+    Route::post('/consultas', [\App\Http\Controllers\ConsultasController::class, 'store']); // Crear consulta + signos vitales
+   Route::put('/consultas/{id}', [\App\Http\Controllers\ConsultasController::class, 'update']); // Actualizar consulta + signos vitales
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:borrar'])->group(function () {
+    Route::delete('/consultas/{id}', [\App\Http\Controllers\ConsultasController::class, 'destroy']); // Soft delete
+    Route::post('/consultas/{id}/restore', [\App\Http\Controllers\ConsultasController::class, 'restore']); // Restaurar
+});
+
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
+    Route::get('/consultas/buscar', [\App\Http\Controllers\ConsultasController::class, 'search']); // Buscar con filtros y paginación
+    Route::get('/consultas', [\App\Http\Controllers\ConsultasController::class, 'index']); // Listar todas
+    Route::get('/consultas/{id}', [\App\Http\Controllers\ConsultasController::class, 'show']); // Ver una consulta
+   
+});
+
+//horarios doctores
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon', 'check.permission:modificar|escribir'])->group(function () {
+    Route::post('/horarios-doctores', [\App\Http\Controllers\HorariosDoctoresController::class, 'store']);
+    Route::put('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'update']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon', 'check.permission:borrar'])->group(function () {
+    Route::delete('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'destroy']);
+});
+
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
+    Route::get('/horarios-doctores', [\App\Http\Controllers\HorariosDoctoresController::class, 'index']);
+    Route::get('/horarios-doctores/doctor/{doctorId}', [\App\Http\Controllers\HorariosDoctoresController::class, 'getHorariosByDoctorId']);
+    Route::get('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'show']);
+});
