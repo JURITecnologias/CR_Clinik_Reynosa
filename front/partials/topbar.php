@@ -19,17 +19,17 @@ $user= include(__DIR__ . '/../src/user_session.php');
 
                     <!-- Logo Normal -->
                     <span class="logo-light">
-                        <span class="logo-lg"><img src="assets/img/logo.svg" alt="logo"></span>
+                        <span class="logo-lg"><img src="assets/img/cruz-roja-logo-small-ligth.png" alt="logo"></span>
                     </span>
 
                     <!-- Logo Dark -->
                     <span class="logo-dark">
-                        <span class="logo-lg"><img src="assets/img/logo-dark.svg" alt="dark logo"></span>
+                        <span class="logo-lg"><img src="assets/img/cruz-roja-logo-small.png" alt="dark logo"></span>
                     </span>
                 
                     <!-- Logo Sm -->
                     <span class="logo-small">
-                        <span class="logo-lg"><img src="assets/img/logo-small.svg" alt="small logo"></span>
+                        <span class="logo-lg"><img src="assets/img/cruz-roja-logo-small-ligth.png" alt="small logo"></span>
                     </span>
 
                 </a>

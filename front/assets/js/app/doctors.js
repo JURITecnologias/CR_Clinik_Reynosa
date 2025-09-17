@@ -14,7 +14,7 @@ async function getDoctores() {
         console.error('Error fetching doctors:', error);
     }
 }
-
+// Buscar usuario por email
 async function  searchDoctorByEmail(email) {
     try {
         const response = await fetch(apiHost + apiPath + '/doctores/buscar/email', {
@@ -22,6 +22,10 @@ async function  searchDoctorByEmail(email) {
             headers: headersRequest,
             body: JSON.stringify({ email })
         });
+
+        if (response.status === 404) {
+            throw new Error('Failed to search doctor by email: Not Found');
+        }
 
         if (!response.ok) {
             throw new Error('Failed to search doctor by email: ' + response.statusText);
