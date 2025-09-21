@@ -94,7 +94,9 @@ class HorariosDoctoresController extends Controller
 
     public function getHorariosByDoctorId($doctorId)
     {
-        $horarios = HorarioDoctor::where('doctor_id', $doctorId)->get();
+        $horarios = HorarioDoctor::where('doctor_id', $doctorId)
+            ->orderByRaw("FIELD(dia_semana, 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')")
+            ->get();
 
         if ($horarios->isEmpty()) {
             return response()->json(['message' => 'No se encontraron horarios para este doctor'], 404);
