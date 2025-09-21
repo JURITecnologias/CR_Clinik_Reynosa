@@ -28,8 +28,5 @@ $config = include(__DIR__ . '/config.php');
 $apiBaseUrl = $config['api_base_url'];
 fetchAndStoreUserProfile($apiBaseUrl . '/profile', $token);
 
-echo $token;
-
 //Redirige al index
-header("Location: index.php");
-exit;
+echo '<script>window.location.href = "index.php";</script>';

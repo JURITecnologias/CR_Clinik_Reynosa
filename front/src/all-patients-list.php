@@ -77,7 +77,7 @@
         <!-- card start -->
         <div class="card mb-0 d-none" id="patients_container">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                <h6 class="d-inline-flex align-items-center mb-0">Total Patients <span class="badge bg-danger ms-2" id="total-pacientes">0</span></h6>
+                <h6 class="d-inline-flex align-items-center mb-0">Total Pacientes <span class="badge bg-danger ms-2" id="total-pacientes">0</span></h6>
                 <!-- <div class="d-flex align-items-center flex-wrap gap-2">
                         <div class="dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle btn btn-md btn-outline-light d-inline-flex align-items-center" data-bs-toggle="dropdown">

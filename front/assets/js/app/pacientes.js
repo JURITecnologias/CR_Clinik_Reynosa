@@ -216,7 +216,7 @@ async function renderPacienteInfoCardList(pacientes) {
                     </div>
 
                     <div class="col-6">
-                        ${hasDoctorRole ? `<a href="javascript:void(0);" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#add_modal">Iniciar visita</a>` : ''}
+                        ${hasDoctorRole ? `<a href="javascript:void(0);" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#add_modal">Iniciar Consulta</a>` : ''}
                     </div>
                     </div>
                 </div>
