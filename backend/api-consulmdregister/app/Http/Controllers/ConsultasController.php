@@ -18,7 +18,12 @@ class ConsultasController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->query('per_page', 10); // Número de elementos por página, por defecto 10
-        return Consulta::with(['paciente', 'doctor', 'signosVitales'])->paginate($perPage);
+        $orderBy = $request->query('order_by', 'fecha_consulta'); // Campo para ordenar, por defecto 'fecha_consulta'
+        $orderDirection = $request->query('order_direction', 'asc'); // Dirección de orden, por defecto 'asc'
+
+        return Consulta::with(['paciente', 'doctor', 'signosVitales'])
+            ->orderBy($orderBy, $orderDirection)
+            ->paginate($perPage);
     }
 
     // Buscar consultas con opción de paginado utilizando query string
@@ -47,6 +52,11 @@ class ConsultasController extends Controller
         if (!empty($filters['fecha_inicio']) && !empty($filters['fecha_fin'])) {
             $query->whereBetween('fecha_consulta', [$filters['fecha_inicio'], $filters['fecha_fin']]);
         }
+
+        $orderBy = $filters['order_by'] ?? 'fecha_consulta'; // Campo para ordenar, por defecto 'fecha_consulta'
+        $orderDirection = $filters['order_direction'] ?? 'asc'; // Dirección de orden, por defecto 'asc'
+
+        $query->orderBy($orderBy, $orderDirection);
 
         $perPage = $filters['per_page'] ?? 10; // Número de elementos por página, por defecto 10
         return $query->with(['paciente', 'doctor', 'signosVitales'])->paginate($perPage);
