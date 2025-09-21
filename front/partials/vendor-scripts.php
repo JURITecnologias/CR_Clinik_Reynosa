@@ -210,3 +210,7 @@ $page = end( $link_array );
     <?php if ($page == 'horarios-doctores.php') {   ?>
     <script src="assets/js/app/horario-doctores.js"></script>
     <?php } ?>
+
+    <?php if($page == 'consultas.php'){ ?>
+    <script src="assets/js/app/consultas.js"></script>
+    <?php } ?>
