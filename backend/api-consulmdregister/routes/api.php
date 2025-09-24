@@ -204,3 +204,19 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/horarios-doctores/doctor/{doctorId}', [\App\Http\Controllers\HorariosDoctoresController::class, 'getHorariosByDoctorId']);
     Route::get('/horarios-doctores/{id}', [\App\Http\Controllers\HorariosDoctoresController::class, 'show']);
 });
+
+// Signos Vitales routes
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
+    Route::get('/signos-vitales', [\App\Http\Controllers\SignosVitalesController::class, 'index']);
+    Route::get('/signos-vitales/{id}', [\App\Http\Controllers\SignosVitalesController::class, 'show']);
+    Route::get('/signos-vitales/paciente/{pacienteId}', [\App\Http\Controllers\SignosVitalesController::class, 'getByPacienteId']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:modificar|escribir'])->group(function () {
+    Route::post('/signos-vitales', [\App\Http\Controllers\SignosVitalesController::class, 'store']);
+    Route::put('/signos-vitales/{id}', [\App\Http\Controllers\SignosVitalesController::class, 'update']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:borrar'])->group(function () {
+    Route::delete('/signos-vitales/{id}', [\App\Http\Controllers\SignosVitalesController::class, 'destroy']);
+});
