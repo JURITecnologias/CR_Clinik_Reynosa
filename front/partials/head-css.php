@@ -92,9 +92,10 @@ $page = end( $link_array );
     <link rel="stylesheet" href="assets/plugins/icons/weather/weathericons.css">
 <?php }?>     
 
-<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'all-doctors-list.php' || $page == 'appointments.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'form-pickers.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php'  || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php') {   ?>
+<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'all-doctors-list.php' || $page == 'appointments.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'form-pickers.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php'  || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page == 'nueva-consulta.php') {   ?>
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="assets/plugins/flatpickr/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <?php }?> 
 
 <?php if ($page == 'all-doctors-list.php' || $page == 'appointment-consultation.php' || $page == 'data-tables.php' || $page == 'lab-results.php' || $page == 'widgets.php') {   ?>     
@@ -147,10 +148,16 @@ $page = end( $link_array );
     <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 <?php }?>
 
-<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'appointments.php' || $page == 'all-doctors-list.php' || $page == 'appearance-settings.php' || $page == 'appointment-consultation.php' || $page == 'change-password.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'email-compose.php' || $page == 'form-select.php' || $page == 'general-settings.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php' || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'security-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php') {   ?>     
+<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'appointments.php' || $page == 'all-doctors-list.php' || $page == 'appearance-settings.php' || $page == 'appointment-consultation.php' || $page == 'change-password.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'email-compose.php' || $page == 'form-select.php' || $page == 'general-settings.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php' || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'security-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page=="nueva-consulta.php") {   ?>     
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
-<?php }?>        
+<?php }?>     
+
+<?php if( $page == 'nueva-consulta.php' ) { ?>
+    <!-- Awesomplete CSS -->
+    <link rel="stylesheet" href="assets/plugins/awesomplete/awesomplete.css" />
+    <script src="assets/plugins/awesomplete/awesomplete.js"></script>
+<?php } ?>
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css" id="app-style">
