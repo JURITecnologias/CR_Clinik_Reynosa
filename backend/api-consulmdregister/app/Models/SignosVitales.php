@@ -21,6 +21,7 @@ class SignosVitales extends Model
         'saturacion_oxigeno',
         'peso',
         'talla',
+        'estatura',
     ];
 
     public function consulta()

@@ -142,6 +142,7 @@ Route::middleware([
     'check.permission:ver'
 ])->group(function () {
     Route::get('/medicamentos', [MedicamentoController::class, 'index']);
+    Route::get('/medicamentos/buscar', [MedicamentoController::class, 'search']);
     Route::get('/medicamentos/{id}', [MedicamentoController::class, 'show']);
 });
 
