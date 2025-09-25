@@ -1,7 +1,7 @@
 <?php ob_start();?>
 
     <!-- ========================
-        Start Page Content
+        Inicio del Contenido de la Página
     ========================= -->
 
     <div class="container-fuild">
@@ -10,13 +10,13 @@
                 <div class="col-lg-6">
                     <div class="d-flex flex-column align-items-center justify-content-center">
                         <div class="error-images mb-4 w-75">
-                            <img src="assets/img/error/maintenance.svg" alt="maintenance" class="img-fluid">
+                            <img src="assets/img/error/maintenance.svg" alt="mantenimiento" class="img-fluid">
                         </div>
                         <div class="text-center">
-                            <h4 class="mb-2">This Site is Currently Under Maintenance</h4>
-                            <p class="text-center">We apologize for the inconvenience caused we’ve almost done.</p>
+                            <h4 class="mb-2">Este Sitio Está Actualmente en Mantenimiento</h4>
+                            <p class="text-center">Pedimos disculpas por los inconvenientes causados, ya casi terminamos.</p>
                             <div class="d-flex justify-content-center">
-                                <a href="index.php" class="btn btn-primary d-flex align-items-center">Back to Dashboard</a>
+                                <a href="index.php" class="btn btn-primary d-flex align-items-center">Volver al Dashboard</a>
                             </div>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
     </div> 
     
     <!-- ========================
-        End Page Content
+        Fin del Contenido de la Página
     ========================= -->
 
 <?php
