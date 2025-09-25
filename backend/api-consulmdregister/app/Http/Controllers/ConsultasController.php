@@ -18,7 +18,7 @@ class ConsultasController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->query('per_page', 10); // Número de elementos por página, por defecto 10
-        $orderBy = $request->query('order_by', 'fecha_consulta'); // Campo para ordenar, por defecto 'fecha_consulta'
+        $orderBy = $request->query('order_by', 'created_at'); // Campo para ordenar, por defecto 'fecha_consulta'
         $orderDirection = $request->query('order_direction', 'asc'); // Dirección de orden, por defecto 'asc'
 
         return Consulta::with(['paciente', 'doctor', 'signosVitales'])
@@ -53,7 +53,7 @@ class ConsultasController extends Controller
             $query->whereBetween('fecha_consulta', [$filters['fecha_inicio'], $filters['fecha_fin']]);
         }
 
-        $orderBy = $filters['order_by'] ?? 'fecha_consulta'; // Campo para ordenar, por defecto 'fecha_consulta'
+        $orderBy = $filters['order_by'] ?? 'created_at'; // Campo para ordenar, por defecto 'created_at'
         $orderDirection = $filters['order_direction'] ?? 'asc'; // Dirección de orden, por defecto 'asc'
 
         $query->orderBy($orderBy, $orderDirection);
@@ -65,7 +65,7 @@ class ConsultasController extends Controller
     // Mostrar una consulta específica
     public function show($id)
     {
-        return Consulta::with(['paciente', 'doctor', 'signosVitales'])->findOrFail($id);
+        return Consulta::with(['paciente', 'doctor', 'signosVitales', 'paciente.historialMedico'])->findOrFail($id);
     }
 
     // Crear una nueva consulta con signos vitales
@@ -106,8 +106,8 @@ class ConsultasController extends Controller
             return response()->json(['mensaje' => 'Error en la validación de los datos'], 422);
         }
 
-        $horaConsulta = Carbon::parse($request->fecha_consulta)->format('H:i');
-        $diaConsulta = Carbon::parse($request->fecha_consulta)->locale('es')->dayName; // ej. "lunes"
+        $horaConsulta = Carbon::parse($request->create_at)->setTimezone('America/Mexico_City')->format('H:i');
+        $diaConsulta = Carbon::parse($request->create_at)->setTimezone('America/Mexico_City')->locale('es')->dayName; // ej. "miércoles"
         $diaConsulta = str_replace(
             ['á', 'é', 'í', 'ó', 'ú'], 
             ['a', 'e', 'i', 'o', 'u'], 
@@ -122,7 +122,6 @@ class ConsultasController extends Controller
             ->first();
 
         $fueraDeHorario = $horario ? false : true;
-
 
         // Crear la consulta
         $consulta = Consulta::create($request->only([
@@ -149,6 +148,7 @@ class ConsultasController extends Controller
             'saturacion_oxigeno',
             'peso',
             'talla',
+            'estatura',
         ]));
 
         $signos->consulta_id = $consulta->id;
@@ -207,6 +207,7 @@ class ConsultasController extends Controller
                 'saturacion_oxigeno',
                 'peso',
                 'talla',
+                'estatura',
             ]));
         }
 
