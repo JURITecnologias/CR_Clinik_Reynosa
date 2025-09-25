@@ -216,7 +216,7 @@ async function renderPacienteInfoCardList(pacientes) {
                     </div>
 
                     <div class="col-6">
-                        ${hasDoctorRole ? `<a href="javascript:void(0);" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#add_modal">Iniciar Consulta</a>` : ''}
+                        ${hasDoctorRole ? `<button class="btn btn-secondary w-100" onclick="seleccionarPaciente(${paciente.id}, '${paciente.nombre} ${paciente.apellido}')">Iniciar Consulta</button>` : ''}
                     </div>
                     </div>
                 </div>
@@ -466,18 +466,6 @@ async function loadPacienteLayout(id) {
     } catch (error) {
         console.error('Error loading patient layout:', error);
     }
-}
-
-function calcularEdad(fechaNacimiento) {
-    if (!fechaNacimiento) return null;
-    const nacimiento = new Date(fechaNacimiento);
-    const hoy = new Date();
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const m = hoy.getMonth() - nacimiento.getMonth();
-    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
-    }
-    return edad;
 }
 
 async function AddPacienteBasicInfo(){
@@ -787,5 +775,107 @@ async function RemovePaciente(){
         console.error('Error removing patient:', error);
     } finally {
         hideLoading();
+    }
+}
+
+function seleccionarPaciente(pacienteId, pacienteNombre) {
+    document.getElementById('paciente_id_seleccionado').value = pacienteId;
+    document.getElementById('nombre_paciente_seleccionado').innerText = pacienteNombre.charAt(0).toUpperCase() + pacienteNombre.slice(1).toLowerCase();
+    const confirmarConsulta = new bootstrap.Modal(document.getElementById('modal_confirmar_consulta'));
+    confirmarConsulta.show();
+}
+
+function CerrarConfirmacionModal () {
+    const confirmarConsultaModal = bootstrap.Modal.getInstance(document.getElementById('modal_confirmar_consulta'));
+    confirmarConsultaModal.hide();
+}
+
+async function CrearConsulta() {
+    const pacienteId = document.getElementById('paciente_id_seleccionado').value;
+    const offcanvasElement = document.getElementById('offcanvasRight');
+    const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    let PerfilUsuario = null;
+    try {
+        PerfilUsuario = await getUserProfile();
+        console.log("PerfilUsuario:", PerfilUsuario);
+        if(!PerfilUsuario || !PerfilUsuario.user.id){
+            renderAlertMessage("No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
+            return; 
+        }
+        if(!PerfilUsuario.doctor_info || !PerfilUsuario.doctor_info.id){
+            renderAlertMessage("Usuario no registrado como doctor. Por favor, complete su registro.", 'danger');
+            return;
+        }
+    } catch (error) {
+        console.log("Error al obtener el perfil del usuario:", error);
+       renderAlertMessage("Error al obtener el perfil del usuario. Por favor, intente nuevamente.", 'danger');
+        return;
+    }finally {
+        CerrarConfirmacionModal();
+        if (offcanvasInstance) {
+            offcanvasInstance.hide();
+        }
+    }
+
+    if (!pacienteId) {
+        CerrarConfirmacionModal();
+        renderAlertMessage("No se ha seleccionado ningún paciente.", 'danger');
+         if (offcanvasInstance) {
+            offcanvasInstance.hide();
+        }
+        return;
+    }
+
+     const consultaData = {
+        paciente_id: parseInt(pacienteId),
+        doctor_id: PerfilUsuario.doctor_info.id,
+        fecha_consulta: new Date().toISOString(),
+        motivo_consulta: "",
+        sintomas: "",
+        diagnostico: "",
+        indicaciones: "",
+        medicamentos: [],
+        servicios_medicos: [],
+        estatus: "abierta",
+        temperatura: null,
+        frecuencia_cardiaca: null,
+        frecuencia_respiratoria: null,
+        presion_arterial: "",
+        saturacion_oxigeno: null,
+        peso: null,
+        talla: null
+    };
+
+   let consultaCreada = null;
+    try {
+        consultaCreada = await insertConsulta(consultaData);
+    } catch (error) {
+        console.error("Error al crear la consulta:", error);
+        renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
+        return;
+    }
+    console.log("Consulta creada:", consultaCreada.consulta.id);
+    if(!consultaCreada || !consultaCreada.consulta.id){
+        renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
+        return;
+    }
+
+    window.location.href = `nueva-consulta.php?p=${btoa(consultaCreada.consulta.id)}`;
+}
+
+async function insertConsulta(consultaData) {
+    try {
+        const response = await fetch(apiHost + apiPath + '/consultas', {
+            method: 'POST',
+            headers: headersRequest,
+            body: JSON.stringify(consultaData)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error inserting consulta:', error);
+        throw error;
     }
 }
