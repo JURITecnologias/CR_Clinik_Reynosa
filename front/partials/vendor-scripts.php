@@ -192,8 +192,8 @@ $page = end( $link_array );
     <?php if ($page == 'medicamentos-catalog.php' || $page == 'nueva-consulta.php') {   ?>
     <script src="assets/js/app/medicamentos.js"></script>
     <?php } ?>
-    
-    <?php if ($page == 'servicios-medicos-catalog.php') {   ?>
+
+    <?php if ($page == 'servicios-medicos-catalog.php' || $page=='nueva-consulta.php') {   ?>
     <script src="assets/js/app/servicios.js"></script>
     <?php } ?>
 
@@ -216,4 +216,5 @@ $page = end( $link_array );
 
     <?php if($page == 'nueva-consulta.php') { ?>
     <script src="assets/js/app/signos-vitales.js"></script>
+    <script src="assets/js/script.js"></script>
     <?php } ?>

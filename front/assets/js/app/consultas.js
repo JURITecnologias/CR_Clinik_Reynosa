@@ -46,6 +46,22 @@ async function searchConsultas(perPage = 50, actualPage = 1, searchTerm = '', or
     }
 }
 
+async function getUltimasCincoConsultasPacienteId(pacienteId,per_page=10) {
+    try {
+        const response = await fetch(apiHost + apiPath + `/consultas/buscar?paciente_id=${pacienteId}&per_page=${per_page}&order_direction=desc`, {
+            method: 'GET',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching ultimas cinco consultas:', error);
+        throw error;
+    }
+}
+
 async function updateConsulta(consultaData) {
     try {
         const response = await fetch(apiHost + apiPath + `/consultas/${consultaData.id}`, {
@@ -164,6 +180,128 @@ function renderMedicamentoCard(medicamento) {
     $('#lista_medicamentos').append(card);
 }
 
+function renderServicioMedicoCard(servicio) {
+    if (!servicio) return;
+
+    const card = $(`
+        <div class="card servicio_id_${servicio.id}" style="width: 18rem;">
+            <div class="card-body d-flex justify-content-between align-items-start">
+                <div class="">
+                    <h4 class="card-title text-secondary">${servicio.nombre.charAt(0).toUpperCase() + servicio.nombre.slice(1)}</h4>
+                    <span class="card-text">Descripción: <strong>${servicio.solicitud}</strong></span><br>
+                </div>
+                <input type="hidden" class="servicio_id" value="${servicio.id}">
+                <button class="btn btn-danger btn-sm" title="Eliminar" onclick="eliminarServicio('${servicio.id}')">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+    `);
+
+    $('#lista_servicios').append(card);
+}
+
+function renderPacienteBasicInfo(paciente) {
+    if (!paciente) return;
+    document.getElementById('paciente-id-label').innerText = `#PT${paciente.id}`;
+    document.getElementById('paciente-nombres-label').innerText = `${paciente.nombre.charAt(0).toUpperCase() + paciente.nombre.slice(1).toLowerCase()} ${paciente.apellido.charAt(0).toUpperCase() + paciente.apellido.slice(1).toLowerCase()}`;
+    document.getElementById('paciente-fecha-agregado-label').innerText = new Date(paciente.created_at).toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+    document.getElementById('paciente-fecha-nacimiento-label').innerText = new Date(paciente.fecha_nacimiento).toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+    const historialMedico = paciente.historial_medico ? paciente.historial_medico[0] : null;
+    document.getElementById('paciente-telefono-label').innerText = paciente.telefono || 'N/A';
+    document.getElementById('paciente-email-label').innerText = paciente.email || 'N/A';
+    document.getElementById('paciente-genero-label').innerText =paciente.sexo || 'N/A';
+    document.getElementById('paciente-edad-label').innerText = calcularEdad(paciente.fecha_nacimiento);
+    document.getElementById('paciente-curp-label').innerText = paciente.curp || 'N/A';
+    document.getElementById('paciente-nss-label').innerText = paciente.nss || 'N/A';
+    document.getElementById('paciente-estado-civil-label').innerText = historialMedico ? historialMedico.estado_civil : 'N/A';
+    document.getElementById('paciente-direccion-label').innerText = paciente.direccion || 'N/A';
+    document.getElementById('paciente-contacto-emergencia-label').innerText = paciente.contacto_emergencia || 'N/A';
+}
+
+function renderPacienteHistorialMedico(historialMedico) {
+    if (!historialMedico) return;
+
+    document.getElementById('paciente-enfermedades-cronicas-label').innerText = historialMedico.enfermedades_cronicas || 'N/A';
+    document.getElementById('paciente-hospitalizaciones-previas-label').innerText = historialMedico.hospitalizaciones_previas || 'N/A';
+    document.getElementById('paciente-medicamentos-actuales-label').innerText = historialMedico.medicamentos_actuales || 'N/A';
+    document.getElementById('paciente-alergias-label').innerText = historialMedico.alergias || 'N/A';
+    document.getElementById('paciente-vacunas-recientes-label').innerText = historialMedico.vacunas_recientes || 'N/A';
+    document.getElementById('paciente-antecedentes-familiares-label').innerText = historialMedico.antecedentes_familiares || 'N/A';
+    document.getElementById('paciente-transfusiones-label').innerText = historialMedico.transfusiones || 'N/A';
+    document.getElementById('paciente-fuma-label').innerText = historialMedico.fuma ? 'Sí' : 'No';
+    document.getElementById('paciente-alcohol-label').innerText = historialMedico.alcohol ? 'Sí' : 'No';
+    document.getElementById('paciente-apoyo-psicologico-label').innerText = historialMedico.apoyo_psicologico ? 'Sí' : 'No';
+    document.getElementById('paciente-frecuencia-alcohol-label').innerText = historialMedico.frecuencia_alcohol || 'N/A';
+    document.getElementById('paciente-frecuencia-tabaco-label').innerText = historialMedico.frecuencia_tabaco || 'N/A';
+    document.getElementById('paciente-sustancias-psicoactivas-label').innerText = historialMedico.sustancias_psicoactivas || 'N/A';
+    document.getElementById('paciente-alimentacion-label').innerText = historialMedico.alimentacion || 'N/A';
+    document.getElementById('paciente-actividad-fisica-label').innerText = historialMedico.actividad_fisica || 'N/A';
+    document.getElementById('paciente-notas-label').innerText = historialMedico.notas || 'N/A';
+}
+
+function renderPacienteUltimasConsultas(consultas) {
+    if (!consultas || consultas.length === 0) {
+        document.getElementById('ultimas-consultas-container').innerHTML = '<p>No hay consultas previas.</p>';
+        return;
+    }
+    const container = document.getElementById('ultimas-consultas-accordion');
+    container.innerHTML = '';
+    consultas.forEach((consulta, index) => {
+        const fechaConsulta = new Date(consulta.created_at);
+        const formattedDate = fechaConsulta.toLocaleDateString('es-MX', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    });
+    const htmlContent = consultas.map((consulta, index) => {
+        const fechaConsulta = new Date(consulta.created_at);
+        const formattedDate = fechaConsulta.toLocaleDateString('es-MX', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        const datosDoctor= consulta.doctor ? `${consulta.doctor.nombre_completo} (${consulta.doctor.titulo})` : 'N/A';
+        return `
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading${index}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+                   Consulta dia ${formattedDate} <span class="badge badge-soft-primary" id="consulta-id-${index}">#PT${consulta.id}</span>
+                </button>
+            </h2>
+            <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#accordionExample" style="">
+                <div class="accordion-body">
+                    <p><strong>Doctor que atendio:</strong> ${datosDoctor}</p>
+                    <p><strong>Motivo de Consulta:</strong> ${consulta.motivo_consulta || 'N/A'}</p>
+                    <p><strong>Síntomas:</strong> ${consulta.sintomas || 'N/A'}</p>
+                    <p><strong>Diagnóstico:</strong> ${consulta.diagnostico || 'N/A'}</p>
+                    <p><strong>Indicaciones:</strong> ${consulta.indicaciones || 'N/A'}</p>
+                    <p><strong>Medicamentos:</strong></p>
+                    <ul id="medicamentos-list-${index}">
+                        ${consulta.medicamentos && consulta.medicamentos.length > 0 ? consulta.medicamentos.map(med => `<li>${med.nombre} - ${med.dosis} (${med.frecuencia})</li>`).join('') : '<li>No hay medicamentos prescritos.</li>'}
+                    </ul>
+                    <p><strong>Servicios Médicos Solicitados:</strong></p>
+                    <ul id="servicios-list-${index}">
+                        ${consulta.servicios_medicos && consulta.servicios_medicos.length > 0 ? consulta.servicios_medicos.map(serv => `<li>${serv.nombre} - ${serv.solicitud}</li>`).join('') : '<li>No hay servicios médicos solicitados.</li>'}
+                    </ul>
+
+                </div>
+            </div>
+        </div>`
+    }).join('');
+
+    container.innerHTML = htmlContent;
+}
+
 function appendMedicamentoToList() {
 
     let medicamentoId = document.getElementById('frm_medicamento_id').value;
@@ -183,22 +321,7 @@ function appendMedicamentoToList() {
         frecuencia: frecuencia
     };
 
-    const consultaData = ValidaConsulta();
-    let medicamentos = sessionStorage.getItem('medicamentos');
-    if (!medicamentos) {
-        medicamentos = [];
-    } else {
-        medicamentos = JSON.parse(medicamentos);
-    }
-
-    if (!consultaData.medicamentos) {
-        consultaData.medicamentos = [];
-    }
-
-    medicamentos.push(medicamento);
-    consultaData.medicamentos = medicamentos;
-
-    sessionStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+    const consultaData = SaveConsultaData(medicamento);
     console.log('Medicamento agregado:', medicamento);
     try {
         disableButtons();
@@ -218,6 +341,94 @@ function appendMedicamentoToList() {
         enableButtons();
     }
 }
+
+async function appendServicioMedicoToList() {
+    let servicioId = document.getElementById('frm_servicio_id').value;
+    console.log('Servicio ID:', servicioId);
+    if (!servicioId) servicioId = crypto.randomUUID(); // Generate a UUID if servicioId is empty
+
+    const nombre = document.getElementById('frm_servicio_nombre').value.trim();
+    const solicitud = document.getElementById('frm_servicio_solicitud').value.trim();
+    if (nombre.length < 3) {
+        alert('Por favor, ingrese un nombre válido para el servicio médico (mínimo 3 caracteres).');
+        return;
+    }
+    if (solicitud.length < 3) {
+        alert('Por favor, ingrese una solicitud válida para el servicio médico (mínimo 5 caracteres).');
+        return;
+    }
+    const servicio = {
+        id: servicioId,
+        nombre: nombre,
+        solicitud: solicitud
+    };
+    const consultaData = SaveConsultaData(null,servicio);
+    console.log('Servicio médico agregado:', servicio);
+    try {
+        disableButtons();
+        const updatedConsulta = updateConsulta(consultaData);
+        renderServicioMedicoCard(servicio);
+        // Clear form fields
+        document.getElementById('frm_servicio_id').value = '';
+        document.getElementById('frm_servicio_nombre').value = '';
+        document.getElementById('frm_servicio_solicitud').value = '';
+    } catch (error) {
+        console.error('Error al agregar servicio médico:', error);
+        renderAlertMessage('Error al agregar servicio médico. Por favor, intente nuevamente.', 'danger');
+    }finally {
+        enableButtons();
+    }
+}
+
+function SaveConsultaData(medicamento=null,serviciomedico=null) { 
+    if(!medicamento && !serviciomedico) return;
+    const consultaData = ValidaConsulta();
+    let medicamentos = sessionStorage.getItem('medicamentos');
+    let servicios_medicos = sessionStorage.getItem('servicios_medicos');
+    if (!medicamentos) {
+        medicamentos = [];
+    } else {
+        medicamentos = JSON.parse(medicamentos);
+    }
+
+    if (!servicios_medicos) {
+        servicios_medicos = [];
+    } else {
+        servicios_medicos = JSON.parse(servicios_medicos);
+    }
+
+    if (!consultaData.medicamentos) {
+        consultaData.medicamentos = [];
+    }
+
+    if(medicamento) {
+        medicamentos.push(medicamento);
+    }
+    consultaData.medicamentos = medicamentos;
+    sessionStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+
+    if (!consultaData.servicios_medicos) {
+        consultaData.servicios_medicos = [];
+    }
+
+    if(serviciomedico) {
+        servicios_medicos.push(serviciomedico);
+    }
+    consultaData.servicios_medicos = servicios_medicos;
+    sessionStorage.setItem('servicios_medicos', JSON.stringify(servicios_medicos));
+
+    return consultaData;
+}
+
+// function eliminarMedicamento(medicamentoId) {
+//     if (!medicamentoId) return;
+
+//     let medicamentos = sessionStorage.getItem('medicamentos');
+//     if (!medicamentos) return;
+//     medicamentos = JSON.parse(medicamentos);
+    
+//     return consultaData;
+// }
 
 function eliminarMedicamento(medicamentoId) {
     if (!medicamentoId) return;
@@ -242,6 +453,31 @@ function eliminarMedicamento(medicamentoId) {
     } catch (error) {
         console.error('Error al eliminar medicamento:', error);
         renderAlertMessage('Error al eliminar medicamento. Por favor, intente nuevamente.', 'danger');
+    }finally {
+        enableButtons();
+    }
+}
+
+function eliminarServicio(servicioId) {
+    if (!servicioId) return;
+    let servicios = sessionStorage.getItem('servicios_medicos');
+    if (!servicios) return;
+    servicios = JSON.parse(servicios);
+    servicios = servicios.filter(s => s.id !== servicioId);
+    const serviciosJson = JSON.stringify(servicios);
+    sessionStorage.setItem('servicios_medicos', serviciosJson);
+    $(`#lista_servicios .servicio_id[value="${servicioId}"]`).closest('.card').remove();
+    const consultaData = ValidaConsulta();
+    if (!consultaData.servicios_medicos) {
+        consultaData.servicios_medicos = [];
+    }
+    consultaData.servicios_medicos = servicios;
+    try {
+        disableButtons();
+        const updatedConsulta = updateConsulta(consultaData);
+    } catch (error) {
+        console.error('Error al eliminar servicio médico:', error);
+        renderAlertMessage('Error al eliminar servicio médico. Por favor, intente nuevamente.', 'danger');
     }finally {
         enableButtons();
     }
@@ -313,6 +549,9 @@ async function LoadConsulta(p) {
         renderAlertMessage("ID de consulta no proporcionado.", 'danger');
         return;
     }
+    //limpia listas de medicamentos y servicios medicos
+    sessionStorage.removeItem('medicamentos');
+    sessionStorage.removeItem('servicios_medicos');
     const consultaId = atob(p);
     showLoading();
     disableButtons();
@@ -325,6 +564,21 @@ async function LoadConsulta(p) {
                 renderMedicamentoCard(medicamento);
             });
         }
+        if(consulta.servicios_medicos && consulta.servicios_medicos.length > 0){
+            sessionStorage.setItem('servicios_medicos', JSON.stringify(consulta.servicios_medicos));
+            consulta.servicios_medicos.forEach(servicio => {
+                renderServicioMedicoCard(servicio);
+            });
+        }
+        renderPacienteBasicInfo(consulta.paciente);
+        renderPacienteHistorialMedico(consulta.paciente.historial_medico ? consulta.paciente.historial_medico[0] : null);
+        const ultimasConsultas = await getUltimasCincoConsultasPacienteId(consulta.paciente.id);
+        const filteredConsultas = ultimasConsultas.data.filter(ultimaConsulta => {
+            const consultaFecha = new Date(consulta.created_at);
+            const ultimaConsultaFecha = new Date(ultimaConsulta.created_at);
+            return ultimaConsultaFecha < consultaFecha;
+        });
+        renderPacienteUltimasConsultas(filteredConsultas);
 
         enableButtons();
     } catch (error) {

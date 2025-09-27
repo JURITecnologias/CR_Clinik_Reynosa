@@ -83,4 +83,17 @@ class ServicioMedicoController extends Controller
 
         return response()->json(['message' => 'El servicio no está eliminado'], 400);
     }
+
+    // Buscar servicio por nombre
+    public function searchByName(Request $request)
+    {
+        $nombre = $request->query('nombre');
+        $servicios = ServicioMedico::where('nombre', 'LIKE', '%' . $nombre . '%')->get();
+
+        if ($servicios->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron servicios con ese nombre'], 404);
+        }
+
+        return response()->json($servicios);
+    }
 }

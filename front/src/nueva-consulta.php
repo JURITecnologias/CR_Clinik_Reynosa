@@ -1,4 +1,6 @@
-<?php ob_start(); ?>
+<?php
+
+ob_start(); ?>
 
 <!-- ========================
         Start Page Content
@@ -70,7 +72,7 @@
                         </div>
                     </div>
                     <div class="text-end">
-                        <button class="btn btn-primary" id="btn_ver_historial_medico" onclick="">Historial Medico</button>
+                        <button class="btn btn-primary" id="btn_ver_historial_medico" data-bs-toggle="modal" data-bs-target="#full-width-modal">Historial Medico</button>
                     </div>
                 </div>
                 <!-- end row -->
@@ -273,9 +275,10 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label" for="frm_medicamento_nombre">Nombre de medicamento<span class="text-danger ms-1">*</span></label><br>
-                            <input class="form-control form-control-lg awesomplete" id="frm_medicamento_nombre" type="text" placeholder="Escriba el nombre del medicamento" autocomplete="off" style="width: 550px; max-width: 550px;"/>
+                            <input class="form-control form-control-lg awesomplete" id="frm_medicamento_nombre" type="text" placeholder="Escriba el nombre del medicamento" autocomplete="off" style="width: 550px; max-width: 550px;" />
                         </div>
-                    </div></div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-xl-2 col-md-4 col-sm-6">
                         <div class="mb-3">
@@ -286,7 +289,10 @@
                     <div class="col-xl-2 col-md-4 col-sm-6">
                         <div class="mb-3">
                             <label class="form-label" for="frm_medicamento_duracion">Duracion de dosis<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" id="frm_medicamento_duracion">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="frm_medicamento_duracion">
+                                <span class="input-group-text" id="frm_medicamento_duracion">Dias</span>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-6">
@@ -318,7 +324,7 @@
         <!-- start Servicios medicos information -->
         <div class="card">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                <h5 class="d-inline-flex align-items-center mb-0">Orden Clinica</h5>
+                <h5 class="d-inline-flex align-items-center mb-0">Orden Clinica/ Servicios Medicos</h5>
             </div>
             <div class="card-body">
                 <!-- start row -->
@@ -326,12 +332,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-8">
                         <div class="mb-3">
                             <label class="form-label">Servicio a solicitar <span class="text-danger ms-1">*</span></label>
-                            <select class="form-control select2" data-toggle="select2">
-                                <option value="">Seleccione un servicio</option>
-                                <option value="consulta_general">Curaciones</option>
-                                <option value="rayos_x">Rayos X</option>
-                                <option value="laboratorio">Laboratorio</option>
-                            </select>
+                            <input type="text" class="form-control" id="frm_servicio_nombre" placeholder="Escriba el nombre del servicio" autocomplete="off" style="width: 450px; max-width: 100%;">
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-8 col-sm-10">
@@ -341,10 +342,11 @@
                         </div>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-6">
-                        <button class="btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex">
+                        <input type="hidden" id="frm_servicio_id" value="">
+                        <button class="btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex" onclick="appendServicioMedicoToList()">
                             <i class="ti ti-plus"></i>
                         </button>
-                        <button class="btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;">
+                        <button class="btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;" onclick="appendServicioMedicoToList()">
                             <i class="ti ti-plus"></i> Agregar
                         </button>
                     </div>
@@ -352,39 +354,7 @@
                 <hr class="mb-1 p-3 opacity-10" style="border-color: #d3d3d3;">
                 <!-- end row -->
                 <div id="lista_servicios" class="d-flex flex-wrap gap-3">
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title">Curaciones</h5>
-                                <p class="card-text">Solicitud: Limpieza y desinfección de herida</p>
-                            </div>
-                            <button class="btn btn-danger btn-sm" title="Eliminar">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title">Rayos X</h5>
-                                <p class="card-text">Solicitud: Radiografía de tórax</p>
-                            </div>
-                            <button class="btn btn-danger btn-sm" title="Eliminar">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title">Laboratorio</h5>
-                                <p class="card-text">Solicitud: Análisis de sangre completo</p>
-                            </div>
-                            <button class="btn btn-danger btn-sm" title="Eliminar">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -442,6 +412,69 @@
     </div>
     <!-- End Content -->
 
+    <div id="full-width-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-paciente-historial" aria-hidden="true">
+        <div class="modal-dialog modal-full-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-paciente-historial">Historial Paciente</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-3">
+                            <li class="nav-item">
+                                <a href="#info-general" data-bs-toggle="tab" aria-expanded="true" class="nav-link active">
+                                    Info. General
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#antecedentes" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                    Antecedentes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#consultas-previas" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                    Consultas Previas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#citas-programadas" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                    Citas Programadas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#ordenes_clinicas" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                    Órdenes Clínicas
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="info-general">
+                                <div class="p-4" style="width: 50%;">
+                                    <?php require_once __DIR__ . '/../partials/info-general-paciente.php'; ?>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="antecedentes">
+                                <div class="p-4" style="width: 50%;">
+                                    <?php require_once __DIR__ . '/../partials/antecedentes_medicos.php'; ?>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="consultas-previas">
+                                <div class="accordion" id="ultimas-consultas-accordion">
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end card-body -->
+                </div> <!-- end modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div> <!-- end modal content -->
+        </div> <!-- end modal dialog -->
+    </div> <!-- end modal -->
+
+
     <?php require_once '../partials/footer.php'; ?>
 
 </div>
@@ -449,6 +482,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadEvent();
         const input = document.getElementById("frm_medicamento_nombre");
+        const inputServiciosMedicos = document.getElementById("frm_servicio_nombre");
         const awesomplete = new Awesomplete(input, {
             filter: () => { // We will provide a list that is already filtered ...
                 return true;
@@ -456,6 +490,14 @@
             sort: false, // ... and sorted.
             list: []
         });
+        const awesompleteServiciosMedicos = new Awesomplete(inputServiciosMedicos, {
+            filter: () => { // We will provide a list that is already filtered ...
+                return true;
+            },
+            sort: false, // ... and sorted.
+            list: []
+        });
+
         input.addEventListener("input", async function() {
 
             const term = input.value.trim();
@@ -468,8 +510,24 @@
                 input._medicamentos = result;
                 const list = result.map(m => m.nombre);
                 awesomplete.list = list;
-                console.log("resultados:", awesomplete.list);
-                console.log("Medicamentos encontrados:", list);
+            }
+        });
+
+        inputServiciosMedicos.addEventListener("input", async function() {
+
+            const term = inputServiciosMedicos.value.trim();
+            if (term.length < 2) return;
+
+            const result = await searchServiciosMedicosByName(term);
+            if (result) {
+                // Guarda los medicamentos para selección posterior
+                result.forEach(s => {
+                    s.displayName = s.nombre.charAt(0).toUpperCase() + s.nombre.slice(1) + " - " + s.categoria.charAt(0).toUpperCase() + s.categoria.slice(1);
+                });
+                inputServiciosMedicos._serviciosmedicos = result;
+                console.log("result servicios medicos:", inputServiciosMedicos._serviciosmedicos);
+                const list = result.map(s => s.displayName);
+                awesompleteServiciosMedicos.list = list;
             }
         });
 
@@ -478,12 +536,25 @@
             const selectedName = input.value;
             const medicamentos = input._medicamentos || [];
             const med = medicamentos.find(m => m.nombre === selectedName);
+
             if (med) {
                 if (med.concentracion) {
                     document.getElementById("frm_medicamento_dosis").value = med.concentracion;
                 }
                 // Guarda el ID del medicamento seleccionado
                 document.getElementById("frm_medicamento_id").value = med.id;
+                // Puedes llenar otros campos aquí si lo necesitas
+            }
+        });
+
+        inputServiciosMedicos.addEventListener("awesomplete-selectcomplete", function(e) {
+            const selectedName = inputServiciosMedicos.value;
+            const servicios_medicos = inputServiciosMedicos._serviciosmedicos || [];
+            const serv = servicios_medicos.find(s => s.displayName === selectedName);
+
+            if (serv) {
+                // Guarda el ID del servicio médico seleccionado
+                document.getElementById("frm_servicio_id").value = serv.id;
                 // Puedes llenar otros campos aquí si lo necesitas
             }
         });

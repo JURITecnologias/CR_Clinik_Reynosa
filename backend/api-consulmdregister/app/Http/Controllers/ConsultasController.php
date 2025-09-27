@@ -53,6 +53,10 @@ class ConsultasController extends Controller
             $query->whereBetween('fecha_consulta', [$filters['fecha_inicio'], $filters['fecha_fin']]);
         }
 
+        if (!empty($filters['paciente_id'])) {
+            $query->where('paciente_id', $filters['paciente_id']);
+        }
+
         $orderBy = $filters['order_by'] ?? 'created_at'; // Campo para ordenar, por defecto 'created_at'
         $orderDirection = $filters['order_direction'] ?? 'asc'; // Dirección de orden, por defecto 'asc'
 
