@@ -98,6 +98,25 @@ async function deleteMedicamento(id) {
     }
 }
 
+async function searchMedicamentosByName(name) {
+    try {
+        const response = await fetch(apiHost+apiPath+'/medicamentos/buscar?query='+encodeURIComponent(name), {
+            method: 'GET',
+            headers: headersRequest
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching medicamentos:', error);
+        return null;
+    }
+}
+
 async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
     if (totalPages <= 1) {
          $('.pagination_medicamentos').each(function() {
@@ -200,7 +219,6 @@ async function InsertMedicamento(){
 
     const result = await addMedicamento(medicamentoData);
     if (result) {
-        console.log('Medicamento agregado:', result);
         // Aquí puedes agregar lógica adicional, como cerrar el modal o actualizar la tabla
         $('#add_medicamento').modal('hide');
         const urlParams = new URLSearchParams(window.location.search);
@@ -250,7 +268,6 @@ async function EditMedicamento(id) {
 
     const result = await updateMedicamento(id, medicamentoData);
     if (result) {
-        console.log('Medicamento editado:', result);
         // Aquí puedes agregar lógica adicional, como cerrar el modal o actualizar la tabla
         $('#add_medicamento').modal('hide');
         const urlParams = new URLSearchParams(window.location.search);
@@ -267,7 +284,6 @@ async function EditMedicamento(id) {
 async function DeleteMedicamento(id){
     const result = await deleteMedicamento(id);
     if (result) {
-        console.log('Medicamento eliminado');
         // Aquí puedes agregar lógica adicional, como actualizar la tabla
         const urlParams = new URLSearchParams(window.location.search);
         const perPage = parseInt(urlParams.get('registros')) || 50;

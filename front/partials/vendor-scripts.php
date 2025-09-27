@@ -13,13 +13,13 @@ $page = end( $link_array );
 	<!-- Simplebar JS -->
 	<script src="assets/plugins/simplebar/simplebar.min.js"></script>
 
-<?php if ($page == 'index.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php') {   ?>     
+<?php if ($page == 'index.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'nueva-consulta.php') {   ?>     
     <!-- Daterangepikcer JS -->
 	<script src="assets/js/moment.min.js"></script>
 	<script src="assets/plugins/daterangepicker/daterangepicker.js"></script>
 <?php }?>          
 
-<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'all-doctors-list.php' || $page == 'appointments.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'form-pickers.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php'  || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php') {   ?>     
+<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'all-doctors-list.php' || $page == 'appointments.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'form-pickers.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php'  || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page == 'nueva-consulta.php') {   ?>     
     <!-- Flatpickr JS -->
     <script src="assets/plugins/flatpickr/flatpickr.min.js"></script>
 <?php }?>
@@ -152,10 +152,9 @@ $page = end( $link_array );
     <script src="assets/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script src="assets/js/sweetalerts.js"></script>
 <?php }?>
-
-<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'appointments.php' || $page == 'all-doctors-list.php' || $page == 'appearance-settings.php' || $page == 'appointment-consultation.php' || $page == 'change-password.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'email-compose.php' || $page == 'form-select.php' || $page == 'general-settings.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php' || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'security-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php') {   ?>     
+<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'appointments.php' || $page == 'all-doctors-list.php' || $page == 'appearance-settings.php' || $page == 'appointment-consultation.php' || $page == 'change-password.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'email-compose.php' || $page == 'form-select.php' || $page == 'general-settings.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php' || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'security-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page == 'nueva-consulta.php') {   ?>     
     <!-- Select2 JS -->
-    <script src="assets/plugins/select2/js/select2.min.js"></script>
+<script src="assets/plugins/select2/js/select2.min.js"></script>
 <?php }?>   
 
 <?php if ($page == 'chat.php') {   ?> 
@@ -190,11 +189,11 @@ $page = end( $link_array );
     <script src="assets/js/app/roles.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'medicamentos-catalog.php') {   ?>
+    <?php if ($page == 'medicamentos-catalog.php' || $page == 'nueva-consulta.php') {   ?>
     <script src="assets/js/app/medicamentos.js"></script>
     <?php } ?>
-    
-    <?php if ($page == 'servicios-medicos-catalog.php') {   ?>
+
+    <?php if ($page == 'servicios-medicos-catalog.php' || $page=='nueva-consulta.php') {   ?>
     <script src="assets/js/app/servicios.js"></script>
     <?php } ?>
 
@@ -202,7 +201,7 @@ $page = end( $link_array );
     <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'patients.php' || $page == 'add-patient.php' || $page == 'edit-patient.php' || $page == "patient-details-appointments.php" || $page == "patient-details-visit-history.php" || $page == "all-patients-list.php" || $page == "paciente-detalle.php") {   ?>
+    <?php if ($page == 'patients.php' || $page == 'add-patient.php' || $page == 'edit-patient.php' || $page == "patient-details-appointments.php" || $page == "patient-details-visit-history.php" || $page == "all-patients-list.php" || $page == "paciente-detalle.php" || $page == "consultas.php") {   ?>
     <script src="assets/js/app/pacientes.js"></script>
     <script src="assets/js/app/historial-paciente.js"></script>
     <?php } ?>
@@ -211,6 +210,11 @@ $page = end( $link_array );
     <script src="assets/js/app/horario-doctores.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consultas.php'){ ?>
+    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php') { ?>
     <script src="assets/js/app/consultas.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'nueva-consulta.php') { ?>
+    <script src="assets/js/app/signos-vitales.js"></script>
+    <script src="assets/js/script.js"></script>
     <?php } ?>

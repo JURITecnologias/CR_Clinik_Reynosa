@@ -1,4 +1,6 @@
 const apiHost="http://localhost/backend/api-consulmdregister/public/";
+// production
+//const apiHost="https://crclinik.juritecnologias.com/bkend/public/";
 const apiPath="api";
 
 function getDeviceName() {

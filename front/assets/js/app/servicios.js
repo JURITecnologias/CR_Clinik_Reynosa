@@ -52,6 +52,21 @@ async function deleteServicioMedico(id) {
     return await response.json();
 }
 
+async function searchServiciosMedicosByName(name) {
+    try {
+        const response = await fetch(apiHost+apiPath+'/servicios-medicos/buscar?nombre=' + encodeURIComponent(name), {
+            method: 'GET',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('failed to fetch: ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function getServicioMedico(id) {
     const response = await fetch(apiHost+apiPath+'/servicios-medicos/' + id, {
         method: 'GET',

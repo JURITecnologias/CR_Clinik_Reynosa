@@ -90,4 +90,25 @@ class MedicamentoController extends Controller
 
         return response()->json(['message' => 'Medicamento eliminado']);
     }
+
+    // Buscar medicamentos por nombre o descripción
+    public function search(Request $request)
+    {
+        $query = $request->get('query', '');
+
+        if (empty($query)) {
+            return response()->json(['error' => 'Debe proporcionar un término de búsqueda'], 400);
+        }
+
+        $medicamentos = Medicamento::query()
+            ->whereNull('deleted_at')
+            ->where(function ($q) use ($query) {
+                $q->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($query) . '%'])
+                  ->orWhereRaw('LOWER(descripcion) LIKE ?', ['%' . strtolower($query) . '%'])
+                  ->orWhereRaw('LOWER(nombre_generico) LIKE ?', ['%' . strtolower($query) . '%']);
+            })
+            ->get();
+
+        return response()->json($medicamentos);
+    }
 }
