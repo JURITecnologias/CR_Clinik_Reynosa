@@ -50,6 +50,7 @@ ob_start(); ?>
                                     </a></h6>
                                 <p class="mb-0">Consulta ID :<span id="consulta_id"></span></p>
                                 <input type="hidden" id="consulta_id" value="">
+                                <input type="hidden" id="consulta_estatus" value="">
                             </div>
                         </div>
                     </div>
@@ -177,7 +178,7 @@ ob_start(); ?>
                     </div>
                     <div class="text-end mb-3 col-12">
                         <input type="hidden" id="frm_signos_vitales_id" value="">
-                        <button class="btn btn-primary" id="btn_guardar_signos_vitales" onclick="EditarSignosVitales()">Guardar</button>
+                        <button class="btn btn-primary btn-save" id="btn_guardar_signos_vitales" onclick="EditarSignosVitales()">Guardar</button>
                     </div>
                 </div>
                 <!-- end row -->
@@ -269,9 +270,9 @@ ob_start(); ?>
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
                 <h5 class="d-inline-flex align-items-center mb-0">Medicamentos</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body" >
                 <!-- start row -->
-                <div class="row">
+                <div class="row" id="medicamento_entry_form_name">
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label" for="frm_medicamento_nombre">Nombre de medicamento<span class="text-danger ms-1">*</span></label><br>
@@ -279,7 +280,7 @@ ob_start(); ?>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="medicamento_entry_form">
                     <div class="col-xl-2 col-md-4 col-sm-6">
                         <div class="mb-3">
                             <label class="form-label" for="frm_medicamento_dosis">Dosis<span class="text-danger ms-1">*</span></label>
@@ -303,10 +304,10 @@ ob_start(); ?>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-6">
                         <input type="hidden" id="frm_medicamento_id" value="">
-                        <button class="btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex" onclick="appendMedicamentoToList()">
+                        <button class="btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex btn-save" onclick="appendMedicamentoToList()">
                             <i class="ti ti-plus"></i>
                         </button>
-                        <button class="btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;" onclick="appendMedicamentoToList()">
+                        <button class="btn btn-primary btn-block mt-4 d-md-none btn-save" style="width: 100%;" onclick="appendMedicamentoToList()">
                             <i class="ti ti-plus"></i> Agregar
                         </button>
                     </div>
@@ -328,7 +329,7 @@ ob_start(); ?>
             </div>
             <div class="card-body">
                 <!-- start row -->
-                <div class="row">
+                <div class="row" id="servicio_medico_entry_form">
                     <div class="col-xl-4 col-md-6 col-sm-8">
                         <div class="mb-3">
                             <label class="form-label">Servicio a solicitar <span class="text-danger ms-1">*</span></label>
@@ -343,10 +344,11 @@ ob_start(); ?>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-6">
                         <input type="hidden" id="frm_servicio_id" value="">
-                        <button class="btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex" onclick="appendServicioMedicoToList()">
+                        <input type="hidden" id="frm_servicio_categoria" value="">
+                        <button class="btn-save btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex " onclick="appendServicioMedicoToList()">
                             <i class="ti ti-plus"></i>
                         </button>
-                        <button class="btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;" onclick="appendServicioMedicoToList()">
+                        <button class="btn-save btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;" onclick="appendServicioMedicoToList()">
                             <i class="ti ti-plus"></i> Agregar
                         </button>
                     </div>
@@ -405,8 +407,8 @@ ob_start(); ?>
         <!-- end follow Up information -->
 
         <div class="d-flex justify-content-end flex-wrap align-items-center gap-2 mt-3">
-            <button onclick="GuardarConsulta()" class="btn btn-primary btn-lg">Guardar Datos de Consulta</button>
-            <button href="javascript:void(0);" class="btn btn-success btn-lg">Imprimir Receta Médica</button>
+            <button onclick="GuardarConsulta()" class="btn btn-primary btn-lg btn-save">Guardar Datos de Consulta</button>
+            <button onclick="ImprimirReceta()" class="btn btn-success btn-lg">Imprimir Receta Médica</button>
         </div>
 
     </div>
@@ -555,7 +557,11 @@ ob_start(); ?>
             if (serv) {
                 // Guarda el ID del servicio médico seleccionado
                 document.getElementById("frm_servicio_id").value = serv.id;
+                document.getElementById("frm_servicio_categoria").value = serv.categoria;
                 // Puedes llenar otros campos aquí si lo necesitas
+            }else{
+                document.getElementById("frm_servicio_id").value = "";
+                document.getElementById("frm_servicio_categoria").value = "";
             }
         });
     });

@@ -96,6 +96,23 @@ async function insertConsulta(consultaData) {
     }
 }
 
+async function deleteConsulta(consultaId) {
+    try {
+        const response = await fetch(apiHost + apiPath + `/consultas/${consultaId}`, {
+            method: 'DELETE',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error deleting consulta:', error);
+        throw error;
+    }
+}
+
+
 function renderTableConsultas(consultas) {
     const $tableBody = $('#table_consultas tbody');
     $tableBody.empty();
@@ -104,8 +121,9 @@ function renderTableConsultas(consultas) {
 
         const user = JSON.parse(sessionStorage.getItem('user'));
         const hasEditPermission = user && user.permissions && user.permissions.includes('modificar') && consulta.estatus === 'abierta';
-        const IsDoctor = user && user.roles.includes('Doctor');   
-        //const hasDeletePermission = user && user.permissions && user.permissions.includes('borrar');
+        const hasDeletePermission = user && user.permissions && user.permissions.includes('borrar') && consulta.estatus === 'abierta';
+        const IsDoctor = user && user.roles.includes('Doctor');
+        const isAdmin = user && (user.roles.includes('Main Admin') || user.roles.includes('Admon'));
 
         // fecha consulta format to dd/mm/yyyy hh:mm
         const fechaConsulta = new Date(consulta.created_at);
@@ -132,7 +150,12 @@ function renderTableConsultas(consultas) {
                 <a href="nueva-consulta.php?p=${btoa(consulta.id)}" class="btn btn-lg btn-primary me-1" title="Editar Consulta"><i class="ti ti-pencil"></i></a>
             `));
         }else{
-            $row.append($('<td>').html(`<a href="view-consulta.php?id=${consulta.id}" class="btn btn-lg btn-info me-1" title="Ver Consulta"><i class="ti ti-eye"></i></a>`));
+            $row.append($('<td>').html(`<a href="detalle-consulta.php?p=${btoa(consulta.id)}" class="btn btn-lg btn-info me-1" title="Ver Consulta"><i class="ti ti-eye"></i></a>`));
+        }
+        if (isAdmin && hasDeletePermission) {
+            $row.append($('<td>').html(`
+                    <button class="btn btn-lg btn-danger me-1" title="Eliminar Consulta" onclick="ConfirmarEliminarConsulta(${consulta.id})"><i class="ti ti-trash"></i></button>
+                `));
         }
         
         $tableBody.append($row);
@@ -157,7 +180,7 @@ function renderPacienteConsultaInfo(paciente) {
     $('#paciente_id').val(paciente.id);
 }
 
-function renderMedicamentoCard(medicamento) {
+function renderMedicamentoCard(medicamento, showDeleteButton = true) {
     if (!medicamento) return;
 
     const card = $(`
@@ -170,17 +193,19 @@ function renderMedicamentoCard(medicamento) {
                     <span class="card-text">Frecuencia: <strong>${medicamento.frecuencia}</strong></span>
                 </div>
                 <input type="hidden" class="medicamento_id" value="${medicamento.id}">
-                <button class="btn btn-danger btn-sm" title="Eliminar" onclick="eliminarMedicamento('${medicamento.id}')">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </div>
-                    </div>
+                ${showDeleteButton ? `
+                    <button class="btn btn-save btn-danger btn-sm" title="Eliminar" onclick="eliminarMedicamento('${medicamento.id}')">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                ` : ''}
+            </div>
+        </div>
     `);
 
     $('#lista_medicamentos').append(card);
 }
 
-function renderServicioMedicoCard(servicio) {
+function renderServicioMedicoCard(servicio, showDeleteButton = true) {
     if (!servicio) return;
 
     const card = $(`
@@ -191,11 +216,13 @@ function renderServicioMedicoCard(servicio) {
                     <span class="card-text">Descripción: <strong>${servicio.solicitud}</strong></span><br>
                 </div>
                 <input type="hidden" class="servicio_id" value="${servicio.id}">
-                <button class="btn btn-danger btn-sm" title="Eliminar" onclick="eliminarServicio('${servicio.id}')">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </div>
-                    </div>
+                ${showDeleteButton ? `
+                    <button class="btn btn-save btn-danger btn-sm" title="Eliminar" onclick="eliminarServicio('${servicio.id}')">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                ` : ''}
+            </div>
+        </div>
     `);
 
     $('#lista_servicios').append(card);
@@ -322,7 +349,7 @@ function appendMedicamentoToList() {
     };
 
     const consultaData = SaveConsultaData(medicamento);
-    console.log('Medicamento agregado:', medicamento);
+    
     try {
         disableButtons();
         const updatedConsulta = updateConsulta(consultaData);
@@ -344,11 +371,13 @@ function appendMedicamentoToList() {
 
 async function appendServicioMedicoToList() {
     let servicioId = document.getElementById('frm_servicio_id').value;
-    console.log('Servicio ID:', servicioId);
+    
     if (!servicioId) servicioId = crypto.randomUUID(); // Generate a UUID if servicioId is empty
 
     const nombre = document.getElementById('frm_servicio_nombre').value.trim();
     const solicitud = document.getElementById('frm_servicio_solicitud').value.trim();
+    const categoria = document.getElementById('frm_servicio_categoria').value.trim();
+
     if (nombre.length < 3) {
         alert('Por favor, ingrese un nombre válido para el servicio médico (mínimo 3 caracteres).');
         return;
@@ -360,10 +389,10 @@ async function appendServicioMedicoToList() {
     const servicio = {
         id: servicioId,
         nombre: nombre,
-        solicitud: solicitud
+        solicitud: solicitud,
+        categoria: categoria
     };
     const consultaData = SaveConsultaData(null,servicio);
-    console.log('Servicio médico agregado:', servicio);
     try {
         disableButtons();
         const updatedConsulta = updateConsulta(consultaData);
@@ -487,6 +516,7 @@ async function renderConsultaPaciente(consulta){
     if(!consulta || !consulta.id) return;
     // Fetch paciente details
     document.getElementById('consulta_id').innerText = "C#" + consulta.id;
+    document.getElementById('consulta_estatus').value = consulta.estatus;
     document.getElementById('consulta_fecha').innerText = new Date(consulta.created_at).toLocaleDateString('es-MX', {
         day: '2-digit',
         month: '2-digit',
@@ -544,7 +574,7 @@ async function LoadConsultasTable(perPage = 50, actualPage = 1, searchTerm = '',
     }
 }
 
-async function LoadConsulta(p) {
+async function LoadConsulta(p, showDeleteButton = true) {
     if (!p) {
         renderAlertMessage("ID de consulta no proporcionado.", 'danger');
         return;
@@ -561,13 +591,13 @@ async function LoadConsulta(p) {
         if (consulta.medicamentos && consulta.medicamentos.length > 0) {
             sessionStorage.setItem('medicamentos', JSON.stringify(consulta.medicamentos));
             consulta.medicamentos.forEach(medicamento => {
-                renderMedicamentoCard(medicamento);
+                renderMedicamentoCard(medicamento, showDeleteButton);
             });
         }
         if(consulta.servicios_medicos && consulta.servicios_medicos.length > 0){
             sessionStorage.setItem('servicios_medicos', JSON.stringify(consulta.servicios_medicos));
             consulta.servicios_medicos.forEach(servicio => {
-                renderServicioMedicoCard(servicio);
+                renderServicioMedicoCard(servicio, showDeleteButton);
             });
         }
         renderPacienteBasicInfo(consulta.paciente);
@@ -578,9 +608,27 @@ async function LoadConsulta(p) {
             const ultimaConsultaFecha = new Date(ultimaConsulta.created_at);
             return ultimaConsultaFecha < consultaFecha;
         });
-        renderPacienteUltimasConsultas(filteredConsultas);
+        if (filteredConsultas.length > 0) {
+            renderPacienteUltimasConsultas(filteredConsultas);
+        }
 
         enableButtons();
+
+        if(consulta.estatus !== 'abierta' ){
+            hideSaveButtons();
+            const servicioMedicoEntryForm = document.getElementById('servicio_medico_entry_form');
+            const medicamentoEntryForm = document.getElementById('medicamento_entry_form');
+            const medicamentoEntryFormName = document.getElementById('medicamento_entry_form_name');
+            if(servicioMedicoEntryForm) {
+                servicioMedicoEntryForm.classList.add('d-none');
+            }
+            if(medicamentoEntryForm) {
+                medicamentoEntryForm.classList.add('d-none');
+            }
+            if(medicamentoEntryFormName) {
+                medicamentoEntryFormName.classList.add('d-none');
+            }
+        }
     } catch (error) {
         renderAlertMessage("Error al cargar la consulta. Por favor, intente nuevamente.", 'danger',false);
         console.error('Error fetching consulta:', error);
@@ -803,8 +851,6 @@ function seleccionarPaciente(pacienteId, pacienteNombre) {
     document.getElementById('nombre_paciente_seleccionado').innerText = pacienteNombre.charAt(0).toUpperCase() + pacienteNombre.slice(1).toLowerCase();
     const confirmarConsulta = new bootstrap.Modal(document.getElementById('modal_confirmar_consulta'));
     confirmarConsulta.show();
-    // Redirect to add-consulta.php with pacienteId as query parameter
-    //window.location.href = `add-consulta.php?paciente_id=${pacienteId}`;
 }
 
 function CerrarConfirmacionModal () {
@@ -819,7 +865,6 @@ async function CrearConsulta() {
     let PerfilUsuario = null;
     try {
         PerfilUsuario = await getUserProfile();
-        console.log("PerfilUsuario:", PerfilUsuario);
         if(!PerfilUsuario || !PerfilUsuario.user.id){
             renderAlertMessage("No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
             return; 
@@ -876,7 +921,6 @@ async function CrearConsulta() {
         renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
         return;
     }
-    console.log("Consulta creada:", consultaCreada.consulta.id);
     if(!consultaCreada || !consultaCreada.consulta.id){
         renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
         return;
@@ -890,4 +934,86 @@ function disableButtons(){
 }
 function enableButtons(){
     $('.btn').prop('disabled', false);
+}
+
+function hideSaveButtons(){
+    $('.btn-save').addClass('d-none');
+}
+function showSaveButtons(){
+    $('.btn-save').removeClass('d-none');
+}
+
+function ConfirmarEliminarConsulta(consultaId){
+    if(!consultaId) return;
+    document.getElementById('consulta_id_eliminar').value = consultaId;
+    const eliminarConsultaModal = new bootstrap.Modal(document.getElementById('danger-header-modal-delete-consulta'));
+    eliminarConsultaModal.show();
+}
+
+function eliminarConsulta(){
+    const consultaId = document.getElementById('consulta_id_eliminar').value;
+    if(!consultaId) return;
+    showLoading();
+    try {
+        deleteConsulta(consultaId);
+    } catch (error) {
+        console.error('Error al eliminar la consulta:', error);
+        renderAlertMessage('Error al eliminar la consulta. Por favor, intente nuevamente.', 'danger', false);
+    }finally {
+        hideLoading();
+        const eliminarConsultaModal = bootstrap.Modal.getInstance(document.getElementById('danger-header-modal-delete-consulta'));
+        eliminarConsultaModal.hide();
+        // Recargar la tabla de consultas
+        const urlParams = new URLSearchParams(window.location.search);
+        const perPage = parseInt(urlParams.get('registros')) || 50;
+        const actualPage = parseInt(urlParams.get('pagina')) || 1;
+        const searchTerm = urlParams.get('busqueda') || '';
+        const direccion = urlParams.get('direccion') || 'desc';
+        window.location.search = `?registros=${perPage}&pagina=${actualPage}&busqueda=${encodeURIComponent(searchTerm)}&direccion=${direccion}`;
+    }
+}
+
+async function ImprimirReceta(){
+    hideSaveButtons();
+    document.getElementById('servicio_medico_entry_form').classList.add('d-none');
+    document.getElementById('medicamento_entry_form').classList.add('d-none');
+    document.getElementById('medicamento_entry_form_name').classList.add('d-none');
+
+    if(document.getElementById('consulta_estatus').value.toLowerCase() !== 'abierta'){
+        //la consulta ya fue guardada, solo imprimimos
+        alert("La consulta ya fue guardada, solo se imprimirá la receta.");
+        return;
+    }
+
+    try {
+        const consultaData = ValidaConsulta();
+        if (!consultaData) return;
+        disableButtons();
+        try {
+            consultaData.estatus = 'completada';
+            const servicios = sessionStorage.getItem('servicios_medicos');
+            consultaData.servicios_medicos = servicios ? JSON.parse(servicios) : [];
+            if(consultaData.servicios_medicos && consultaData.servicios_medicos.length > 0){
+                consultaData.servicios_medicos.forEach(servicio => {
+                    if (servicio.categoria && servicio.categoria.toLowerCase() === 'enfermeria') {
+                        consultaData.estatus = 'enfermeria';
+                    }
+                });
+            }
+            document.getElementById('consulta_estatus').value= consultaData.estatus;
+            console.log(consultaData);
+            const updatedConsulta = await updateConsulta(consultaData);
+            enableButtons();
+        } catch (error) {
+            if (renderMessages) renderAlertMessage('Error al actualizar la consulta. Por favor, intente nuevamente.', 'danger');
+            showSaveButtons();
+            enableButtons();
+        }
+
+    } catch (error) {
+        console.error("Error al guardar la consulta:", error);
+        renderAlertMessage("Error al guardar la consulta. Por favor, intente nuevamente.", 'danger');
+        showSaveButtons();
+        enableButtons();
+    }
 }
