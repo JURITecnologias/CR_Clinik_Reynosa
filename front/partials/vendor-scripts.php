@@ -201,7 +201,7 @@ $page = end( $link_array );
     <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'patients.php' || $page == 'add-patient.php' || $page == 'edit-patient.php' || $page == "patient-details-appointments.php" || $page == "patient-details-visit-history.php" || $page == "all-patients-list.php" || $page == "paciente-detalle.php" || $page == "consultas.php") {   ?>
+    <?php if ($page == 'patients.php' || $page == 'add-patient.php' || $page == 'edit-patient.php' || $page == "patient-details-appointments.php" || $page == "patient-details-visit-history.php" || $page == "all-patients-list.php" || $page == "paciente-detalle.php" || $page == "consultas.php" || $page == 'paciente-consultas-previas.php') {   ?>
     <script src="assets/js/app/pacientes.js"></script>
     <script src="assets/js/app/historial-paciente.js"></script>
     <?php } ?>
@@ -210,11 +210,11 @@ $page = end( $link_array );
     <script src="assets/js/app/horario-doctores.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php') { ?>
+    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php' || $page == 'paciente-consultas-previas.php' || $page == 'detalle-consulta.php') { ?>
     <script src="assets/js/app/consultas.js"></script>
     <?php } ?>
 
-    <?php if($page == 'nueva-consulta.php') { ?>
+    <?php if($page == 'nueva-consulta.php' || $page == 'detalle-consulta.php') { ?>
     <script src="assets/js/app/signos-vitales.js"></script>
     <script src="assets/js/script.js"></script>
     <?php } ?>

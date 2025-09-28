@@ -1,0 +1,169 @@
+name: Manual Deploy to FTP
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Despliegue en server staging o production (ftp.crclinik.juritecnologias.com)'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - prod
+          - staging
+      backup:
+        description: '¿Realizar backup antes de desplegar?'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      FTP_HOST: ${{ secrets.FTP_HOST }}
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_TARGET: crclinik.juritecnologias.com
+      APP_KEY: ${{ secrets.APP_KEY }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Show selected options
+      run: |
+        echo "Entorno seleccionado: ${{ inputs.environment }}"
+        echo "Backup activado: ${{ inputs.backup }}"
+
+    - name: Optional backup step
+      if: ${{ inputs.backup == 'true' }}
+      run: |
+        echo "Realizando backup del servidor FTP..."
+        # Instalar lftp
+        sudo apt-get update
+        sudo apt-get install -y lftp
+
+        # Crear carpeta local para el backup
+        mkdir -p ftp_backup/bkend
+        mkdir -p ftp_backup/front
+
+        # Descargar backend desde FTP
+        lftp -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST <<EOF
+        mirror --verbose --only-newer --parallel=2 --exclude-glob .htaccess --exclude-glob .well-known \
+          public_html/bkend ftp_backup/bkend
+        mirror --verbose --only-newer --parallel=2 --exclude-glob .htaccess --exclude-glob .well-known \
+          public_html ftp_backup/front
+        bye
+        EOF
+
+        echo "Backup completado. Archivos guardados en ftp_backup/"
+
+    - name: Upload backup as artifact
+      if: ${{ inputs.backup == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ftp-backup
+        path: ftp_backup/
+
+
+    - name: Create .env file for Laravel
+      run: |
+        cat <<EOF > backend/api-consulmdregister/.env
+        APP_NAME=CR-Clinik
+        APP_ENV=${{ inputs.environment }}
+        APP_KEY=${APP_KEY}
+        APP_DEBUG=true
+        APP_URL=https://crclinik.juritecnologias.com/bkend/public
+
+        LOG_CHANNEL=stack
+        LOG_DEPRECATIONS_CHANNEL=null
+        LOG_LEVEL=debug
+
+        DB_CONNECTION=mysql
+        DB_HOST=127.0.0.1
+        DB_PORT=3306
+        DB_DATABASE=${DB_DATABASE}
+        DB_USERNAME=${DB_USERNAME}
+        DB_PASSWORD=${DB_PASSWORD}
+
+        BROADCAST_DRIVER=log
+        CACHE_DRIVER=file
+        FILESYSTEM_DISK=local
+        QUEUE_CONNECTION=sync
+        SESSION_DRIVER=file
+        SESSION_LIFETIME=120
+
+        MEMCACHED_HOST=127.0.0.1
+
+        REDIS_HOST=127.0.0.1
+        REDIS_PASSWORD=null
+        REDIS_PORT=6379
+
+        MAIL_MAILER=smtp
+        MAIL_HOST=mailpit
+        MAIL_PORT=1025
+        MAIL_USERNAME=null
+        MAIL_PASSWORD=null
+        MAIL_ENCRYPTION=null
+        MAIL_FROM_ADDRESS="hello@example.com"
+        MAIL_FROM_NAME="CR-Clinik"
+        EOF
+
+    - name: Update PHP config.php
+      run: |
+        echo "<?php
+        return \$config = [
+            'api_base_url' => 'https://crclinik.juritecnologias.com/bkend/public/api',
+        ];" > front/src/config.php
+
+    - name: Update JS config.js
+      run: |
+        cat <<EOF > front/assets/js/app/config.js
+        const apiHost="https://crclinik.juritecnologias.com/bkend/public/";
+        const apiPath="api";
+
+        function getDeviceName() {
+          return navigator.userAgent;
+        }
+
+        const headersRequest=new Headers({
+          'Authorization': 'Basic '+sessionStorage.getItem('token'),
+          'Content-Type': 'application/json',
+          'Device-Name': getDeviceName()
+        });
+        EOF
+
+    - name: Upload backend to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4
+      with:
+        server: ${{ env.FTP_HOST }}
+        username: ${{ env.FTP_USERNAME }}
+        password: ${{ env.FTP_PASSWORD }}
+        local-dir: backend/api-consulmdregister/
+        server-dir: ${{ env.FTP_TARGET }}/public_html/bkend/
+
+    - name: Upload frontend to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4
+      with:
+        server: ${{ env.FTP_HOST }}
+        username: ${{ env.FTP_USERNAME }}
+        password: ${{ env.FTP_PASSWORD }}
+        local-dir: front/
+        server-dir: ${{ env.FTP_TARGET }}/public_html/
+
+    - name: Preparar artefacto del nuevo deploy
+      run: |
+        mkdir -p deployed_artifact/bkend
+        mkdir -p deployed_artifact/front
+
+        cp -r backend/api-consulmdregister/* deployed_artifact/bkend/
+        cp -r front/* deployed_artifact/front/
+
+    - name: Subir artefacto del deploy
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuevo-deploy-${{ inputs.environment }}
+        path: deployed_artifact/

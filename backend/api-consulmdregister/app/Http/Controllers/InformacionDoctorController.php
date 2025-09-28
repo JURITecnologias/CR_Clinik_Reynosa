@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\InformacionDoctor;
+use Illuminate\Support\Facades\Validator;
 
 class InformacionDoctorController extends Controller
 {
@@ -91,5 +92,22 @@ class InformacionDoctorController extends Controller
         $doctor->save();
 
         return response()->json(['mensaje' => 'Firma actualizada', 'doctor' => $doctor]);
+    }
+
+    public function buscarPorNombre(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string'
+        ]);
+
+        $nombre = $request->query('nombre');
+
+        $doctores = InformacionDoctor::with('user')->where('nombre_completo', 'like', '%' . $nombre . '%')->get();
+
+        if ($doctores->isEmpty()) {
+            return response()->json(['mensaje' => 'No se encontraron doctores con ese nombre'], 404);
+        }
+
+        return response()->json($doctores);
     }
 }

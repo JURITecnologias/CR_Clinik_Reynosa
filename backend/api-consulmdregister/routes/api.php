@@ -222,3 +222,19 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.pe
 Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:borrar'])->group(function () {
     Route::delete('/signos-vitales/{id}', [\App\Http\Controllers\SignosVitalesController::class, 'destroy']);
 });
+
+//ciastas pacientes
+Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
+    Route::get('/citas-pacientes', [\App\Http\Controllers\CitaPacienteController::class, 'index']);
+    Route::get('/citas-pacientes/buscar', [\App\Http\Controllers\CitaPacienteController::class, 'buscar']);
+    Route::get('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'show']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera', 'check.permission:modificar|escribir'])->group(function () {
+    Route::post('/citas-pacientes', [\App\Http\Controllers\CitaPacienteController::class, 'store']);
+    Route::put('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'update']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:borrar'])->group(function () {
+    Route::delete('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'destroy']);
+});

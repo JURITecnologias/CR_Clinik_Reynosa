@@ -9,11 +9,18 @@ use App\Models\SignosVitales;
 use App\Models\Paciente;
 use App\Models\InformacionDoctor;
 use Carbon\Carbon;
+use App\Providers\NotificacionService;
 
 use function Psy\debug;
 
 class ConsultasController extends Controller
 {
+    protected $notificacionService;
+    public function __construct(NotificacionService $notificacionService)
+    {
+        $this->notificacionService = $notificacionService;
+    }
+
     // Listar todas las consultas activas
     public function index(Request $request)
     {
@@ -142,6 +149,18 @@ class ConsultasController extends Controller
         ]));
         $consulta->fuera_de_horario = $fueraDeHorario;
         $consulta->save();
+
+        // Crear notificación de nueva consulta
+        if($fueraDeHorario){
+            $this->notificacionService->crear([
+                'descripcion' => 'Nueva consulta creada fuera de horario',
+                'tipo' => 'critica',
+                'rol_usuario' => 'Main Admin|Admon',
+                'paciente_id' => $consulta->paciente_id,
+                'doctor_id' => $consulta->doctor_id,
+                'consulta_id' => $consulta->id,
+            ]);
+        }
 
         // Crear los signos vitales asociados
         $signos = new SignosVitales($request->only([

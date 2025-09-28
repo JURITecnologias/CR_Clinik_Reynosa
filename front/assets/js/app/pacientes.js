@@ -372,7 +372,6 @@ async function loadPacienteInForm(id) {
         }
 
         let edad=calcularEdad(paciente.fecha_nacimiento);
-        console.log('Calculated age:', edad);
 
         document.getElementById('paciente_id').value = paciente.id;
         document.getElementById('frm_add_paciente_nombres').value = paciente.nombre || '';
@@ -498,7 +497,6 @@ async function AddPacienteBasicInfo(){
 
     try {
         const newPaciente = await insertPaciente(pacienteData);
-        console.log('Patient added successfully:', newPaciente);
         return newPaciente;
     } catch (error) {
         console.log('Error adding patient:', error);
@@ -542,7 +540,6 @@ async function EditPacienteBasicInfo(){
 
     try {
         await UpdatePaciente(id,pacienteData);
-        console.log('Patient updated successfully:', pacienteData);
         document.getElementById('save-basic-info').classList.remove('d-none');
         hideLoading();
         nextTab();
@@ -563,7 +560,6 @@ async function AddPacienteAndHistorial() {
     document.getElementById('save-vitals').classList.add('disabled');
     try {
         const newHistorial = await AddHistorialMedico(idPacienteGlobal);
-        console.log('Patient and medical history added successfully:', newHistorial);
         window.location.href = 'patients.php';
     }catch (error) {
         console.error('Error adding patient or medical history:', error);
@@ -577,14 +573,12 @@ async function EditHistorialPaciente() {
     showLoading();
     document.getElementById('save-vitals').classList.add('d-none');
     const idhistorialData = document.getElementById('paciente_historial_id').value;
-    console.log('Editing medical history with ID:', idhistorialData);
     if (!idhistorialData) {
         console.error('Medical History ID is missing');
         return;
     }
     try {
         const updatedHistorial = await EditHistorialMedicoPaciente(idhistorialData);
-        console.log('Medical history updated successfully:', updatedHistorial);
         window.location.href = 'patients.php';
     } catch (error) {
         document.getElementById('save-vitals').classList.remove('d-none');
@@ -660,7 +654,6 @@ async function ValidaYContinuaHistoral() {
             }
             const newPaciente = await AddPacienteBasicInfo();
             idPacienteGlobal = newPaciente.id;
-            console.log('Patient added successfully:', newPaciente);
             nextTab();
         } catch (error) {
             console.error('Error adding patient:', error);
@@ -759,7 +752,6 @@ async function RemovePaciente(){
         const refererer = document.getElementById('delete_paciente_referer').value || 'patients.php';
         deleteModal.hide();
         id= document.getElementById('delete_paciente_id').value;
-        console.log('Removing patient with ID:', id);
         await DeletePaciente(id);
         const urlParams = new URLSearchParams(window.location.search);
         const registros = urlParams.get('registros') ? parseInt(urlParams.get('registros'), 10) : 50;
@@ -796,8 +788,7 @@ async function CrearConsulta() {
     const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
     let PerfilUsuario = null;
     try {
-        PerfilUsuario = await getUserProfile();
-        console.log("PerfilUsuario:", PerfilUsuario);
+        PerfilUsuario = await getUserProfile();  
         if(!PerfilUsuario || !PerfilUsuario.user.id){
             renderAlertMessage("No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
             return; 
@@ -854,7 +845,7 @@ async function CrearConsulta() {
         renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
         return;
     }
-    console.log("Consulta creada:", consultaCreada.consulta.id);
+    
     if(!consultaCreada || !consultaCreada.consulta.id){
         renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
         return;
@@ -877,5 +868,23 @@ async function insertConsulta(consultaData) {
     } catch (error) {
         console.error('Error inserting consulta:', error);
         throw error;
+    }
+}
+
+async function LoadConsultasPreviasPaciente(pacienteId){
+    showLoading();
+    if(!pacienteId){
+        hideLoading();
+        return;
+    }
+
+    try {
+        const consultas = await getUltimasCincoConsultasPacienteId(pacienteId,per_page=50);
+        renderPacienteUltimasConsultas(consultas.data);
+        document.getElementById('patient-detail-container').classList.remove('d-none');
+        hideLoading();
+    } catch (error) {
+        renderAlertMessage("Error al cargar consultas previas. Por favor, intente nuevamente.", 'danger');
+        console.error("Error al cargar consultas previas:", error);
     }
 }

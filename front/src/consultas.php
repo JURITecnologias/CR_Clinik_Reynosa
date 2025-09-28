@@ -129,7 +129,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
                                         <th class="no-sort">Doctor</th>
                                         <th class="no-sort">Fecha Consulta</th>
                                         <th class="no-sort">Estatus</th>
-                                        <th class="no-sort">Opciones</th>
+                                        <th class="no-sort" colspan=2>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -204,6 +204,27 @@ $user = include(__DIR__ . '/../src/user_session.php');
     </div>
 </div>
 <!-- End Confirm Consulta Modal  -->
+
+<div id="danger-header-modal-delete-consulta" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modal-delete-consultaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-bg-danger border-0">
+                <h4 class="modal-title" id="danger-header-modalLabel">Eliminar Consulta</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="mt-0">¿Está seguro de que desea eliminar esta consulta?</h5>
+                <p>Esta acción no se puede deshacer. </p>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="consulta_id_eliminar" value="">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" onclick="eliminarConsulta()">Eliminar</button>
+            </div>
+        </div> <!-- end modal content -->
+    </div> <!-- end modal dialog -->
+</div> <!-- end modal -->
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

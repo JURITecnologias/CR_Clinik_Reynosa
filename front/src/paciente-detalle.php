@@ -23,30 +23,30 @@
                 <a href="patients.php" class="fw-medium d-flex align-items-center"><i class="ti ti-arrow-left me-1"></i>Volver a Pacientes</a>
             </div>
             <!-- Fin Encabezado de Página -->
-
+            <div id="alert_placeholder" class="mb-3"></div>
             <!-- inicio pestañas -->
                 <ul class="nav nav-tabs nav-item-primary mb-3 border-bottom pb-4 mb-4 d-flex align-items-center gap-2">
                 <li class="nav-item">
-                    <a href="paciente-detalle.php" class="nav-link border rounded fw-semibold active">
+                    <a href="paciente-detalle.php?b=<?php echo  $_GET['b']; ?>" class="nav-link border rounded fw-semibold active">
                         Perfil del Paciente
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="patient-details-appointments.php" class="nav-link border rounded fw-semibold">
-                        Citas
+                 <li class="nav-item">
+                    <a href="paciente-consultas-previas.php?b=<?php echo  $_GET['b']; ?>" class="nav-link border rounded fw-semibold">
+                        Consultas Previas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="patient-details-vital-signs.php" class="nav-link border rounded fw-semibold">
-                        Signos Vitales
+                    <a href="paciente-citas.php" class="nav-link border rounded fw-semibold">
+                        Citas programadas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="patient-details-visit-history.php" class="nav-link border rounded fw-semibold">
-                        Historial de Visitas
+                    <a href="paciente-ordenes-clinicas.php" class="nav-link border rounded fw-semibold">
+                        Ordenes Clinicas
                     </a>
                 </li>
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a href="patient-details-lab-results.php" class="nav-link border rounded fw-semibold">
                         Resultados de Laboratorio
                     </a>
