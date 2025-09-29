@@ -28,6 +28,8 @@ jobs:
       FTP_TARGET: crclinik.juritecnologias.com
       APP_KEY: ${{ secrets.APP_KEY }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
 
     steps:
     - name: Checkout code
