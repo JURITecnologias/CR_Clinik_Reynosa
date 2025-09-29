@@ -139,7 +139,7 @@ jobs:
         EOF
 
     - name: Upload backend to FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
       with:
         server: ${{ env.FTP_HOST }}
         username: ${{ env.FTP_USERNAME }}
@@ -148,7 +148,7 @@ jobs:
         server-dir: ${{ env.FTP_TARGET }}/public_html/bkend/
 
     - name: Upload frontend to FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
       with:
         server: ${{ env.FTP_HOST }}
         username: ${{ env.FTP_USERNAME }}
