@@ -11,8 +11,15 @@ class CitaPacienteController extends Controller
     // Listar todas las citas
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 15);
+        $perPage = $request->get('per_page', 15); 
         $query = CitaPaciente::with(['paciente', 'doctor', 'consulta']);
+        
+        if ($request->filled('direccion')) {
+            $query->orderBy('fecha_cita', $request->direccion);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+       
         return $query->paginate($perPage);
     }
 
@@ -97,6 +104,16 @@ class CitaPacienteController extends Controller
         if ($request->filled('fecha_cita')) {
             $query->whereDate('fecha_cita', $request->fecha_cita);
         }
+        if($request->filled('consulta_id')) {
+            $query->where('consulta_id', $request->consulta_id);
+        }
+
+        if($request->filled('direccion')) {
+            $query->orderBy('fecha_cita', $request->direccion);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
         if ($request->filled('nombre_paciente')) {
             $nombre = strtolower($request->get('nombre_paciente'));
             $query->whereHas('paciente', function($q) use ($nombre) {
