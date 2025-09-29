@@ -65,7 +65,7 @@ jobs:
 
     - name: Upload backup as artifact
       if: ${{ inputs.backup == 'true' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ftp-backup
         path: ftp_backup/
@@ -165,7 +165,7 @@ jobs:
         cp -r front/* deployed_artifact/front/
 
     - name: Subir artefacto del deploy
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nuevo-deploy-${{ inputs.environment }}
         path: deployed_artifact/
