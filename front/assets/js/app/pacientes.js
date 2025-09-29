@@ -880,11 +880,15 @@ async function LoadConsultasPreviasPaciente(pacienteId){
 
     try {
         const consultas = await getUltimasCincoConsultasPacienteId(pacienteId,per_page=50);
+        if (!consultas || !consultas.data || consultas.data.length === 0) {
+            return;
+        }
         renderPacienteUltimasConsultas(consultas.data);
         document.getElementById('patient-detail-container').classList.remove('d-none');
-        hideLoading();
     } catch (error) {
         renderAlertMessage("Error al cargar consultas previas. Por favor, intente nuevamente.", 'danger');
         console.error("Error al cargar consultas previas:", error);
+    }finally {
+        hideLoading();
     }
 }
