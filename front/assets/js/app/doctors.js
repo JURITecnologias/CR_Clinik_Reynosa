@@ -37,6 +37,23 @@ async function  searchDoctorByEmail(email) {
     }
 }
 
+async function getDoctorPorNombre(nombre) {
+    try {
+        const response = await fetch(apiHost + apiPath + `/doctores/buscar?nombre=${encodeURIComponent(nombre)}`, {
+            method: 'GET',
+            headers: headersRequest
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch doctor by name: ' + response.statusText);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function destroyDoctor(id) {
     try {
         const response = await fetch(apiHost + apiPath + '/doctores/' + id, {

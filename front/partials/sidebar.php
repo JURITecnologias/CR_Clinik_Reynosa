@@ -132,18 +132,24 @@ function userHasAnyRole($user, $roles)
                     </li>
 
                     <li>
-                        <a href="appointments.php" class="<?php echo ($page =='appointments.php' || $page =='appointment-consultation.php') ? 'active' : '' ;?>">
+                        <a href="citas.php" class="<?php echo ($page =='citas.php') ? 'active' : '' ;?>">
                             <i class="ti ti-calendar-time"></i><span>Citas</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="consultas.php" class="<?php echo ($page =='consultas.php') ? 'active' : '' ;?>">
-                            <i class="ti ti-e-passport"></i><span>Consultas</span>
+                            <i class="fa fa-address-card"></i><span>Consultas</span>
                         </a>
                     </li>
 
-                    <li class="submenu">
+                     <li>
+                        <a href="under-maintenance.php" class="<?php echo ($page =='ordenes_clinicas.php') ? 'active' : '' ;?>">
+                            <i class="fa fa-ambulance"></i><span>Ordenes Clínicas</span>
+                        </a>
+                    </li>
+
+                    <!-- <li class="submenu">
                         <a href="javascript:void(0);" class="<?php echo ($page =='lab-results.php' || $page =='medical-results.php') ? 'active subdrop' : '' ;?>">
                             <i class="ti ti-test-pipe"></i><span>Laboratorio</span><span class="menu-arrow"></span>
                         </a>
@@ -155,21 +161,21 @@ function userHasAnyRole($user, $roles)
                                 <a href="medical-results.php" class="<?php echo ($page =='medical-results.php') ? 'active' : '' ;?>">Resultados Médicos</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
 
-                    <li>
+                    <!-- <li>
                         <a href="pharmacy.php" class="<?php echo ($page =='pharmacy.php') ? 'active' : '' ;?>">
                             <i class="ti ti-prescription"></i><span>Farmacia</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li class="menu-title" aria-disabled="true"><span>Administraci&oacuten</span></li>
-
+<!-- 
                     <li>
                         <a href="staffs.php" class="<?php echo ($page =='staffs.php') ? 'active' : '' ;?>">
                             <i class="ti ti-users-group"></i><span>Personal</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li>
                         <a href="notifications.php" class="<?php echo ($page =='notifications.php') ? 'active' : '' ;?>">

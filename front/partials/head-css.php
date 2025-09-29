@@ -46,11 +46,11 @@ $page = end( $link_array );
     <link rel="stylesheet" href="assets/plugins/icons/flags/flags.css">
 <?php }?>  
 
-<?php if ($page == 'icon-fontawesome.php') {   ?> 
+
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-<?php }?> 
+
 
 <?php if ($page == 'icon-ionic.php') {   ?> 
     <!-- Ionic CSS -->
@@ -148,12 +148,12 @@ $page = end( $link_array );
     <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 <?php }?>
 
-<?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'appointments.php' || $page == 'all-doctors-list.php' || $page == 'appearance-settings.php' || $page == 'appointment-consultation.php' || $page == 'change-password.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'email-compose.php' || $page == 'form-select.php' || $page == 'general-settings.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php' || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'security-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page=="nueva-consulta.php") {   ?>     
+<?php if ($page == 'add-doctors.php' || $page=='citas.php' || $page == 'add-patient.php' || $page == 'appointments.php' || $page == 'all-doctors-list.php' || $page == 'appearance-settings.php' || $page == 'appointment-consultation.php' || $page == 'change-password.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'email-compose.php' || $page == 'form-select.php' || $page == 'general-settings.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php' || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'security-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page=="nueva-consulta.php") {   ?>     
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
 <?php }?>     
 
-<?php if( $page == 'nueva-consulta.php' ) { ?>
+<?php if( $page == 'nueva-consulta.php' || $page == 'citas.php' ) { ?>
     <!-- Awesomplete CSS -->
     <link rel="stylesheet" href="assets/plugins/awesomplete/awesomplete.css" />
     <script src="assets/plugins/awesomplete/awesomplete.js"></script>

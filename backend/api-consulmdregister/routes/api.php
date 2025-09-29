@@ -104,9 +104,10 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera',
 
 Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/doctores', [InformacionDoctorController::class, 'index']);
+    Route::get('/doctores/buscar', [InformacionDoctorController::class, 'buscarPorNombre']);
+    Route::get('/doctores/todos', [InformacionDoctorController::class, 'indexConEliminados']);
     Route::get('/doctores/{id}', [InformacionDoctorController::class, 'show']);
     Route::post('/doctores/buscar/email', [InformacionDoctorController::class, 'buscarPorEmail']);
-    Route::get('/doctores/todos', [InformacionDoctorController::class, 'indexConEliminados']);
     Route::get('/doctores/eliminados', [InformacionDoctorController::class, 'soloEliminados']);
 });
 
