@@ -42,6 +42,41 @@ async function addCita(citaData) {
     }
 }
 
+async function searchCitaByConsulta(consultaId,per_page=50,page=1) {
+    try {
+        const response = await fetch(apiHost + apiPath + `/citas-pacientes/buscar?per_page=${per_page}&page=${page}&consulta_id=${consultaId}`, {
+            method: 'GET',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        return error;
+    }
+}
+
+async function updateCita(citaId, citaData) {
+    try {
+        const response = await fetch(apiHost + apiPath + `/citas-pacientes/${citaId}`, {
+            method: 'PUT',
+            headers: headersRequest,
+            body: JSON.stringify(citaData)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        return error;
+    }
+}
+
 function renderCitasTable(citas) {
     const tableBody =  $('#citas_info_table tbody')[0];
     tableBody.innerHTML = '';

@@ -242,11 +242,14 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.pe
     Route::delete('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'destroy']);
 });
 
-Route::get('/pdf/receta', [PdfRecetaController::class, 'generar']);
+Route::middleware(['basic.auth','check.role:Doctor', 'check.permission:escribir'])->group(function () {
+    Route::get('/pdf/receta', [PdfRecetaController::class, 'generar']);
+});
 
 // Receta Medica routes
 Route::middleware(['basic.auth', 'check.role:Doctor','check.permission:ver'])->group(function () {
     Route::get('/receta-medica/uuid/{uuid}', [\App\Http\Controllers\RecetaMedicaController::class, 'showByUuid']);
+    Route::get('/receta-medica/consulta/{consultaId}', [\App\Http\Controllers\RecetaMedicaController::class, 'showByConsultaId']);
 });
 
 Route::middleware(['basic.auth', 'check.role:Doctor','check.permission:escribir'])->group(function () {

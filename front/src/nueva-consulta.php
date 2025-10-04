@@ -1,6 +1,8 @@
 <?php
 
-ob_start(); ?>
+ob_start(); 
+$user = include(__DIR__ . '/../src/user_session.php');
+?>
 
 <!-- ========================
         Start Page Content
@@ -290,10 +292,8 @@ ob_start(); ?>
                     <div class="col-xl-2 col-md-4 col-sm-6">
                         <div class="mb-3">
                             <label class="form-label" for="frm_medicamento_duracion">Duracion de dosis<span class="text-danger ms-1">*</span></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_medicamento_duracion">
-                                <span class="input-group-text" id="frm_medicamento_duracion">Dias</span>
-                            </div>
+                            <input type="text" class="form-control" id="frm_medicamento_duracion">
+                            
                         </div>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-6">
@@ -377,7 +377,7 @@ ob_start(); ?>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-12">
                         <div class="input-group w-auto input-group-flat mb-3">
-                            <input type="date" class="form-control" placeholder="dd/mm/yyyy">
+                            <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="frm_cita_fecha">
                             <span class="input-group-text">
                                 <i class="ti ti-calendar"></i>
                             </span>
@@ -394,7 +394,7 @@ ob_start(); ?>
                     </div>
                     <div class="col-xl-6 col-md-6 col-sm-12">
                         <div class="input-group w-auto input-group-flat mb-3">
-                            <input type="time" class="form-control" placeholder="HH:mm">
+                            <input type="time" class="form-control" placeholder="HH:mm" id="frm_cita_hora">
                             <span class="input-group-text">
                                 <i class="ti ti-clock"></i>
                             </span>
@@ -407,6 +407,11 @@ ob_start(); ?>
         <!-- end follow Up information -->
 
         <div class="d-flex justify-content-end flex-wrap align-items-center gap-2 mt-3">
+            <input type="hidden" id="cita_id" value="">
+            <input type="hidden" id="doctor_id" value="">
+            <input type="hidden" id="doc_info" value="">
+            <input type="hidden" id="paciente_info" value="">
+            <input type="hidden" type="hidden" id="receta" value="">
             <button onclick="GuardarConsulta()" class="btn btn-primary btn-lg btn-save">Guardar Datos de Consulta</button>
             <button onclick="ImprimirReceta()" class="btn btn-success btn-lg">Imprimir Receta Médica</button>
         </div>

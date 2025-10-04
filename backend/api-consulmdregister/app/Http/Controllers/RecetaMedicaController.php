@@ -6,6 +6,7 @@ use App\Models\RecetaMedica;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ConfiguracionSistema;
 
 class RecetaMedicaController extends Controller
 {
@@ -19,7 +20,6 @@ class RecetaMedicaController extends Controller
             'medicamentos' => 'nullable|array',
             'fecha_emision' => 'required|date',
             'fecha_consulta' => 'required|date',
-            'folio_receta' => 'required|string',
             'nombre_doctor' => 'required|string',
             'titulo_doctor' => 'required|string',
             'numero_cedula' => 'required|string',
@@ -39,6 +39,17 @@ class RecetaMedicaController extends Controller
         }
 
         $data = $validator->validated();
+
+        $config = ConfiguracionSistema::firstOrCreate(
+            ['variable' => 'folio_receta'],
+            ['valor' => 1]
+        );
+
+        $data['folio_receta'] = $config->valor;
+
+        $config->valor += 1;
+        $config->save();
+        
 
         $data['uuid'] = (string) \Illuminate\Support\Str::uuid();
         $data['ip_address'] = $request->ip();
@@ -67,5 +78,17 @@ class RecetaMedicaController extends Controller
     {
         $receta = RecetaMedica::where('uuid', $uuid)->firstOrFail();
         return response()->json($receta);
+    }
+
+    // Obtener receta médica por consulta ID
+    public function showByConsultaId($consultaId)
+    {
+        $receta = RecetaMedica::where('consulta_id', $consultaId)->first();
+
+        if (!$receta) {
+            return response()->json(['message' => 'Receta no encontrada'], 404);
+        }
+
+        return response()->json(['uuid' => $receta->uuid]);
     }
 }

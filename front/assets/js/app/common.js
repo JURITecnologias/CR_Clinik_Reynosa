@@ -45,3 +45,11 @@ function calcularEdad(fechaNacimiento) {
     }
     return edad;
 }
+
+function obfuscate(str) {
+    return str.split('').map(c => String.fromCharCode(c.charCodeAt(0) + 1)).join('');
+}
+
+function deobfuscate(str) {
+    return str.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 1)).join('');
+}

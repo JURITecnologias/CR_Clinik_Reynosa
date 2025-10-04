@@ -516,6 +516,7 @@ async function renderConsultaPaciente(consulta){
     if(!consulta || !consulta.id) return;
     // Fetch paciente details
     document.getElementById('consulta_id').innerText = "C#" + consulta.id;
+    document.getElementById('doctor_id').value = consulta.doctor.id;
     document.getElementById('consulta_estatus').value = consulta.estatus;
     document.getElementById('consulta_fecha').innerText = new Date(consulta.created_at).toLocaleDateString('es-MX', {
         day: '2-digit',
@@ -557,7 +558,23 @@ async function renderConsultaPaciente(consulta){
     }
 
     document.getElementById('info_paciente_container').classList.remove('d-none');
+    document.getElementById('doc_info').value =  obfuscate(JSON.stringify(consulta.doctor));
+    document.getElementById('paciente_info').value = obfuscate(JSON.stringify(consulta.paciente));
 }
+
+function renderCitaSeguimientoInfo(cita){
+    if(!cita || !cita.id) {
+        return;
+    }
+
+    const fechaCita = new Date(cita.fecha_cita);
+    document.getElementById('frm_cita_fecha').value = cita.fecha_cita;
+
+    document.getElementById('frm_cita_hora').value = cita.hora_cita;
+
+    document.getElementById('cita_id').value = cita.id;
+}
+
 
 async function LoadConsultasTable(perPage = 50, actualPage = 1, searchTerm = '',order='fecha_consulta', orderDirection='asc') {
     showLoading();
@@ -587,7 +604,10 @@ async function LoadConsulta(p, showDeleteButton = true) {
     disableButtons();
     try {
         const consulta = await getConsulta(consultaId);
+        const cita= await searchCitaByConsulta(consultaId);
+        
         renderConsultaPaciente(consulta);
+        if(cita && cita.data && cita.data.length > 0) renderCitaSeguimientoInfo(cita.data[0]);
         if (consulta.medicamentos && consulta.medicamentos.length > 0) {
             sessionStorage.setItem('medicamentos', JSON.stringify(consulta.medicamentos));
             consulta.medicamentos.forEach(medicamento => {
@@ -610,6 +630,17 @@ async function LoadConsulta(p, showDeleteButton = true) {
         });
         if (filteredConsultas.length > 0) {
             renderPacienteUltimasConsultas(filteredConsultas);
+        }
+
+        try {
+            const receta = await getRecetaByConsultaId(consultaId);
+            if (receta && receta.uuid) {
+            document.getElementById('receta').value = obfuscate(receta.uuid);
+            }
+        } catch (error) {
+            if (error.response && error.response.status !== 404) {
+            renderAlertMessage("Error al obtener la receta. Por favor, intente nuevamente.", 'danger');
+            }
         }
 
         enableButtons();
@@ -713,13 +744,37 @@ function ValidaConsulta(){
 
 async function GuardarConsulta(renderMessages=true){
     const consultaData = ValidaConsulta();
+    const citaId = document.getElementById('cita_id').value;
+
+    const pacienteId = document.getElementById('paciente_id').value;
+    const doctorId = document.getElementById('doctor_id').value;
+    const fechaCita = document.getElementById('frm_cita_fecha').value;
+    const horaCita = document.getElementById('frm_cita_hora').value;
+    const consultaId = document.getElementById('consulta_id').value;
+    const citaData = {
+        paciente_id: pacienteId,
+        doctor_id: doctorId || null,
+        fecha_cita: fechaCita,
+        hora_cita: horaCita,
+        consulta_id: consultaId || null
+    };
+
     if(!consultaData) return;
     showLoading();
     disableButtons();
     try {
         const updatedConsulta = await updateConsulta(consultaData);
+        if(citaId){
+            await updateCita(citaId, citaData);
+        }else{
+            if(citaData.fecha_cita && citaData.hora_cita) {
+                const newCita = await addCita(citaData);
+                document.getElementById('cita_id').value = newCita.id;
+            }
+        }
         if(renderMessages) renderAlertMessage('Consulta actualizada correctamente.', 'success');
     } catch (error) {
+        console.error('Error al actualizar la consulta:', error);
         if(renderMessages) renderAlertMessage('Error al actualizar la consulta. Por favor, intente nuevamente.', 'danger');
     } finally {
         enableButtons();
@@ -981,7 +1036,7 @@ async function ImprimirReceta(){
 
     if(document.getElementById('consulta_estatus').value.toLowerCase() !== 'abierta'){
         //la consulta ya fue guardada, solo imprimimos
-        alert("La consulta ya fue guardada, solo se imprimirá la receta.");
+        downloadRecetaPdf(document.getElementById('receta').value ? deobfuscate( document.getElementById('receta').value) : null);
         return;
     }
 
@@ -990,6 +1045,11 @@ async function ImprimirReceta(){
         if (!consultaData) return;
         disableButtons();
         try {
+            const response = await ProcesaReceta();
+            if (!response) return;
+           
+            document.getElementById('receta').value = obfuscate(response.uuid);
+
             consultaData.estatus = 'completada';
             const servicios = sessionStorage.getItem('servicios_medicos');
             consultaData.servicios_medicos = servicios ? JSON.parse(servicios) : [];
@@ -1004,8 +1064,10 @@ async function ImprimirReceta(){
             console.log(consultaData);
             const updatedConsulta = await updateConsulta(consultaData);
             enableButtons();
+            downloadRecetaPdf(response.uuid);
         } catch (error) {
-            if (renderMessages) renderAlertMessage('Error al actualizar la consulta. Por favor, intente nuevamente.', 'danger');
+            console.error(error);
+            renderAlertMessage('Error al actualizar la consulta. Por favor, intente nuevamente.', 'danger');
             showSaveButtons();
             enableButtons();
         }
@@ -1015,5 +1077,107 @@ async function ImprimirReceta(){
         renderAlertMessage("Error al guardar la consulta. Por favor, intente nuevamente.", 'danger');
         showSaveButtons();
         enableButtons();
+    }
+}
+
+async function ProcesaReceta() {
+    const pacienteId = document.getElementById('paciente_id').value;
+    const consultaId = document.getElementById('consulta_id').value;
+    const doctorId = document.getElementById('doctor_id').value;
+    const fechaConsulta = document.getElementById('consulta_fecha').innerText;
+    const presionArterial = document.getElementById('frm_signos_vitales_presion_arterial').value;
+    const temperatura = document.getElementById('frm_signos_vitales_temperatura').value;
+    const pulso = document.getElementById('frm_signos_vitales_frecuencia_cardiaca').value;
+    const frecuenciaRespiratoria = document.getElementById('frm_signos_vitales_frecuencia_respiratoria').value;
+    const saturacionOxigeno = document.getElementById('frm_signos_vitales_saturacion_oxigeno').value;
+    const peso = document.getElementById('frm_signos_vitales_peso').value;
+    const talla = document.getElementById('frm_signos_vitales_talla').value;
+    const diagnostico = document.getElementById('frm_diagnostico').value;
+
+
+    // Validate pacienteId, consultaId, and doctorId
+    if (!pacienteId) {
+        renderAlertMessage("Error al crear la receta. El ID del paciente es obligatorio. Por favor, verifique.", 'danger');
+        return;
+    }
+    if (!consultaId) {
+        renderAlertMessage("Error al crear la receta. El ID de la consulta es obligatorio. Por favor, verifique.", 'danger');
+        return;
+    }
+    if (!doctorId) {
+        renderAlertMessage("Error al crear la receta. El ID del doctor es obligatorio. Por favor, verifique.", 'danger');
+        return;
+    }
+
+    const doctorData = document.getElementById('doc_info').value ? JSON.parse(deobfuscate(document.getElementById('doc_info').value)) : null;
+    if (!doctorData || !doctorData.id) {
+        renderAlertMessage("Error al crear la receta. No se pudo obtener el perfil del doctor. Por favor, inicie sesión nuevamente.", 'danger');
+        return;
+    }
+
+    const pacienteData = document.getElementById('paciente_info').value ? JSON.parse(deobfuscate(document.getElementById('paciente_info').value)) : null;
+    if (!pacienteData || !pacienteData.id) {
+        renderAlertMessage("Error al crear la receta. No se pudo obtener la información del paciente. Por favor, verifique.", 'danger');
+        return;
+    }
+
+    medicamentos = sessionStorage.getItem('medicamentos');
+    medicamentos = medicamentos ? JSON.parse(medicamentos) : [];
+
+    servicios_medicos = sessionStorage.getItem('servicios_medicos');
+    servicios_medicos = servicios_medicos ? JSON.parse(servicios_medicos) : [];
+
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user) {
+        renderAlertMessage("Error al crear la receta. No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
+        return;
+    }
+
+    let fechaConsultaObj = new Date(fechaConsulta);
+    if (isNaN(fechaConsultaObj.getTime())) {
+       let fconsulta= fechaConsulta.split(' ')[0];
+       const partesFecha = fconsulta.split('/');
+       if (partesFecha.length === 3) {
+              const dia = parseInt(partesFecha[0], 10);
+              const mes = parseInt(partesFecha[1], 10) - 1; // Los meses en JavaScript son 0-indexados
+              const anio = parseInt(partesFecha[2], 10);
+              fechaConsultaObj = new Date(anio, mes, dia);
+       }     
+    }
+
+    const recetaPayload = {
+        paciente_id: pacienteId,
+        consulta_id: consultaId,
+        doctor_id: doctorId,
+        medicamentos: medicamentos,
+        fecha_emision: new Date().toISOString(),
+        fecha_consulta: fechaConsultaObj.toISOString(),
+        nombre_doctor: doctorData.nombre_completo,
+        titulo_doctor: doctorData.titulo,
+        numero_cedula: doctorData.cedula_profesional,
+        telefono_doctor: doctorData.telefono,
+        nombre_completo_paciente: pacienteData.nombre+" "+pacienteData.apellido,
+        fecha_nacimiento_paciente: pacienteData.fecha_nacimiento,
+        edad_paciente: ""+calcularEdad(pacienteData.fecha_nacimiento)+"",
+        signos_vitales: {
+            presion: presionArterial,
+            temperatura: temperatura,
+            pulso: pulso,
+            frecuencia: frecuenciaRespiratoria,
+            saturacion: saturacionOxigeno,
+            peso: peso,
+            talla: talla
+        },
+        diagnostico: diagnostico,
+        servicios_medicos: servicios_medicos,
+        created_by: user.user.name
+    };
+
+    try {
+        const response=await processReceta(recetaPayload);
+        return response;
+    } catch (error) {
+        console.error("Error al generar la receta PDF:", error);
+        throw error;
     }
 }
