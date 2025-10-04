@@ -36,10 +36,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Composer install
+    - name: Composer update
       run: |
         cd backend/api-consulmdregister
-        composer install
+        composer update
 
     - name: Show selected options
       run: |
