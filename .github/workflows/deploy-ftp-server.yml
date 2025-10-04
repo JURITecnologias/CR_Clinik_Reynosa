@@ -36,20 +36,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Composer install
+    - name: Composer update
       run: |
         cd backend/api-consulmdregister
-        composer install
-
-    - name: Run Laravel migrations
-      run: |
-        cd backend/api-consulmdregister
-        php artisan migrate --force
-
-    - name: Clear Laravel cache
-      run: |
-        cd backend/api-consulmdregister
-        php artisan cache:clear
+        composer update
 
     - name: Show selected options
       run: |
@@ -181,6 +171,16 @@ jobs:
         password: ${{ env.FTP_PASSWORD }}
         local-dir: front/
         server-dir: ${{ env.FTP_TARGET }}/public_html/
+
+    - name: Run Laravel migrations
+      run: |
+        cd backend/api-consulmdregister
+        php artisan migrate --force
+
+    - name: Clear Laravel cache
+      run: |
+        cd backend/api-consulmdregister
+        php artisan cache:clear
 
     - name: Preparar artefacto del nuevo deploy
       run: |
