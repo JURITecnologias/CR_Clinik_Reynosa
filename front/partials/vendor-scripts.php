@@ -219,6 +219,10 @@ $page = end( $link_array );
     <script src="assets/js/script.js"></script>
     <?php } ?>
 
-    <?php if($page == 'citas.php') { ?>
+    <?php if($page == 'citas.php' || $page=="nueva-consulta.php" || $page=="detalle-consulta.php") { ?>
     <script src="assets/js/app/citas.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'nueva-consulta.php' || $page=='detalle-consulta.php') { ?>
+    <script src="assets/js/app/recetas.js"></script>
     <?php } ?>

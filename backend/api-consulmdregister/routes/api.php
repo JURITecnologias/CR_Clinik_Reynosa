@@ -10,6 +10,8 @@ use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\InformacionDoctorController;
 use App\Http\Controllers\ServicioMedicoController;
 use App\Http\Controllers\MedicamentoController;
+use App\Http\Controllers\PdfRecetaController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -238,4 +240,22 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera',
 
 Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:borrar'])->group(function () {
     Route::delete('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'destroy']);
+});
+
+Route::middleware(['basic.auth','check.role:Doctor', 'check.permission:escribir'])->group(function () {
+    Route::get('/pdf/receta', [PdfRecetaController::class, 'generar']);
+});
+
+// Receta Medica routes
+Route::middleware(['basic.auth', 'check.role:Doctor','check.permission:ver'])->group(function () {
+    Route::get('/receta-medica/uuid/{uuid}', [\App\Http\Controllers\RecetaMedicaController::class, 'showByUuid']);
+    Route::get('/receta-medica/consulta/{consultaId}', [\App\Http\Controllers\RecetaMedicaController::class, 'showByConsultaId']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Doctor','check.permission:escribir'])->group(function () {
+    Route::post('/receta-medica', [\App\Http\Controllers\RecetaMedicaController::class, 'store']);
+});
+
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon','check.permission:borrar'])->group(function () {
+    Route::delete('/receta-medica/uuid/{uuid}', [\App\Http\Controllers\RecetaMedicaController::class, 'destroyByUuid']);
 });

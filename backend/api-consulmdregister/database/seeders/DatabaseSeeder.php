@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ServiciosMedicosSeeder::class,
             SeedersMedicamentoSeeder::class,
+            add_default_configuracion_sistema::class,
         ]);
     }
 }

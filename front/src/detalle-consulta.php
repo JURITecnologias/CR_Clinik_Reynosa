@@ -299,6 +299,13 @@ ob_start(); ?>
                         </div>
                     </div>
                 </div>
+                <div>
+                     <input type="hidden" id="cita_id" value="">
+                    <input type="hidden" id="doctor_id" value="">
+                    <input type="hidden" id="doc_info" value="">
+                    <input type="hidden" id="paciente_info" value="">
+                    <input type="hidden" type="hidden" id="receta" value="">
+                </div>
                 <!-- end row for time -->
             </div>
         </div>
