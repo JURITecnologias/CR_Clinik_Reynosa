@@ -41,15 +41,15 @@ jobs:
         cd backend/api-consulmdregister
         composer install
 
-      - name: Run Laravel migrations
-        run: |
-          cd backend/api-consulmdregister
-          php artisan migrate --force
+    - name: Run Laravel migrations
+      run: |
+        cd backend/api-consulmdregister
+        php artisan migrate --force
 
-        - name: Clear Laravel cache
-          run: |
-            cd backend/api-consulmdregister
-            php artisan cache:clear
+    - name: Clear Laravel cache
+      run: |
+        cd backend/api-consulmdregister
+        php artisan cache:clear
 
     - name: Show selected options
       run: |
