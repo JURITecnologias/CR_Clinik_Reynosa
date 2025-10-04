@@ -36,6 +36,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Composer install
+      run: |
+        cd backend/api-consulmdregister
+        composer install
+
     - name: Show selected options
       run: |
         echo "Entorno seleccionado: ${{ inputs.environment }}"
@@ -147,6 +152,16 @@ jobs:
         password: ${{ env.FTP_PASSWORD }}
         local-dir: backend/api-consulmdregister/
         server-dir: ${{ env.FTP_TARGET }}/public_html/bkend/
+        exclude: ''
+
+    - name: Upload vendor to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+      with:
+        server: ${{ env.FTP_HOST }}
+        username: ${{ env.FTP_USERNAME }}
+        password: ${{ env.FTP_PASSWORD }}
+        local-dir: backend/api-consulmdregister/vendor/
+        server-dir: ${{ env.FTP_TARGET }}/public_html/bkend/vendor/
 
     - name: Upload frontend to FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.6
