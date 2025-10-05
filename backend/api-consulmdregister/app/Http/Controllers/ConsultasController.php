@@ -28,7 +28,9 @@ class ConsultasController extends Controller
         $orderBy = $request->query('order_by', 'created_at'); // Campo para ordenar, por defecto 'fecha_consulta'
         $orderDirection = $request->query('order_direction', 'asc'); // Dirección de orden, por defecto 'asc'
 
-        return Consulta::with(['paciente', 'doctor', 'signosVitales'])
+        return Consulta::with(['paciente', 'doctor' => function ($query) {
+            $query->select('id', 'uuid', 'user_id','nombre_completo','titulo','universidad','cedula_profesional','especialista_en','fecha_nacimiento','experiencia','telefono_personal','telefono','telefono_emergencias','direccion'); // Excluir el campo de firma
+            }, 'signosVitales'])
             ->orderBy($orderBy, $orderDirection)
             ->paginate($perPage);
     }
@@ -70,13 +72,22 @@ class ConsultasController extends Controller
         $query->orderBy($orderBy, $orderDirection);
 
         $perPage = $filters['per_page'] ?? 10; // Número de elementos por página, por defecto 10
-        return $query->with(['paciente', 'doctor', 'signosVitales'])->paginate($perPage);
+        return $query->with(['paciente', 'doctor' => function ($query) {
+            $query->select('id', 'uuid', 'user_id', 'nombre_completo', 'titulo', 'universidad', 'cedula_profesional', 'especialista_en', 'fecha_nacimiento', 'experiencia', 'telefono_personal', 'telefono', 'telefono_emergencias', 'direccion');
+        }, 'signosVitales'])->paginate($perPage);
     }
 
     // Mostrar una consulta específica
     public function show($id)
     {
-        return Consulta::with(['paciente', 'doctor', 'signosVitales', 'paciente.historialMedico'])->findOrFail($id);
+        return Consulta::with([
+            'paciente', 
+            'doctor' => function ($query) {
+            $query->select('id', 'uuid', 'user_id', 'nombre_completo', 'titulo', 'universidad', 'cedula_profesional', 'especialista_en', 'fecha_nacimiento', 'experiencia', 'telefono_personal', 'telefono', 'telefono_emergencias', 'direccion');
+            }, 
+            'signosVitales', 
+            'paciente.historialMedico'
+        ])->findOrFail($id);
     }
 
     // Crear una nueva consulta con signos vitales
