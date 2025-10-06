@@ -233,7 +233,7 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'show']);
 });
 
-Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera', 'check.permission:modificar|escribir'])->group(function () {
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera', 'check.permission:modificar|escribir|ver'])->group(function () {
     Route::post('/citas-pacientes', [\App\Http\Controllers\CitaPacienteController::class, 'store']);
     Route::put('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'update']);
 });

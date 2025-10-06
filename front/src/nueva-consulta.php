@@ -413,7 +413,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
             <input type="hidden" id="paciente_info" value="">
             <input type="hidden" type="hidden" id="receta" value="">
             <button onclick="GuardarConsulta()" class="btn btn-primary btn-lg btn-save">Guardar Datos de Consulta</button>
-            <button onclick="ImprimirReceta()" class="btn btn-success btn-lg">Imprimir Receta Médica</button>
+            <button onclick="ImprimirReceta()" class="btn btn-success btn-lg" id='btn_imprimir_receta'>Imprimir Receta Médica</button>
         </div>
 
     </div>

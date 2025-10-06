@@ -312,7 +312,7 @@ ob_start(); ?>
             <input type="hidden" id="doc_info" value="">
             <input type="hidden" id="paciente_info" value="">
             <input type="hidden" type="hidden" id="receta" value="">
-            <button onclick="ImprimirReceta()" class="btn btn-success btn-lg">Imprimir Receta Médica</button>
+            <button onclick="ImprimirReceta()" class="btn btn-success btn-lg" id="btn_imprimir_receta">Imprimir Receta Médica</button>
         </div>
     </div>
     <div id="full-width-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-paciente-historial" aria-hidden="true">

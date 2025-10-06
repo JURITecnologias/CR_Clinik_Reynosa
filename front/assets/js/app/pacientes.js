@@ -212,7 +212,7 @@ async function renderPacienteInfoCardList(pacientes) {
                     </div>
                     <div class ="row">
                     <div class="col-6">
-                        <a href="javascript:void(0);" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#add_modal">Agendar cita</a>
+                        <a href="javascript:CrearCitaFromPacientes(${paciente.id},'${paciente.nombre} ${paciente.apellido}');" class="btn btn-primary w-100" >Agendar cita</a>
                     </div>
 
                     <div class="col-6">
@@ -891,4 +891,17 @@ async function LoadConsultasPreviasPaciente(pacienteId){
     }finally {
         hideLoading();
     }
+}
+
+async function CrearCitaFromPacientes(pacienteId,nombrePaciente) {
+    if (!pacienteId) {
+        renderAlertMessage("No se ha seleccionado ningún paciente.", 'danger');
+        return;
+    }
+    document.getElementById('frm_paciente_id').value = pacienteId;
+    document.getElementById('paciente_busqueda').value = nombrePaciente;
+    document.getElementById('paciente_busqueda').setAttribute('readonly', true);
+    const citaModal = new bootstrap.Modal(document.getElementById('add-cita-modal'));
+    citaModal.show();
+
 }

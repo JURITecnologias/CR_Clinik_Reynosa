@@ -598,6 +598,12 @@ async function LoadConsulta(p, showDeleteButton = true) {
     //limpia listas de medicamentos y servicios medicos
     sessionStorage.removeItem('medicamentos');
     sessionStorage.removeItem('servicios_medicos');
+
+    const user = JSON.parse(sessionStorage.getItem('user'));
+
+    const hasAdminRole = user && user.roles && ['Admon', 'Main Admin'].some(rol => user.roles.includes(rol));
+    const hasDoctorRole = user && user.roles && user.roles.includes('Doctor');
+
     const consultaId = atob(p);
     showLoading();
     disableButtons();
@@ -662,6 +668,11 @@ async function LoadConsulta(p, showDeleteButton = true) {
                 medicamentoEntryFormName.classList.add('d-none');
             }
         }
+
+        if(!hasAdminRole && !hasDoctorRole){
+            document.getElementById('btn_imprimir_receta').classList.add('d-none');
+        }
+        
     } catch (error) {
         renderAlertMessage("Error al cargar la consulta. Por favor, intente nuevamente.", 'danger',false);
         console.error('Error fetching consulta:', error);
