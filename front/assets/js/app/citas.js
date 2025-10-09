@@ -111,6 +111,23 @@ async function searchCitaByConsulta(consultaId,per_page=50,page=1) {
     }
 }
 
+async function searchCitaByPaciente(pacienteId,per_page=20,page=1) {
+    try {
+        const response = await fetch(apiHost + apiPath + `/citas-pacientes/buscar?per_page=${per_page}&page=${page}&paciente_id=${pacienteId}&direccion=desc`, {
+            method: 'GET',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        return error;
+    }
+}
+
 async function updateCita(citaId, citaData) {
     try {
         const response = await fetch(apiHost + apiPath + `/citas-pacientes/${citaId}`, {
@@ -129,7 +146,7 @@ async function updateCita(citaId, citaData) {
     }
 }
 
-function renderCitasTable(citas) {
+function renderCitasTable(citas,showActions=true) {
     const tableBody =  $('#citas_info_table tbody')[0];
     tableBody.innerHTML = '';
 
@@ -161,10 +178,10 @@ function renderCitasTable(citas) {
             `}
             </td>
             <td>
-            ${CitaTieneMasDe3Dias? '' : `
-            ${CitaAunNoIniciada && hasDoctorRole ? `<button class="btn btn-sm btn-primary" onclick="CrearConsultaDeCita(${cita.id},${cita.paciente_id},${cita.doctor_id})">Entrar a Consulta</button>` : ''}
-            ${hasEditPermission || hasNurseRole ? `<button class="btn btn-sm btn-secondary" onclick="showEditCitaModal(${cita.id})">Editar</button>` : ''}
-            ${hasAdminRole && hasDeletePermission ? `<button class="btn btn-sm btn-danger" onclick="showDeleteCitaModal(${cita.id})">Eliminar</button>` : ''}
+            ${CitaTieneMasDe3Dias && showActions ? '' : `
+            ${CitaAunNoIniciada && hasDoctorRole &&  showActions ? `<button class="btn btn-sm btn-primary" onclick="CrearConsultaDeCita(${cita.id},${cita.paciente_id},${cita.doctor_id})">Entrar a Consulta</button>` : ''}
+            ${(hasEditPermission || hasNurseRole) && showActions ? `<button class="btn btn-sm btn-secondary" onclick="showEditCitaModal(${cita.id})">Editar</button>` : ''}
+            ${hasAdminRole && hasDeletePermission && showActions ? `<button class="btn btn-sm btn-danger" onclick="showDeleteCitaModal(${cita.id})">Eliminar</button>` : ''}
             `}
             </td>
         `;
@@ -184,6 +201,24 @@ async function LoadCitasTable(pagina = 1, registros = 50, busqueda = '', direcci
         renderCitasTable(data.data);
         await LoadPagesControl(data.last_page, registros, data.current_page);
         showInfoContainer(true);
+    } catch (error) {
+        console.error('Error loading citas:', error);
+        renderAlertMessage('Error al cargar las citas. Inténtalo de nuevo más tarde.', 'danger');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function LoadCitasTablePacienteView(pacienteId, pagina = 1, registros = 50) {
+    showLoading();
+    try {
+        const data = await searchCitaByPaciente(pacienteId, registros, pagina);
+        if (data instanceof Error) {
+            showAlert('Error al cargar las citas. Inténtalo de nuevo más tarde.', 'danger');
+            return;
+        }   
+        renderCitasTable(data.data,false);
+        document.getElementById('patient-detail-container').classList.remove('d-none');
     } catch (error) {
         console.error('Error loading citas:', error);
         renderAlertMessage('Error al cargar las citas. Inténtalo de nuevo más tarde.', 'danger');

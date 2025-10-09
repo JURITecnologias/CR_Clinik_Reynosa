@@ -37,12 +37,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="paciente-citas.php" class="nav-link border rounded fw-semibold">
+                    <a href="paciente-citas.php?b=<?php echo  $_GET['b']; ?>" class="nav-link border rounded fw-semibold">
                         Citas programadas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="paciente-ordenes-clinicas.php" class="nav-link border rounded fw-semibold">
+                    <a href="paciente-ordenes-clinicas.php?b=<?php echo  $_GET['b']; ?>" class="nav-link border rounded fw-semibold">
                         Ordenes Clinicas
                     </a>
                 </li>
