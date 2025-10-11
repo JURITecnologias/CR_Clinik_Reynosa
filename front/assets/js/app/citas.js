@@ -1,5 +1,4 @@
 async function getCitas(pagina = 1, registros = 50, busqueda = '', direccion = 'desc') {
-    console.log('Fetching citas with params:', { pagina, registros, busqueda, direccion });
     try {
         let response;
         if(busqueda){
@@ -163,8 +162,6 @@ function renderCitasTable(citas,showActions=true) {
         const CitaAunNoIniciada = new Date(cita.fecha_cita) <= new Date();
         //const CitaAunNoIniciada =true;
         const CitaTieneMasDe3Dias = (new Date() - new Date(cita.fecha_cita)) / (1000 * 60 * 60 * 24) > 3;
-        console.log( 'CitaAunNoIniciada:', CitaAunNoIniciada);
-        console.log(cita.atendio_cita);
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>#CT${cita.id}</td>
@@ -340,7 +337,6 @@ async function CrearCita(modalName='add-modal',reloadCitasTable=true) {
         fecha_cita: fechaCita,
         hora_cita: horaCita
     };
-    console.log('Creating cita with data:', citaData);
 
     try {
         const result = await addCita(citaData);
@@ -419,7 +415,6 @@ async function EditarCita() {
         consulta_id: consultaId || null,
         notas: notas || null
     };
-    console.log('Updating cita with data:', citaData);
     try {
         const result = await updateCita(citaId, citaData);
         if (result instanceof Error) {
@@ -494,7 +489,6 @@ async function CrearConsultaDeCita(citaId,pacienteId,doctorId) {
             renderAlertMessage('Error al crear la consulta. Inténtalo de nuevo más tarde.', 'danger');
             return;
         }
-        console.log('Consulta creada con éxito:', result);
         window.location.href = `nueva-consulta.php?p=${btoa(result.consulta.id)}&from=cita&cita_id=${btoa(citaId)}`;
     } catch (error) {
         console.error('Error creating consulta:', error);

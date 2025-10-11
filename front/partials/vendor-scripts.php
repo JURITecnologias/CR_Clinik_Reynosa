@@ -226,3 +226,5 @@ $page = end( $link_array );
     <?php if($page == 'nueva-consulta.php' || $page=='detalle-consulta.php') { ?>
     <script src="assets/js/app/recetas.js"></script>
     <?php } ?>
+
+    <script src="assets/js/app/notificaciones.js"></script>

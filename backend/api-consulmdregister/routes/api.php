@@ -264,10 +264,10 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon','check.permission
 
 Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('notificaciones', [NotificacionController::class, 'index']);  
-    Route::get('notificaciones/{id}', [NotificacionController::class, 'show']);
     Route::get('notificaciones/roles', [NotificacionController::class, 'getByRoles']);
     Route::get('notificaciones/no-leidas', [NotificacionController::class, 'getNotificacionesNoLeidas']);
     Route::get('notificaciones/globales', [NotificacionController::class, 'getGlobalNotificaciones']);
+    Route::get('notificaciones/{id}', [NotificacionController::class, 'show']);
   
 });
 

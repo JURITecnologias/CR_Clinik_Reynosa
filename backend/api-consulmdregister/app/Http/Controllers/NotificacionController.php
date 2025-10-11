@@ -22,13 +22,48 @@ class NotificacionController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->input('per_page', 15);
-        if ($request->has('usuario_id')) {
-            $leidas = $request->input('leidas');
-            $notificaciones = $this->notificacionService->obtenerPorUsuario($request->usuario_id, $leidas)->paginate($per_page);
-        } else {
-            $notificaciones = $this->notificacionService->getNotificacionesAll()->paginate($per_page);
+        $user = $request->user() ?? $request->get('authenticated_user');
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no autenticado'], 401);
         }
-        return response()->json($notificaciones);
+
+        $mostrarTodas = $request->input('todas', false); // Si viene ?todas=1 muestra todas
+
+        if ($mostrarTodas) {
+            // Notificaciones globales (todas)
+            $notificacionesGlobales = \App\Models\Notificacion::where('tipo', 'global')
+                ->with(['paciente', 'doctor', 'consulta', 'citaPaciente']);
+
+            // Notificaciones por rol o individuales (todas las del usuario)
+            $notificacionesUsuario = $user->notificaciones()
+                ->with(['paciente', 'doctor', 'consulta', 'citaPaciente']);
+
+            $all = $notificacionesGlobales->get()->merge($notificacionesUsuario->get());
+        } else {
+            // Solo no leídas
+            $notificacionesGlobales = \App\Models\Notificacion::where('tipo', 'global')
+                ->whereDoesntHave('usuarios', function($q) use ($user) {
+                    $q->where('notificacion_usuario.usuario_id', $user->id)->where('leida', true);
+                })
+                ->with(['paciente', 'doctor', 'consulta', 'citaPaciente']);
+
+            $notificacionesUsuario = $user->notificaciones()
+                ->wherePivot('leida', false)
+                ->with(['paciente', 'doctor', 'consulta', 'citaPaciente']);
+
+            $all = $notificacionesGlobales->get()->merge($notificacionesUsuario->get());
+        }
+
+        // Ordenar por created_at descendente
+        $all = $all->sortByDesc('created_at')->values();
+        $page = $request->input('page', 1);
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            $all->forPage($page, $per_page),
+            $all->count(),
+            $per_page,
+            $page
+        );
+        return response()->json($paginator);
     }
 
     /**
@@ -43,7 +78,7 @@ class NotificacionController extends Controller
             'consulta_id' => 'nullable|integer',
             'cita_id' => 'nullable|integer',
             'descripcion' => 'required|string',
-            'tipo' => 'required|string|in:critica,informativa,normal,global',
+            'tipo' => 'required|string|in:critica,informativa,normal,urgente,global',
             'rol_usuario' => 'nullable|string',
             'origen' => 'nullable|string'
         ]);
@@ -88,7 +123,7 @@ class NotificacionController extends Controller
             'consulta_id' => 'nullable|integer',
             'cita_id' => 'nullable|integer',
             'descripcion' => 'required|string',
-            'tipo' => 'required|string|in:critica,informativa,normal,global',
+            'tipo' => 'required|string|in:critica,informativa,normal,urgente,global',
             'rol_usuario' => 'nullable|string',
             'origen' => 'nullable|string',
             'leida' => 'nullable|boolean'
@@ -104,13 +139,14 @@ class NotificacionController extends Controller
         return response()->json($notificacionActualizada);
     }
 
-    public function marcarComoLeida($id)
+    public function marcarComoLeida($id, Request $request)
     {
-        $notificacion = $this->notificacionService->marcarComoLeida($id);
-        if ($notificacion) {
-            return response()->json($notificacion);
+        $user = $request->user() ?? $request->get('authenticated_user');
+        $updated = $this->notificacionService->marcarComoLeidaPorUsuario($id, $user->id);
+        if ($updated) {
+            return response()->json(['message' => 'Notificación marcada como leída']);
         }
-        return response()->json(['message' => 'Notificación no encontrada'], 404);
+        return response()->json(['message' => 'Notificación no encontrada o ya leída'], 404);
     }
 
     /**
@@ -130,8 +166,8 @@ class NotificacionController extends Controller
      */
     public function getByRoles(Request $request)
     {
-        $roles = $request->input('roles', []);
-        $per_page = $request->input('per_page', 15);
+        $roles = $request->query('roles', []);
+        $per_page = $request->query('per_page', 15);
         $notificaciones = $this->notificacionService->getByRoles($roles)->paginate($per_page);
         return response()->json($notificaciones);
     }

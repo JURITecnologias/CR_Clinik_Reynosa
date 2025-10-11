@@ -161,16 +161,19 @@ class ConsultasController extends Controller
         $consulta->fuera_de_horario = $fueraDeHorario;
         $consulta->save();
 
-        // Crear notificación de nueva consulta
+        // Crear notificación de nueva consulta fuera de horario para cada rol
         if($fueraDeHorario){
-            $this->notificacionService->crear([
-                'descripcion' => 'Nueva consulta creada fuera de horario',
-                'tipo' => 'critica',
-                'rol_usuario' => 'Main Admin|Admon',
-                'paciente_id' => $consulta->paciente_id,
-                'doctor_id' => $consulta->doctor_id,
-                'consulta_id' => $consulta->id,
-            ]);
+            $roles = ['Main Admin', 'Admon'];
+            foreach ($roles as $rol) {
+                $this->notificacionService->crear([
+                    'descripcion' => 'Nueva consulta creada fuera de horario',
+                    'tipo' => 'critica',
+                    'rol_usuario' => $rol,
+                    'paciente_id' => $consulta->paciente_id,
+                    'doctor_id' => $consulta->doctor_id,
+                    'consulta_id' => $consulta->id,
+                ]);
+            }
         }
 
         // Crear los signos vitales asociados
