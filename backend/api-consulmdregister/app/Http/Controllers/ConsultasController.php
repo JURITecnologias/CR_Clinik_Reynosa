@@ -118,6 +118,7 @@ class ConsultasController extends Controller
             'saturacion_oxigeno' => 'nullable|integer',
             'peso' => 'nullable|numeric',
             'talla' => 'nullable|numeric',
+            'motivos_consulta' => 'nullable|array',
         ]);
 
         if ($validatedData->fails()) {
@@ -157,6 +158,7 @@ class ConsultasController extends Controller
             'medicamentos',
             'servicios_medicos',
             'estatus',
+            'motivos_consulta',
         ]));
         $consulta->fuera_de_horario = $fueraDeHorario;
         $consulta->save();
@@ -220,6 +222,7 @@ class ConsultasController extends Controller
             'saturacion_oxigeno' => 'nullable|integer',
             'peso' => 'nullable|numeric',
             'talla' => 'nullable|numeric',
+            'motivos_consulta' => 'nullable|array',
         ]);
         
 
@@ -232,6 +235,7 @@ class ConsultasController extends Controller
             'medicamentos',
             'servicios_medicos',
             'estatus',
+            'motivos_consulta',
         ]));
 
         // Actualizar signos vitales si existen

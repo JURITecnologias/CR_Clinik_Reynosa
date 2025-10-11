@@ -191,15 +191,38 @@ $user = include(__DIR__ . '/../src/user_session.php');
         <!-- start complaint information -->
         <div class="card">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                <h5 class="d-inline-flex align-items-center mb-0">Motivo de Consulta/ Queja</h5>
+                <h5 class="d-inline-flex align-items-center mb-0">Motivo de Consulta</h5>
             </div>
             <div class="card-body">
                 <!-- start row -->
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12">
                         <div class="mb-0">
-                            <textarea class="form-control" id="frm_motivo_consulta" rows="2"></textarea>
-                            <div class="invalid-feedback" id="invalid_frm_motivo_consulta"></div>
+                            <!-- <textarea class="form-control" id="frm_motivo_consulta" rows="2"></textarea>
+                            <div class="invalid-feedback" id="invalid_frm_motivo_consulta"></div> -->
+                            <div class="mt-2 h5">
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="aev" value="aev">
+                                    <label class="form-check-label" for="aev">A E V (Accidente, Envenenamiento y Violencia)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="uc" value="uc">
+                                    <label class="form-check-label" for="uc">UC (Urgencias Calificada)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="unc" value="unc">
+                                    <label class="form-check-label" for="unc">UNC (Urgencias No Calificada)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="trabajo_parto" value="trabajo_parto">
+                                    <label class="form-check-label" for="trabajo_parto">Trabajo de Parto</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="frm_motivo_consulta" class="form-label mt-3">Describa el motivo de consulta<span class="text-danger ms-1">*</span></label>
+                                <textarea class="form-control" id="frm_motivo_consulta" rows="2"></textarea>
+                                <div class="invalid-feedback" id="invalid_frm_motivo_consulta"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

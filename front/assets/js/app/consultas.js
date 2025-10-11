@@ -560,6 +560,15 @@ async function renderConsultaPaciente(consulta){
     document.getElementById('info_paciente_container').classList.remove('d-none');
     document.getElementById('doc_info').value =  obfuscate(JSON.stringify(consulta.doctor));
     document.getElementById('paciente_info').value = obfuscate(JSON.stringify(consulta.paciente));
+    if (consulta.motivos_consulta && Array.isArray(consulta.motivos_consulta)) {
+        consulta.motivos_consulta.forEach(motivo => {
+            const checkbox = document.getElementById(motivo);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        });
+    }
+
 }
 
 function renderCitaSeguimientoInfo(cita){
@@ -750,6 +759,14 @@ function ValidaConsulta(){
     consultaData.diagnostico = diagnostico;
     consultaData.indicaciones = indicaciones;
     consultaData.id = consultaId;
+
+    const motivosConsulta = [];
+    document.querySelectorAll('.motivos_consulta_checkbox').forEach(checkbox => {
+        if (checkbox.checked) {
+            motivosConsulta.push(checkbox.value);
+        }
+    });
+    consultaData.motivos_consulta = motivosConsulta;
 
     return consultaData;
 
@@ -978,7 +995,8 @@ async function CrearConsulta() {
         presion_arterial: "",
         saturacion_oxigeno: null,
         peso: null,
-        talla: null
+        talla: null,
+        motivos_consulta: null
     };
 
     let consultaCreada = null;
