@@ -194,7 +194,6 @@ function renderNotificacionUser(notificacion) {
 async function loadGlobalNotifications() {
     try {
         const notificaciones = await getNotificacionesGlobales();
-        console.log('Notificaciones globales:', notificaciones);
         renderNotificacionesGlobales(notificaciones.data);
     } catch (error) {
         console.error('Error al cargar notificaciones globales:', error);
@@ -210,7 +209,6 @@ async function loadNotificacionesUsuario() {
         }
         const roles = user.roles;
         const notificaciones = await getNotificaciones(10, 1, false);
-        console.log('Notificaciones por roles:', notificaciones);
         notificacionesSinLeer=notificaciones.data.filter(n => !n.leida);
         if(notificacionesSinLeer.length === 0 ) document.getElementById('notification-icon').classList.remove('animate-ring');
         notificaciones.data.slice(0, 4).forEach(notificacion => {

@@ -560,7 +560,16 @@ async function AddPacienteAndHistorial() {
     document.getElementById('save-vitals').classList.add('disabled');
     try {
         const newHistorial = await AddHistorialMedico(idPacienteGlobal);
-        window.location.href = 'patients.php';
+        const urlParams = new URLSearchParams(window.location.search);
+        const consultas = urlParams.get('o');
+        document.getElementById('paciente_id_seleccionado').value = idPacienteGlobal;
+        if (consultas && consultas.trim() === 'consultas') {
+            const confirmarConsulta = new bootstrap.Modal(document.getElementById('modal_confirmar_consulta'));
+            confirmarConsulta.show();
+        }else{
+             window.location.href = 'patients.php';
+        }
+       
     }catch (error) {
         console.error('Error adding patient or medical history:', error);
         throw error;
@@ -904,4 +913,71 @@ async function CrearCitaFromPacientes(pacienteId,nombrePaciente) {
     const citaModal = new bootstrap.Modal(document.getElementById('add-cita-modal'));
     citaModal.show();
 
+}
+
+async function CrearConsultaNuevoPaciente() {
+    const pacienteId = document.getElementById('paciente_id_seleccionado').value;
+    let PerfilUsuario = null;
+    try {
+        PerfilUsuario = await getUserProfile();
+        if(!PerfilUsuario || !PerfilUsuario.user.id){
+            renderAlertMessage("No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
+            return; 
+        }
+        if(!PerfilUsuario.doctor_info || !PerfilUsuario.doctor_info.id){
+            renderAlertMessage("Usuario no registrado como doctor. Por favor, complete su registro.", 'danger');
+            return;
+        }
+    } catch (error) {
+        console.log("Error al obtener el perfil del usuario:", error);
+        renderAlertMessage("Error al obtener el perfil del usuario. Por favor, intente nuevamente.", 'danger');
+        return;
+    }finally {
+        CerrarConfirmacionModal();
+    }
+
+    if (!pacienteId) {
+        CerrarConfirmacionModal();
+        renderAlertMessage("No se ha seleccionado ningún paciente.", 'danger');
+         if (offcanvasInstance) {
+            offcanvasInstance.hide();
+        }
+        return;
+    }
+
+    const consultaData = {
+        paciente_id: parseInt(pacienteId),
+        doctor_id: PerfilUsuario.doctor_info.id,
+        fecha_consulta: new Date().toISOString(),
+        motivo_consulta: "",
+        sintomas: "",
+        diagnostico: "",
+        indicaciones: "",
+        medicamentos: [],
+        servicios_medicos: [],
+        estatus: "abierta",
+        temperatura: null,
+        frecuencia_cardiaca: null,
+        frecuencia_respiratoria: null,
+        presion_arterial: "",
+        saturacion_oxigeno: null,
+        peso: null,
+        talla: null,
+        motivos_consulta: null
+    };
+
+    let consultaCreada = null;
+    try {
+        consultaCreada = await insertConsulta(consultaData);
+    } catch (error) {
+        console.error("Error al crear la consulta:", error);
+        renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
+        return;
+    }
+    if(!consultaCreada || !consultaCreada.consulta.id){
+        renderAlertMessage("Error al crear la consulta. Por favor, intente nuevamente.", 'danger');
+        return;
+    }
+
+    window.location.href = `nueva-consulta.php?p=${btoa(consultaCreada.consulta.id)}`;
 }

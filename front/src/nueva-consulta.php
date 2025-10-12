@@ -453,12 +453,12 @@ $user = include(__DIR__ . '/../src/user_session.php');
                     <div class="card-body">
                         <ul class="nav nav-tabs mb-3">
                             <li class="nav-item">
-                                <a href="#info-general" data-bs-toggle="tab" aria-expanded="true" class="nav-link active">
+                                <a href="#info-general" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
                                     Info. General
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#antecedentes" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                <a href="#antecedentes" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
                                     Antecedentes
                                 </a>
                             </li>
@@ -480,12 +480,12 @@ $user = include(__DIR__ . '/../src/user_session.php');
                         </ul>
 
                         <div class="tab-content">
-                            <div class="tab-pane show active" id="info-general">
+                            <div class="tab-pane" id="info-general">
                                 <div class="p-4" style="width: 50%;">
                                     <?php require_once __DIR__ . '/../partials/info-general-paciente.php'; ?>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="antecedentes">
+                            <div class="tab-pane show active" id="antecedentes">
                                 <div class="p-4" style="width: 50%;">
                                     <?php require_once __DIR__ . '/../partials/antecedentes_medicos.php'; ?>
                                 </div>

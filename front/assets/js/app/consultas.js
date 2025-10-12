@@ -298,6 +298,7 @@ function renderPacienteUltimasConsultas(consultas) {
             day: 'numeric'
         });
         const datosDoctor= consulta.doctor ? `${consulta.doctor.nombre_completo} (${consulta.doctor.titulo})` : 'N/A';
+        const motivosConsulta = consulta.motivos_consulta && Array.isArray(consulta.motivos_consulta) ? consulta.motivos_consulta.join(', ') : (consulta.motivo_consulta || 'N/A');
         return `
         <div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
@@ -309,6 +310,7 @@ function renderPacienteUltimasConsultas(consultas) {
                 <div class="accordion-body">
                     <p><strong>Doctor que atendio:</strong> ${datosDoctor}</p>
                     <p><strong>Motivo de Consulta:</strong> ${consulta.motivo_consulta || 'N/A'}</p>
+                    <p><strong>Tipo de Motivo de consulta :</strong> ${motivosConsulta.toUpperCase() || 'N/A'}</p>
                     <p><strong>Síntomas:</strong> ${consulta.sintomas || 'N/A'}</p>
                     <p><strong>Diagnóstico:</strong> ${consulta.diagnostico || 'N/A'}</p>
                     <p><strong>Indicaciones:</strong> ${consulta.indicaciones || 'N/A'}</p>
