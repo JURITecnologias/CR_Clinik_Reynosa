@@ -52,7 +52,18 @@ class PdfRecetaController extends Controller
         $pdf->SetLineWidth(0.5); // Definir el grosor de la línea
         $pdf->Line(5, 10, 63.33, 10, 'D'); // Línea horizontal que ocupa un tercio del ancho de la página
         // Insertar imagen
-        $pdf->Image(public_path('assets\\images\\logo-receta-superior-f4.png'), 69.33, 0, 83.33, 25); // Ajusta la posición y tamaño según sea necesario
+        try {
+           $pdf->Image(public_path('assets\\images\\logo-receta-superior-f4.png'), 69.33, 0, 83.33, 25); // Ajusta la posición y tamaño según sea necesario
+        } catch (\Exception $e) {
+            // Manejar el error si la imagen no se encuentra
+            // Por ejemplo, puedes registrar el error o mostrar un mensaje
+            try {
+                $pdf->Image(public_path('assets/images/logo-receta-superior-f4.png'), 69.33, 0, 83.33, 25); // Ajusta la posición y tamaño según sea necesario
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        }
+        
         $pdf->Line(155, 10, 210, 10, 'D'); // Línea horizontal que ocupa un poco más de un tercio del ancho de la página
 
         // Línea vertical

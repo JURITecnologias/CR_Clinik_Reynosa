@@ -173,112 +173,250 @@
             </div> <!-- end modal content -->
         </div> <!-- end modal dialog -->
     </div> <!-- end modal -->
+</div> <!-- end modal add cita -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+<!-- modal edit cita -->
+<div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editModalLabel">Editar cita a paciente</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Paciente</label>
+                        <input type="text" style="width: 450px;" class="form-control" id="edit_paciente_nombre" placeholder="Buscar paciente..." readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Doctor</label>
+                        <input type="text" class="form-control" style="width: 450px;" id="edit_doctor_nombre" placeholder="Buscar doctor...">
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label mb-0">Siguiente Visita</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="input-group w-auto input-group-flat mb-3">
+                            <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="edit_fecha_cita">
+                            <span class="input-group-text">
+                                <i class="ti ti-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label mb-0">Hora de la cita</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="input-group w-auto input-group-flat mb-3">
+                            <input type="time" class="form-control" placeholder="HH:mm" id="edit_hora_cita">
+                            <span class="input-group-text">
+                                <i class="ti ti-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label mb-0">Nota de cita</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <input type="text" class="form-control" placeholder="Escribe una nota..." id="edit_nota_cita">
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <input type="hidden" id="edit_paciente_id" value="">
+                    <input type="hidden" id="edit_doctor_id" value="">
+                    <input type="hidden" id="edit_cita_id" value="">
+                    <input type="hidden" id="edit_consulta_id" value="">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="EditarCita()">Modificar cita</button>
+                </div>
+            </div> <!-- end modal content -->
+        </div> <!-- end modal dialog -->
+    </div> <!-- end modal -->
+</div> <!-- end modal edit cita -->
 
-            const inputPacienteBusqueda = document.getElementById("paciente_busqueda");
-            const inputDoctorBusqueda = document.getElementById("doctor_busqueda");
-            const awesompleteServiciosMedicos =new Awesomplete(inputPacienteBusqueda, {
-                minChars: 1,
-                maxItems: 10,
-                autoFirst: true,
-                list: []
-            });
-            const awesompleteDoctores = new Awesomplete(inputDoctorBusqueda, {
-                minChars: 1,
-                maxItems: 10,
-                autoFirst: true,
-                list: []
-            });
+<div id="danger-header-modal-delete-cita" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modal-delete-citaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-bg-danger border-0">
+                <h4 class="modal-title" id="danger-header-modalLabel">Eliminar Cita</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="mt-0">¿Está seguro de que desea eliminar esta cita?</h5>
+                <p>Esta acción no se puede deshacer. </p>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="cita_id_eliminar" value="">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" onclick="EliminarCita()">Eliminar</button>
+            </div>
+        </div> <!-- end modal content -->
+    </div> <!-- end modal dialog -->
+</div> <!-- end modal -->
 
-            inputPacienteBusqueda.addEventListener("input", async function() {
 
-                const term = inputPacienteBusqueda.value.trim();
-                if (term.length < 2) return;
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
 
-                const result = await searchPatientByName(50, 1, term);
-                if (result) {
-                    // Guarda los pacientes para selección posterior
-                    inputPacienteBusqueda._pacientes = result.data;
-                    inputPacienteBusqueda._pacientes.forEach(p => {
-                        p.nombre_completo = `${p.nombre.charAt(0).toUpperCase() + p.nombre.slice(1).toLowerCase()} ${p.apellido.charAt(0).toUpperCase() + p.apellido.slice(1).toLowerCase()}`;
+                document.querySelectorAll('button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        if (this.disabled) return;
+                        this.disabled = true;
+                        setTimeout(() => {
+                            this.disabled = false;
+                        }, 3000); // Re-enable after 3 seconds
                     });
-                    const list = result.data.map(m => m.nombre_completo);
-                    awesompleteServiciosMedicos.list = list;
-                }
+                });
+
+                const inputPacienteBusqueda = document.getElementById("paciente_busqueda");
+                const inputDoctorBusqueda = document.getElementById("doctor_busqueda");
+                const inputDoctorEditBusqueda = document.getElementById("edit_doctor_nombre");
+
+                const awesompleteServiciosMedicos = new Awesomplete(inputPacienteBusqueda, {
+                    minChars: 1,
+                    maxItems: 10,
+                    autoFirst: true,
+                    list: []
+                });
+                const awesompleteDoctores = new Awesomplete(inputDoctorBusqueda, {
+                    minChars: 1,
+                    maxItems: 10,
+                    autoFirst: true,
+                    list: []
+                });
+
+                const awesompleteDoctoresEdit = new Awesomplete(inputDoctorEditBusqueda, {
+                    minChars: 1,
+                    maxItems: 10,
+                    autoFirst: true,
+                    list: []
+                });
+
+                inputPacienteBusqueda.addEventListener("input", async function() {
+
+                    const term = inputPacienteBusqueda.value.trim();
+                    if (term.length < 2) return;
+
+                    const result = await searchPatientByName(50, 1, term);
+                    if (result) {
+                        // Guarda los pacientes para selección posterior
+                        inputPacienteBusqueda._pacientes = result.data;
+                        inputPacienteBusqueda._pacientes.forEach(p => {
+                            p.nombre_completo = `${p.nombre.charAt(0).toUpperCase() + p.nombre.slice(1).toLowerCase()} ${p.apellido.charAt(0).toUpperCase() + p.apellido.slice(1).toLowerCase()}`;
+                        });
+                        const list = result.data.map(m => m.nombre_completo);
+                        awesompleteServiciosMedicos.list = list;
+                    }
+                });
+
+                inputDoctorBusqueda.addEventListener("input", async function() {
+                    const term = inputDoctorBusqueda.value.trim();
+                    if (term.length < 2) return;
+
+                    const result = await getDoctorPorNombre(term);
+                    if (result) {
+                        // Guarda los doctores para selección posterior
+                        inputDoctorBusqueda._doctores = result;
+                        inputDoctorBusqueda._doctores.forEach(d => {
+                            d.nombre_completo_format = `Dr. ${d.nombre_completo.charAt(0).toUpperCase() + d.nombre_completo.slice(1).toLowerCase()}`;
+                        });
+                        const list = result.map(m => m.nombre_completo_format);
+                        awesompleteDoctores.list = list;
+                    }
+                });
+
+                inputDoctorEditBusqueda.addEventListener("input", async function() {
+                    const term = inputDoctorEditBusqueda.value.trim();
+                    if (term.length < 2) return;
+
+                    const result = await getDoctorPorNombre(term);
+                    if (result) {
+                        // Guarda los doctores para selección posterior
+                        inputDoctorEditBusqueda._doctores = result;
+                        inputDoctorEditBusqueda._doctores.forEach(d => {
+                            d.nombre_completo_format = `Dr. ${d.nombre_completo.charAt(0).toUpperCase() + d.nombre_completo.slice(1).toLowerCase()}`;
+                        });
+                        const list = result.map(m => m.nombre_completo_format);
+                        awesompleteDoctoresEdit.list = list;
+                    }
+                });
+
+
+                inputPacienteBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
+                    const selectedName = e.text.value;
+                    const pacientes = inputPacienteBusqueda._pacientes || [];
+                    const paciente = pacientes.find(p => p.nombre_completo === selectedName);
+
+                    if (paciente) {
+                        // Guarda el ID del paciente seleccionado
+                        document.getElementById("frm_paciente_id").value = paciente.id;
+                        // Puedes llenar otros campos aquí si lo necesitas
+                    } else {
+                        document.getElementById("frm_paciente_id").value = "";
+                    }
+                });
+
+                inputDoctorBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
+                    const selectedName = e.text.value;
+                    const doctores = inputDoctorBusqueda._doctores || [];
+                    const doctor = doctores.find(d => d.nombre_completo_format === selectedName);
+
+                    if (doctor) {
+                        // Guarda el ID del doctor seleccionado
+                        document.getElementById("frm_doctor_id").value = doctor.id;
+                        // Puedes llenar otros campos aquí si lo necesitas
+                    } else {
+                        document.getElementById("frm_doctor_id").value = "";
+                    }
+                });
+
+                inputDoctorEditBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
+                    const selectedName = e.text.value;
+                    const doctores = inputDoctorEditBusqueda._doctores || [];
+                    const doctor = doctores.find(d => d.nombre_completo_format === selectedName);
+
+                    if (doctor) {
+                        // Guarda el ID del doctor seleccionado
+                        document.getElementById("edit_doctor_id").value = doctor.id;
+                        // Puedes llenar otros campos aquí si lo necesitas
+                    } else {
+                        document.getElementById("edit_doctor_id").value = "";
+                    }
+                });
+
+                document.getElementById('searchPaciente').addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        BuscarPacienteCitas();
+                    }
+                });
+
+                loadEvent();
             });
 
-            inputDoctorBusqueda.addEventListener("input", async function() {
-                const term = inputDoctorBusqueda.value.trim();
-                if (term.length < 2) return;
+            function loadEvent() {
 
-                const result = await getDoctorPorNombre(term);
-                if (result) {
-                    // Guarda los doctores para selección posterior
-                    inputDoctorBusqueda._doctores = result;
-                    inputDoctorBusqueda._doctores.forEach(d => {
-                        d.nombre_completo_format = `Dr. ${d.nombre_completo.charAt(0).toUpperCase() + d.nombre_completo.slice(1).toLowerCase()}`;
-                    });
-                    const list = result.map(m => m.nombre_completo_format);
-                    awesompleteDoctores.list = list;
-                }
-            });
+                const registros = <?php echo isset($_GET['registros']) ? intval($_GET['registros']) : 50; ?>;
+                const busqueda = "<?php echo isset($_GET['busqueda']) ? addslashes($_GET['busqueda']) : ''; ?>";
+                const pagina = <?php echo isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; ?>;
+                const ordenby = "<?php echo isset($_GET['direccion']) ? addslashes($_GET['direccion']) : 'desc'; ?>";
 
-            inputPacienteBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
-                const selectedName = e.text.value;
-                const pacientes = inputPacienteBusqueda._pacientes || [];
-                const paciente = pacientes.find(p => p.nombre_completo === selectedName);
+                LoadCitasTable(pagina, registros, busqueda, ordenby);
 
-                if (paciente) {
-                    // Guarda el ID del paciente seleccionado
-                    document.getElementById("frm_paciente_id").value = paciente.id;
-                    // Puedes llenar otros campos aquí si lo necesitas
-                } else {
-                    document.getElementById("frm_paciente_id").value = "";
-                }
-            });
+            }
+        </script>
 
-            inputDoctorBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
-                const selectedName = e.text.value;
-                const doctores = inputDoctorBusqueda._doctores || [];
-                const doctor = doctores.find(d => d.nombre_completo_format === selectedName);
-
-                if (doctor) {
-                    // Guarda el ID del doctor seleccionado
-                    document.getElementById("frm_doctor_id").value = doctor.id;
-                    // Puedes llenar otros campos aquí si lo necesitas
-                } else {
-                    document.getElementById("frm_doctor_id").value = "";
-                }
-            });
-
-            document.getElementById('searchPaciente').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    BuscarPacienteCitas();
-                }
-            });
-
-            loadEvent();
-        });
-
-        function loadEvent() {
-
-            const registros = <?php echo isset($_GET['registros']) ? intval($_GET['registros']) : 50; ?>;
-            const busqueda = "<?php echo isset($_GET['busqueda']) ? addslashes($_GET['busqueda']) : ''; ?>";
-            const pagina = <?php echo isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; ?>;
-            const ordenby = "<?php echo isset($_GET['direccion']) ? addslashes($_GET['direccion']) : 'desc'; ?>";
-
-            LoadCitasTable(pagina, registros, busqueda, ordenby);
-
-        }
-    </script>
-
-    <!-- ========================
+        <!-- ========================
         End Page Content
     ========================= -->
 
-    <?php
-    $content = ob_get_clean();
+        <?php
+        $content = ob_get_clean();
 
-    require_once '../partials/main.php'; ?>
+        require_once '../partials/main.php'; ?>

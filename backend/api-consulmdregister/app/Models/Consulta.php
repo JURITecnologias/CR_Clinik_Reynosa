@@ -17,6 +17,7 @@ class Consulta extends Model
         'doctor_id',
         'fecha_consulta',
         'motivo_consulta',
+        'motivos_consulta',
         'sintomas',
         'diagnostico',
         'indicaciones',
@@ -30,6 +31,7 @@ class Consulta extends Model
         'medicamentos' => 'array',
         'servicios_medicos' => 'array',
         'fecha_consulta' => 'date',
+        'motivos_consulta' => 'array',
     ];
 
     public function paciente()

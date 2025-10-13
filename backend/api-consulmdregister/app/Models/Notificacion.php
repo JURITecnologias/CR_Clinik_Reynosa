@@ -50,4 +50,11 @@ class Notificacion extends Model
     {
         return $this->belongsTo(CitaPaciente::class, 'citas_pacientes_id');
     }
+
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class, 'notificacion_usuario', 'notificacion_id', 'usuario_id')
+            ->withPivot('leida', 'leida_en')
+            ->withTimestamps();
+    }
 }

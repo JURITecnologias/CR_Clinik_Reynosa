@@ -197,7 +197,7 @@ $page = end( $link_array );
     <script src="assets/js/app/servicios.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page == "doctor-details.php" || $page == 'horarios-doctores.php' || $page == 'citas.php') {   ?>
+    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page='patiens.php' || $page == "doctor-details.php" || $page == 'horarios-doctores.php' || $page == 'citas.php') {   ?>
     <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
 
@@ -210,7 +210,7 @@ $page = end( $link_array );
     <script src="assets/js/app/horario-doctores.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php' || $page == 'paciente-consultas-previas.php' || $page == 'detalle-consulta.php') { ?>
+    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php' || $page == 'paciente-consultas-previas.php' || $page == 'detalle-consulta.php' || $page == 'citas.php') { ?>
     <script src="assets/js/app/consultas.js"></script>
     <?php } ?>
 
@@ -219,10 +219,12 @@ $page = end( $link_array );
     <script src="assets/js/script.js"></script>
     <?php } ?>
 
-    <?php if($page == 'citas.php' || $page=="nueva-consulta.php" || $page=="detalle-consulta.php") { ?>
+    <?php if($page == 'citas.php' || $page=="nueva-consulta.php" || $page=="detalle-consulta.php" || $page=="paciente-citas.php") { ?>
     <script src="assets/js/app/citas.js"></script>
     <?php } ?>
 
     <?php if($page == 'nueva-consulta.php' || $page=='detalle-consulta.php') { ?>
     <script src="assets/js/app/recetas.js"></script>
     <?php } ?>
+
+    <script src="assets/js/app/notificaciones.js"></script>

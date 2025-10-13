@@ -28,4 +28,8 @@
     <?php require_once __DIR__ . '/vendor-scripts.php'; ?>
 
 </body>
+<script>$(document).ready(function() {
+        loadGlobalNotifications();
+        loadNotificacionesUsuario();
+    });</script>
 </html>

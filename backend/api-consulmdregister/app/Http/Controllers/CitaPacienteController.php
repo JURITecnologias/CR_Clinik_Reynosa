@@ -19,6 +19,10 @@ class CitaPacienteController extends Controller
         } else {
             $query->orderBy('created_at', 'desc');
         }
+
+        $query->select('*')->with(['paciente', 'doctor' => function ($query) {
+            $query->select('id', 'nombre_completo', 'titulo'); // Excluir el campo de firma
+        }, 'consulta']);
        
         return $query->paginate($perPage);
     }
@@ -30,6 +34,12 @@ class CitaPacienteController extends Controller
         if (!$cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
+
+        $cita->load(['doctor' => function ($query) {
+            $query->select('id', 'nombre_completo', 'titulo');
+        }]);
+
+
         return response()->json($cita);
     }
 
@@ -121,6 +131,11 @@ class CitaPacienteController extends Controller
             });
         }
         $perPage = $request->get('per_page', 15);
+
+        $query->with(['doctor' => function ($query) {
+            $query->select('id', 'nombre_completo', 'titulo');
+        }]);
+
         return $query->paginate($perPage);
     }
 }

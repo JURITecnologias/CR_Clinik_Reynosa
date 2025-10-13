@@ -282,6 +282,27 @@
     </div>
     <!-- End Content -->
 
+<!-- Start Confirm Consulta Modal  -->
+<div class="modal fade" id="modal_confirmar_consulta">
+    <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+            <div class="modal-body text-center position-relative">
+                <div class="mb-2 position-relative z-1">
+                    <span class="avatar avatar-md bg-primary rounded-circle"><i class="ti ti-activity fs-24"></i></span>
+                </div>
+                <h5 class="mb-1">Creacion de consulta</h5>
+                <p class="mb-3">Desea crear una nueva consulta para el paciente<span id="nombre_paciente_seleccionado" class="h4"></span>?</p>
+                <div class="d-flex justify-content-center">
+                    <input type="hidden" id="paciente_id_seleccionado" value="">
+                    <button onclick="CerrarConfirmacionModal()" class="btn btn-white w-100 position-relative z-1 me-2" data-bs-dismiss="modal">Cancelar</button>
+                    <button onclick="CrearConsultaNuevoPaciente()" class="btn btn-success w-100 position-relative z-1" data-bs-dismiss="modal">Sí, Crear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Confirm Consulta Modal  -->
+
     <?php require_once '../partials/footer.php'; ?>
 
 </div>

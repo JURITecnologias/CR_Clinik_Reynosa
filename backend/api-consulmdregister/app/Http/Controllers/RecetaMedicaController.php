@@ -57,8 +57,18 @@ class RecetaMedicaController extends Controller
 
         $contenido = $data['uuid']."|".$data['nombre_completo_paciente']."|".$data['fecha_nacimiento_paciente'];
         $hash = hash('sha256', $contenido);
-        $privateKey = openssl_pkey_get_private(file_get_contents(storage_path('app\\keys\\private.pem')));
-        openssl_sign($hash, $signature, $privateKey, OPENSSL_ALGO_SHA256);
+        try {
+            $privateKey = openssl_pkey_get_private(file_get_contents(storage_path('app\\keys\\private.pem')));
+            openssl_sign($hash, $signature, $privateKey, OPENSSL_ALGO_SHA256);
+        } catch (\Exception $e) {
+            try {
+                $privateKey = openssl_pkey_get_private(file_get_contents(storage_path('app/keys/private.pem')));
+                openssl_sign($hash, $signature, $privateKey, OPENSSL_ALGO_SHA256);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Error al firmar digitalmente la receta médica: '.$e->getMessage()], 500);
+            }
+        }
+        
         $data['certificate'] = base64_encode($signature);
 
         $receta = RecetaMedica::create($data);

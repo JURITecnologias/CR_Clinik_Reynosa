@@ -172,11 +172,6 @@ jobs:
         local-dir: front/
         server-dir: ${{ env.FTP_TARGET }}/public_html/
 
-    - name: Run Laravel migrations
-      run: |
-        cd backend/api-consulmdregister
-        php artisan migrate --force
-
     - name: Clear Laravel cache
       run: |
         cd backend/api-consulmdregister

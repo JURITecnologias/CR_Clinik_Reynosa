@@ -28,7 +28,9 @@ class ConsultasController extends Controller
         $orderBy = $request->query('order_by', 'created_at'); // Campo para ordenar, por defecto 'fecha_consulta'
         $orderDirection = $request->query('order_direction', 'asc'); // Dirección de orden, por defecto 'asc'
 
-        return Consulta::with(['paciente', 'doctor', 'signosVitales'])
+        return Consulta::with(['paciente', 'doctor' => function ($query) {
+            $query->select('id', 'uuid', 'user_id','nombre_completo','titulo','universidad','cedula_profesional','especialista_en','fecha_nacimiento','experiencia','telefono_personal','telefono','telefono_emergencias','direccion'); // Excluir el campo de firma
+            }, 'signosVitales'])
             ->orderBy($orderBy, $orderDirection)
             ->paginate($perPage);
     }
@@ -70,13 +72,22 @@ class ConsultasController extends Controller
         $query->orderBy($orderBy, $orderDirection);
 
         $perPage = $filters['per_page'] ?? 10; // Número de elementos por página, por defecto 10
-        return $query->with(['paciente', 'doctor', 'signosVitales'])->paginate($perPage);
+        return $query->with(['paciente', 'doctor' => function ($query) {
+            $query->select('id', 'uuid', 'user_id', 'nombre_completo', 'titulo', 'universidad', 'cedula_profesional', 'especialista_en', 'fecha_nacimiento', 'experiencia', 'telefono_personal', 'telefono', 'telefono_emergencias', 'direccion');
+        }, 'signosVitales'])->paginate($perPage);
     }
 
     // Mostrar una consulta específica
     public function show($id)
     {
-        return Consulta::with(['paciente', 'doctor', 'signosVitales', 'paciente.historialMedico'])->findOrFail($id);
+        return Consulta::with([
+            'paciente', 
+            'doctor' => function ($query) {
+            $query->select('id', 'uuid', 'user_id', 'nombre_completo', 'titulo', 'universidad', 'cedula_profesional', 'especialista_en', 'fecha_nacimiento', 'experiencia', 'telefono_personal', 'telefono', 'telefono_emergencias', 'direccion');
+            }, 
+            'signosVitales', 
+            'paciente.historialMedico'
+        ])->findOrFail($id);
     }
 
     // Crear una nueva consulta con signos vitales
@@ -107,6 +118,7 @@ class ConsultasController extends Controller
             'saturacion_oxigeno' => 'nullable|integer',
             'peso' => 'nullable|numeric',
             'talla' => 'nullable|numeric',
+            'motivos_consulta' => 'nullable|array',
         ]);
 
         if ($validatedData->fails()) {
@@ -146,20 +158,24 @@ class ConsultasController extends Controller
             'medicamentos',
             'servicios_medicos',
             'estatus',
+            'motivos_consulta',
         ]));
         $consulta->fuera_de_horario = $fueraDeHorario;
         $consulta->save();
 
-        // Crear notificación de nueva consulta
+        // Crear notificación de nueva consulta fuera de horario para cada rol
         if($fueraDeHorario){
-            $this->notificacionService->crear([
-                'descripcion' => 'Nueva consulta creada fuera de horario',
-                'tipo' => 'critica',
-                'rol_usuario' => 'Main Admin|Admon',
-                'paciente_id' => $consulta->paciente_id,
-                'doctor_id' => $consulta->doctor_id,
-                'consulta_id' => $consulta->id,
-            ]);
+            $roles = ['Main Admin', 'Admon'];
+            foreach ($roles as $rol) {
+                $this->notificacionService->crear([
+                    'descripcion' => 'Nueva consulta creada fuera de horario',
+                    'tipo' => 'critica',
+                    'rol_usuario' => $rol,
+                    'paciente_id' => $consulta->paciente_id,
+                    'doctor_id' => $consulta->doctor_id,
+                    'consulta_id' => $consulta->id,
+                ]);
+            }
         }
 
         // Crear los signos vitales asociados
@@ -206,6 +222,7 @@ class ConsultasController extends Controller
             'saturacion_oxigeno' => 'nullable|integer',
             'peso' => 'nullable|numeric',
             'talla' => 'nullable|numeric',
+            'motivos_consulta' => 'nullable|array',
         ]);
         
 
@@ -218,6 +235,7 @@ class ConsultasController extends Controller
             'medicamentos',
             'servicios_medicos',
             'estatus',
+            'motivos_consulta',
         ]));
 
         // Actualizar signos vitales si existen

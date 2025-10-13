@@ -10,6 +10,7 @@ use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\InformacionDoctorController;
 use App\Http\Controllers\ServicioMedicoController;
 use App\Http\Controllers\MedicamentoController;
+use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\PdfRecetaController;
 
 /*
@@ -233,7 +234,7 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'show']);
 });
 
-Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera', 'check.permission:modificar|escribir'])->group(function () {
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera', 'check.permission:modificar|escribir|ver'])->group(function () {
     Route::post('/citas-pacientes', [\App\Http\Controllers\CitaPacienteController::class, 'store']);
     Route::put('/citas-pacientes/{id}', [\App\Http\Controllers\CitaPacienteController::class, 'update']);
 });
@@ -258,4 +259,24 @@ Route::middleware(['basic.auth', 'check.role:Doctor','check.permission:escribir'
 
 Route::middleware(['basic.auth', 'check.role:Main Admin|Admon','check.permission:borrar'])->group(function () {
     Route::delete('/receta-medica/uuid/{uuid}', [\App\Http\Controllers\RecetaMedicaController::class, 'destroyByUuid']);
+});
+
+
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('notificaciones', [NotificacionController::class, 'index']);  
+    Route::get('notificaciones/roles', [NotificacionController::class, 'getByRoles']);
+    Route::get('notificaciones/no-leidas', [NotificacionController::class, 'getNotificacionesNoLeidas']);
+    Route::get('notificaciones/globales', [NotificacionController::class, 'getGlobalNotificaciones']);
+    Route::get('notificaciones/{id}', [NotificacionController::class, 'show']);
+  
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor','check.permission:escribir'])->group(function () {
+    Route::post('notificaciones', [NotificacionController::class, 'store']);
+    Route::put('notificaciones/{id}', [NotificacionController::class, 'update']);  // Marcar como leida
+    Route::post('notificaciones/{id}/marcar-leida', [NotificacionController::class, 'marcarComoLeida']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor','check.permission:borrar'])->group(function () {
+    Route::delete('notificaciones/{id}', [NotificacionController::class, 'destroy']);
 });

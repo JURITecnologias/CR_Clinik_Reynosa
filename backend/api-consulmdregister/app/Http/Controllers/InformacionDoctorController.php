@@ -10,7 +10,7 @@ class InformacionDoctorController extends Controller
 {
     public function index()
     {
-        return InformacionDoctor::with('user')->get(); // solo activos
+        return InformacionDoctor::with('user')->get(['id', 'uuid', 'user_id', 'nombre_completo', 'titulo', 'universidad', 'cedula_profesional', 'especialista_en', 'fecha_nacimiento', 'experiencia', 'telefono_personal', 'telefono', 'telefono_emergencias', 'direccion','created_at','deleted_at','updated_at']); // solo activos, sin firma
     }
 
     public function indexConEliminados()
@@ -77,7 +77,7 @@ class InformacionDoctorController extends Controller
         if (!$doctor) {
             return response()->json(['mensaje' => 'Doctor no encontrado'], 404);
         }
-
+        unset($doctor->firma);
         return response()->json($doctor);
     }
 
@@ -108,6 +108,9 @@ class InformacionDoctorController extends Controller
             return response()->json(['mensaje' => 'No se encontraron doctores con ese nombre'], 404);
         }
 
+        foreach ($doctores as $doctor) {
+            unset($doctor->firma);
+        }
         return response()->json($doctores);
     }
 }

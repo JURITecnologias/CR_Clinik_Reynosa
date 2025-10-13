@@ -115,26 +115,26 @@ include(__DIR__ . '/../src/user_session.php');
 
 </div>
 <!-- Start Modal  -->
-    <div class="modal fade" id="delete_paciente_modal">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <div class="mb-2">
-                        <span class="avatar avatar-md rounded-circle bg-danger"><i class="ti ti-trash fs-24"></i></span>
-                    </div>
-                    <h6 class="fs-16 mb-1">Confirmar Eliminación</h6>
-                    <p class="mb-3">¿Estás seguro que deseas eliminar este registro?</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <input type="hidden" id="delete_paciente_id" value="">
-                        <input type="hidden" id="delete_paciente_referer" value="">
-                        <a href="javascript:void(0);" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
-                        <a href="javascript:RemovePaciente();" class="btn btn-danger w-100" id="confirm_delete_paciente">Sí, Eliminar</a>
-                    </div>
+<div class="modal fade" id="delete_paciente_modal">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="mb-2">
+                    <span class="avatar avatar-md rounded-circle bg-danger"><i class="ti ti-trash fs-24"></i></span>
+                </div>
+                <h6 class="fs-16 mb-1">Confirmar Eliminación</h6>
+                <p class="mb-3">¿Estás seguro que deseas eliminar este registro?</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <input type="hidden" id="delete_paciente_id" value="">
+                    <input type="hidden" id="delete_paciente_referer" value="">
+                    <a href="javascript:void(0);" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                    <a href="javascript:RemovePaciente();" class="btn btn-danger w-100" id="confirm_delete_paciente">Sí, Eliminar</a>
                 </div>
             </div>
         </div>
     </div>
-    <!-- End Modal  -->
+</div>
+<!-- End Modal  -->
 
 <!-- Start Confirm Consulta Modal  -->
 <div class="modal fade" id="modal_confirmar_consulta">
@@ -157,6 +157,63 @@ include(__DIR__ . '/../src/user_session.php');
 </div>
 <!-- End Confirm Consulta Modal  -->
 
+
+<!-- modal add cita -->
+<div id="add-cita-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addCitaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addModalLabel">Nueva cita a paciente</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#">
+                    <div class="mb-3">
+                        <label class="form-label">Paciente</label>
+                        <input type="text" style="width: 450px;" class="form-control" id="paciente_busqueda" placeholder="Buscar paciente...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Doctor</label>
+                        <input type="text" class="form-control" style="width: 450px;" id="doctor_busqueda" placeholder="Buscar doctor...">
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label mb-0">Siguiente Visita</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="input-group w-auto input-group-flat mb-3">
+                            <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="frm_fecha_cita">
+                            <span class="input-group-text">
+                                <i class="ti ti-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label mb-0">Hora de la cita</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="input-group w-auto input-group-flat mb-3">
+                            <input type="time" class="form-control" placeholder="HH:mm" id="frm_hora_cita">
+                            <span class="input-group-text">
+                                <i class="ti ti-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <input type="hidden" id="frm_paciente_id" value="">
+                    <input type="hidden" id="frm_doctor_id" value="">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="CrearCita('add-cita-modal',false)">Realizar cita</button>
+                </div>
+            </div> <!-- end modal content -->
+        </div> <!-- end modal dialog -->
+    </div> <!-- end modal -->
+</div> <!-- end modal add cita -->
+
 <!-- ========================
         End Page Content
     ========================= -->
@@ -172,6 +229,84 @@ include(__DIR__ . '/../src/user_session.php');
         const pagina = <?php echo isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; ?>;
 
         loadPacientesGrid(registros, pagina, busqueda);
+
+        const inputPacienteBusqueda = document.getElementById("paciente_busqueda");
+        const inputDoctorBusqueda = document.getElementById("doctor_busqueda");
+
+        const awesompleteServiciosMedicos = new Awesomplete(inputPacienteBusqueda, {
+            minChars: 1,
+            maxItems: 10,
+            autoFirst: true,
+            list: []
+        });
+        const awesompleteDoctores = new Awesomplete(inputDoctorBusqueda, {
+            minChars: 1,
+            maxItems: 10,
+            autoFirst: true,
+            list: []
+        });
+
+        inputPacienteBusqueda.addEventListener("input", async function() {
+
+            const term = inputPacienteBusqueda.value.trim();
+            if (term.length < 2) return;
+
+            const result = await searchPatientByName(50, 1, term);
+            if (result) {
+                // Guarda los pacientes para selección posterior
+                inputPacienteBusqueda._pacientes = result.data;
+                inputPacienteBusqueda._pacientes.forEach(p => {
+                    p.nombre_completo = `${p.nombre.charAt(0).toUpperCase() + p.nombre.slice(1).toLowerCase()} ${p.apellido.charAt(0).toUpperCase() + p.apellido.slice(1).toLowerCase()}`;
+                });
+                const list = result.data.map(m => m.nombre_completo);
+                awesompleteServiciosMedicos.list = list;
+            }
+        });
+
+        inputDoctorBusqueda.addEventListener("input", async function() {
+            const term = inputDoctorBusqueda.value.trim();
+            if (term.length < 2) return;
+
+            const result = await getDoctorPorNombre(term);
+            if (result) {
+                // Guarda los doctores para selección posterior
+                inputDoctorBusqueda._doctores = result;
+                inputDoctorBusqueda._doctores.forEach(d => {
+                    d.nombre_completo_format = `Dr. ${d.nombre_completo.charAt(0).toUpperCase() + d.nombre_completo.slice(1).toLowerCase()}`;
+                });
+                const list = result.map(m => m.nombre_completo_format);
+                awesompleteDoctores.list = list;
+            }
+        });
+
+        inputPacienteBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
+            const selectedName = e.text.value;
+            const pacientes = inputPacienteBusqueda._pacientes || [];
+            const paciente = pacientes.find(p => p.nombre_completo === selectedName);
+
+            if (paciente) {
+                // Guarda el ID del paciente seleccionado
+                document.getElementById("frm_paciente_id").value = paciente.id;
+                // Puedes llenar otros campos aquí si lo necesitas
+            } else {
+                document.getElementById("frm_paciente_id").value = "";
+            }
+        });
+
+        inputDoctorBusqueda.addEventListener("awesomplete-selectcomplete", function(e) {
+            const selectedName = e.text.value;
+            const doctores = inputDoctorBusqueda._doctores || [];
+            const doctor = doctores.find(d => d.nombre_completo_format === selectedName);
+
+            if (doctor) {
+                // Guarda el ID del doctor seleccionado
+                document.getElementById("frm_doctor_id").value = doctor.id;
+                // Puedes llenar otros campos aquí si lo necesitas
+            } else {
+                document.getElementById("frm_doctor_id").value = "";
+            }
+        });
+
     }
 </script>
 

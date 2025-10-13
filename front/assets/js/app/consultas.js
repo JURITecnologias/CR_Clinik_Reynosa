@@ -298,6 +298,7 @@ function renderPacienteUltimasConsultas(consultas) {
             day: 'numeric'
         });
         const datosDoctor= consulta.doctor ? `${consulta.doctor.nombre_completo} (${consulta.doctor.titulo})` : 'N/A';
+        const motivosConsulta = consulta.motivos_consulta && Array.isArray(consulta.motivos_consulta) ? consulta.motivos_consulta.join(', ') : (consulta.motivo_consulta || 'N/A');
         return `
         <div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
@@ -309,6 +310,7 @@ function renderPacienteUltimasConsultas(consultas) {
                 <div class="accordion-body">
                     <p><strong>Doctor que atendio:</strong> ${datosDoctor}</p>
                     <p><strong>Motivo de Consulta:</strong> ${consulta.motivo_consulta || 'N/A'}</p>
+                    <p><strong>Tipo de Motivo de consulta :</strong> ${motivosConsulta.toUpperCase() || 'N/A'}</p>
                     <p><strong>Síntomas:</strong> ${consulta.sintomas || 'N/A'}</p>
                     <p><strong>Diagnóstico:</strong> ${consulta.diagnostico || 'N/A'}</p>
                     <p><strong>Indicaciones:</strong> ${consulta.indicaciones || 'N/A'}</p>
@@ -560,6 +562,15 @@ async function renderConsultaPaciente(consulta){
     document.getElementById('info_paciente_container').classList.remove('d-none');
     document.getElementById('doc_info').value =  obfuscate(JSON.stringify(consulta.doctor));
     document.getElementById('paciente_info').value = obfuscate(JSON.stringify(consulta.paciente));
+    if (consulta.motivos_consulta && Array.isArray(consulta.motivos_consulta)) {
+        consulta.motivos_consulta.forEach(motivo => {
+            const checkbox = document.getElementById(motivo);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        });
+    }
+
 }
 
 function renderCitaSeguimientoInfo(cita){
@@ -568,10 +579,9 @@ function renderCitaSeguimientoInfo(cita){
     }
 
     const fechaCita = new Date(cita.fecha_cita);
+
     document.getElementById('frm_cita_fecha').value = cita.fecha_cita;
-
     document.getElementById('frm_cita_hora').value = cita.hora_cita;
-
     document.getElementById('cita_id').value = cita.id;
 }
 
@@ -599,13 +609,19 @@ async function LoadConsulta(p, showDeleteButton = true) {
     //limpia listas de medicamentos y servicios medicos
     sessionStorage.removeItem('medicamentos');
     sessionStorage.removeItem('servicios_medicos');
+
+    const user = JSON.parse(sessionStorage.getItem('user'));
+
+    const hasAdminRole = user && user.roles && ['Admon', 'Main Admin'].some(rol => user.roles.includes(rol));
+    const hasDoctorRole = user && user.roles && user.roles.includes('Doctor');
+
     const consultaId = atob(p);
     showLoading();
     disableButtons();
     try {
         const consulta = await getConsulta(consultaId);
         const cita= await searchCitaByConsulta(consultaId);
-        
+       
         renderConsultaPaciente(consulta);
         if(cita && cita.data && cita.data.length > 0) renderCitaSeguimientoInfo(cita.data[0]);
         if (consulta.medicamentos && consulta.medicamentos.length > 0) {
@@ -620,6 +636,7 @@ async function LoadConsulta(p, showDeleteButton = true) {
                 renderServicioMedicoCard(servicio, showDeleteButton);
             });
         }
+
         renderPacienteBasicInfo(consulta.paciente);
         renderPacienteHistorialMedico(consulta.paciente.historial_medico ? consulta.paciente.historial_medico[0] : null);
         const ultimasConsultas = await getUltimasCincoConsultasPacienteId(consulta.paciente.id);
@@ -635,12 +652,14 @@ async function LoadConsulta(p, showDeleteButton = true) {
         try {
             const receta = await getRecetaByConsultaId(consultaId);
             if (receta && receta.uuid) {
-            document.getElementById('receta').value = obfuscate(receta.uuid);
+                document.getElementById('receta').value = obfuscate(receta.uuid);
             }
         } catch (error) {
             if (error.response && error.response.status !== 404) {
-            renderAlertMessage("Error al obtener la receta. Por favor, intente nuevamente.", 'danger');
+                renderAlertMessage("Error al obtener la receta. Por favor, intente nuevamente.", 'danger');
             }
+            console.error('Error fetching receta:', error);
+
         }
 
         enableButtons();
@@ -660,6 +679,11 @@ async function LoadConsulta(p, showDeleteButton = true) {
                 medicamentoEntryFormName.classList.add('d-none');
             }
         }
+
+        if(!hasAdminRole && !hasDoctorRole){
+            document.getElementById('btn_imprimir_receta').classList.add('d-none');
+        }
+        
     } catch (error) {
         renderAlertMessage("Error al cargar la consulta. Por favor, intente nuevamente.", 'danger',false);
         console.error('Error fetching consulta:', error);
@@ -737,6 +761,14 @@ function ValidaConsulta(){
     consultaData.diagnostico = diagnostico;
     consultaData.indicaciones = indicaciones;
     consultaData.id = consultaId;
+
+    const motivosConsulta = [];
+    document.querySelectorAll('.motivos_consulta_checkbox').forEach(checkbox => {
+        if (checkbox.checked) {
+            motivosConsulta.push(checkbox.value);
+        }
+    });
+    consultaData.motivos_consulta = motivosConsulta;
 
     return consultaData;
 
@@ -965,7 +997,8 @@ async function CrearConsulta() {
         presion_arterial: "",
         saturacion_oxigeno: null,
         peso: null,
-        talla: null
+        talla: null,
+        motivos_consulta: null
     };
 
     let consultaCreada = null;
@@ -1029,10 +1062,6 @@ function eliminarConsulta(){
 }
 
 async function ImprimirReceta(){
-    hideSaveButtons();
-    document.getElementById('servicio_medico_entry_form').classList.add('d-none');
-    document.getElementById('medicamento_entry_form').classList.add('d-none');
-    document.getElementById('medicamento_entry_form_name').classList.add('d-none');
 
     if(document.getElementById('consulta_estatus').value.toLowerCase() !== 'abierta'){
         //la consulta ya fue guardada, solo imprimimos
@@ -1040,6 +1069,11 @@ async function ImprimirReceta(){
         return;
     }
 
+
+    hideSaveButtons();
+    document.getElementById('servicio_medico_entry_form').classList.add('d-none');
+    document.getElementById('medicamento_entry_form').classList.add('d-none');
+    document.getElementById('medicamento_entry_form_name').classList.add('d-none');
     try {
         const consultaData = ValidaConsulta();
         if (!consultaData) return;
