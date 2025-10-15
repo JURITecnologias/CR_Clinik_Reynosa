@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ServiciosMedicosSeeder::class,
             SeedersMedicamentoSeeder::class,
             add_default_configuracion_sistema::class,
+            add_basicas_categorias_consumos::class
         ]);
     }
 }
