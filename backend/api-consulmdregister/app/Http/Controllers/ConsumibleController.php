@@ -39,6 +39,7 @@ class ConsumibleController extends Controller
             'stock_actual' => 'nullable|integer',
             'stock_minimo' => 'nullable|integer',
             'categoria_id' => 'nullable|exists:categoria_consumibles,id',
+            'es_activo' => 'boolean',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);

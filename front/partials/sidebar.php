@@ -218,6 +218,26 @@ function userHasAnyRole($user, $roles)
                             <i class="ti ti-calendar"></i><span>Horarios Doctores</span>
                         </a>
                     </li>
+                    <li class="">
+                        <a href="categorias-consumibles.php" class="<?php echo ($page =='categorias-consumibles.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-tag"></i><span>Cat. de Consumibles</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="consumibles.php" class="<?php echo ($page =='consumibles.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-box"></i><span>Consumibles</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="kit-consumibles.php" class="<?php echo ($page =='kit-consumibles.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-box"></i><span>Kits de Consumibles</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="inventario-consumibles.php" class="<?php echo ($page =='inventario-consumibles.php' ) ? 'active' : '' ;?>">
+                            <i class="ti ti-package"></i><span>Inv. Consumibles</span>
+                        </a>
+                    </li>
                     <?php } ?>
                     <?php
                         $env = CR_CLINIK_ENV;

@@ -93,11 +93,6 @@ async function renderHorariosTable(doctorId) {
    
 }
 
-document.getElementById('frm_doctor_select').addEventListener('change', function() {
-    const doctorId = this.value;
-    renderHorariosTable(doctorId);
-});
-
 async function loadDoctoresSelect() {
     showLoading();
     try {

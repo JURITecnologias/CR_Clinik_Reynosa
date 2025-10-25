@@ -228,3 +228,11 @@ $page = end( $link_array );
     <?php } ?>
 
     <script src="assets/js/app/notificaciones.js"></script>
+
+    <?php if($page == 'categorias-consumibles.php' || $page == 'consumibles.php') { ?>
+    <script src="assets/js/app/categorias-consumibles.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'consumibles.php') { ?>
+    <script src="assets/js/app/consumibles.js"></script>
+    <?php } ?>
