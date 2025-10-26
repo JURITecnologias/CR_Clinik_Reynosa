@@ -233,6 +233,10 @@ $page = end( $link_array );
     <script src="assets/js/app/categorias-consumibles.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consumibles.php') { ?>
+    <?php if($page == 'consumibles.php' || $page=="agregar-kit.php") { ?>
     <script src="assets/js/app/consumibles.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'kit-consumibles.php') { ?>
+    <script src="assets/js/app/kit-consumibles.js"></script>
     <?php } ?>

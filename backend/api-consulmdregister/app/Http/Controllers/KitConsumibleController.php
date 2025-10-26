@@ -43,10 +43,17 @@
     public function index(Request $request)
     {
         $kitId = $request->query('kit_id');
+        $consumibleId = $request->query('consumible_id');
         $query = KitConsumible::with(['kit', 'consumible']);
+        
         if ($kitId) {
             $query->where('kit_id', $kitId);
         }
+        
+        if ($consumibleId) {
+            $query->where('consumible_id', $consumibleId);
+        }
+        
         return $query->paginate($request->query('per_page', 15));
     }
 

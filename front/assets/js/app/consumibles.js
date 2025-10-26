@@ -1,6 +1,9 @@
-async function getConsumibles(per_page = 50, page = 1,busqueda='') {
+async function getConsumibles(per_page = 50, page = 1,busqueda='',activo=false) {
     try {
         const url=(busqueda && busqueda.trim() !=='') ? apiHost + apiPath + `/consumibles?per_page=${per_page}&page=${page}&search=${encodeURIComponent(busqueda)}` : apiHost + apiPath + `/consumibles?per_page=${per_page}&page=${page}`;
+        if(activo){
+            url.concat('&activo=true');
+        }
         const response = await fetch(url, {
             method: 'GET',
             headers: headersRequest
@@ -152,47 +155,13 @@ function renderConsumibleInForm(consumible,prefix='') {
 
 }
 
-async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
-    if (totalPages <= 1) {
-         $('.pagination_control').each(function() {
-            $(this).hide();
-         });
-        return; // No need for pagination if there's only one page
-    }
-    $('.pagination_control').each(function() {
-        const $paginationContainer = $(this);
-        $paginationContainer.empty();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('busqueda')||'';
-        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
-
-        if (actualPage !== 1) {
-            const prevItem = $('<li>', { class: 'page-item' });
-            prevItem.html(`<a class="page-link" href="consumibles.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}" data-page="prev">Anterior</a>`);
-            $paginationContainer.append(prevItem);
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
-            pageItem.html(`<a class="page-link" href="consumibles.php?registros=${perPage}&pagina=${i}${searchParam}" data-page="${i}">${i}</a>`);
-            $paginationContainer.append(pageItem);
-        }
-
-        if (totalPages !== actualPage) {
-            const nextItem = $('<li>', { class: 'page-item' });
-            nextItem.html(`<a class="page-link" href="consumibles.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}" data-page="next">Siguiente</a>`);
-            $paginationContainer.append(nextItem);
-        }
-    });
-}
 
 async function loadDataTableConsumibles(per_page = 50, page = 1, busqueda='') {
     showLoading();
     try {
         const result= await getConsumibles(per_page, page, busqueda);
         renderConsumiblesTable(result.data);
-        await LoadPagesControl(result.last_page, per_page, page);
+        await LoadPagesControl('consumibles',result.last_page, per_page, page);
         document.getElementById('consumibles_container').classList.remove('d-none');
     } catch (error) {
         console.error('Error loading consumibles:', error);
@@ -319,6 +288,7 @@ async function actualizarConsumible(){
         form.reportValidity();
         return;
     }
+    const esActivo = document.getElementById('es_activo').checked ? true : false;
     const consumibleId = document.getElementById('consumible_id').value;
     const consumible = {
         codigo_interno: document.getElementById('codigo_interno').value,
@@ -328,7 +298,8 @@ async function actualizarConsumible(){
         stock_minimo: parseInt(document.getElementById('stock_minimo').value),
         precio_unitario_promedio: parseFloat(document.getElementById('precio_unitario_promedio').value),
         costo_unitario_promedio: parseFloat(document.getElementById('costo_unitario_promedio').value),
-        categoria_id: parseInt(document.getElementById('categoria_consumible').value)
+        categoria_id: parseInt(document.getElementById('categoria_consumible').value),
+        es_activo: esActivo
     };
 
     const modalElement = document.getElementById('form-modal-consumibles-add');

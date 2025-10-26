@@ -14,17 +14,25 @@ class ConsumibleController extends Controller
     {
         $perPage = $request->query('per_page', 15);
         $query = Consumible::with('categoria');
+        
         if ($request->has('categoria_id')) {
             $query->where('categoria_id', $request->query('categoria_id'));
         }
+        
         if ($request->has('search')) {
             $search = $request->query('search');
             $query->where(function($q) use ($search) {
                 $q->where('nombre', 'like', "%$search%")
                   ->orWhere('codigo_interno', 'like', "%$search%")
-                  ->orWhere('descripcion', 'like', "%$search%") ;
+                  ->orWhere('descripcion', 'like', "%$search%");
             });
         }
+
+        if ($request->has('activo')) {
+            $activo = filter_var($request->query('activo'), FILTER_VALIDATE_BOOLEAN);
+            $query->where('es_activo', $activo);
+        }
+
         return $query->orderBy('nombre')->paginate($perPage);
     }
 
