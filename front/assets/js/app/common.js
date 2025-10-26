@@ -53,3 +53,39 @@ function obfuscate(str) {
 function deobfuscate(str) {
     return str.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 1)).join('');
 }
+
+async function LoadPagesControl(referedPage,totalPages,perPage = 50,actualPage=1){
+    if (totalPages <= 1) {
+         $('.pagination_control').each(function() {
+            $(this).hide();
+         });
+        return; // No need for pagination if there's only one page
+    }
+    console.log(actualPage,totalPages,perPage,referedPage);
+    $('.pagination_control').each(function() {
+        const $paginationContainer = $(this);
+        $paginationContainer.empty();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchTerm = urlParams.get('busqueda')||'';
+        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
+
+        if (actualPage !== 1) {
+            const prevItem = $('<li>', { class: 'page-item' });
+            prevItem.html(`<a class="page-link" href="${referedPage}.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}" data-page="prev">Anterior</a>`);
+            $paginationContainer.append(prevItem);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
+            pageItem.html(`<a class="page-link" href="${referedPage}.php?registros=${perPage}&pagina=${i}${searchParam}" data-page="${i}">${i}</a>`);
+            $paginationContainer.append(pageItem);
+        }
+
+        if (totalPages !== actualPage) {
+            const nextItem = $('<li>', { class: 'page-item' });
+            nextItem.html(`<a class="page-link" href="${referedPage}.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}" data-page="next">Siguiente</a>`);
+            $paginationContainer.append(nextItem);
+        }
+    });
+}

@@ -593,7 +593,7 @@ async function LoadConsultasTable(perPage = 50, actualPage = 1, searchTerm = '',
         renderTableConsultas(data.data);
         $('#consultas_container').removeClass('d-none');
         $('#total-consultas').text(data.total);
-        await LoadPagesControl(data.last_page, perPage, actualPage);
+        await LoadPagesControl('consultas',data.last_page, perPage, actualPage);
     } catch (error) {
         console.error('Error loading consultas table:', error);
     }finally {
@@ -849,42 +849,6 @@ function ChangeRecords(){
     const pagina = urlParams.get('pagina') || 1;
 
     window.location.search = `?registros=${registros}&pagina=1&busqueda=${encodeURIComponent(busqueda)}&direccion=${direccion}`;
-}
-
-async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
-    if (totalPages <= 1) {
-         $('.pagination_control').each(function() {
-            $(this).hide();
-         });
-        return; // No need for pagination if there's only one page
-    }
-    $('.pagination_control').each(function() {
-        const $paginationContainer = $(this);
-        $paginationContainer.empty();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('busqueda')||'';
-        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
-         const direccion = urlParams.get('direccion') || 'desc';
-
-        if (actualPage !== 1) {
-            const prevItem = $('<li>', { class: 'page-item' });
-            prevItem.html(`<a class="page-link" href="consultas.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}&direccion=${direccion}" data-page="prev">Anterior</a>`);
-            $paginationContainer.append(prevItem);
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
-            pageItem.html(`<a class="page-link" href="consultas.php?registros=${perPage}&pagina=${i}${searchParam}&direccion=${direccion}" data-page="${i}">${i}</a>`);
-            $paginationContainer.append(pageItem);
-        }
-
-        if (totalPages !== actualPage) {
-            const nextItem = $('<li>', { class: 'page-item' });
-            nextItem.html(`<a class="page-link" href="consultas.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}&direccion=${direccion}" data-page="next">Siguiente</a>`);
-            $paginationContainer.append(nextItem);
-        }
-    });
 }
 
 function GoToAddPaciente(){

@@ -196,7 +196,7 @@ async function LoadCitasTable(pagina = 1, registros = 50, busqueda = '', direcci
             return;
         }
         renderCitasTable(data.data);
-        await LoadPagesControl(data.last_page, registros, data.current_page);
+        await LoadPagesControl('citas',data.last_page, registros, data.current_page);
         showInfoContainer(true);
     } catch (error) {
         console.error('Error loading citas:', error);
@@ -277,43 +277,6 @@ function ChangeRecords(){
 
     window.location.search = `?registros=${registros}&pagina=1&busqueda=${encodeURIComponent(busqueda)}&direccion=${direccion}`;
 }
-
-async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
-    if (totalPages <= 1) {
-         $('.pagination_control').each(function() {
-            $(this).hide();
-         });
-        return; // No need for pagination if there's only one page
-    }
-    $('.pagination_control').each(function() {
-        const $paginationContainer = $(this);
-        $paginationContainer.empty();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('busqueda')||'';
-        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
-         const direccion = urlParams.get('direccion') || 'desc';
-
-        if (actualPage !== 1) {
-            const prevItem = $('<li>', { class: 'page-item' });
-            prevItem.html(`<a class="page-link" href="citas.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}&direccion=${direccion}" data-page="prev">Anterior</a>`);
-            $paginationContainer.append(prevItem);
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
-            pageItem.html(`<a class="page-link" href="citas.php?registros=${perPage}&pagina=${i}${searchParam}&direccion=${direccion}" data-page="${i}">${i}</a>`);
-            $paginationContainer.append(pageItem);
-        }
-
-        if (totalPages !== actualPage) {
-            const nextItem = $('<li>', { class: 'page-item' });
-            nextItem.html(`<a class="page-link" href="citas.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}&direccion=${direccion}" data-page="next">Siguiente</a>`);
-            $paginationContainer.append(nextItem);
-        }
-    });
-}
-
 
 async function CrearCita(modalName='add-modal',reloadCitasTable=true) {
     const pacienteId = document.getElementById('frm_paciente_id').value;

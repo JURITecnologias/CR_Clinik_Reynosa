@@ -59,7 +59,22 @@
                         <!-- Columna 4: Puedes agregar contenido aquí -->
                         <div class="d-flex justify-content-end">
                             <nav aria-label="Page navigation">
-                                <ul class="pagination pagination-sm mb-0 pagination_pacientes" id="pagination_pacientes">
+                                <ul class="pagination pagination-sm mb-0 pagination_control" id="pagination_pacientes">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Siguiente</a>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
