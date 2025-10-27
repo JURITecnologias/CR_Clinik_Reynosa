@@ -1050,17 +1050,27 @@ async function ImprimirReceta(){
 
             consultaData.estatus = 'completada';
             const servicios = sessionStorage.getItem('servicios_medicos');
+            let createOrdenClinica = false;
+            let serviciosSolicitadosOrdenClinica = [];
             consultaData.servicios_medicos = servicios ? JSON.parse(servicios) : [];
             if(consultaData.servicios_medicos && consultaData.servicios_medicos.length > 0){
                 consultaData.servicios_medicos.forEach(servicio => {
                     if (servicio.categoria && servicio.categoria.toLowerCase() === 'enfermeria') {
                         consultaData.estatus = 'enfermeria';
+                        createOrdenClinica = true;
+                        serviciosSolicitadosOrdenClinica.push(servicio);
                     }
                 });
             }
             document.getElementById('consulta_estatus').value= consultaData.estatus;
             console.log(consultaData);
-            const updatedConsulta = await updateConsulta(consultaData);
+            //const updatedConsulta = await updateConsulta(consultaData);
+            if(createOrdenClinica) {
+                consultaData.serviciosSolicitados= serviciosSolicitadosOrdenClinica;
+                consultaData.paciente_id = parseInt(document.getElementById('paciente_id').value, 10);
+                consultaData.doctor_id = parseInt(document.getElementById('doctor_id').value, 10);
+                await createOrdenClinicaPorConsulta(consultaData);
+            }
             enableButtons();
             downloadRecetaPdf(response.uuid);
         } catch (error) {

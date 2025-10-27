@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OrdenClinica;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrdenClinicaController extends Controller
@@ -25,7 +26,9 @@ class OrdenClinicaController extends Controller
         if ($request->has('doctor_id')) {
             $query->where('doctor_id', $request->query('doctor_id'));
         }
-        $result = $query->orderByDesc('created_at')->paginate($perPage);
+        $order = $request->query('order', 'created_at');
+        $orderDirection = $request->query('direction', 'desc');
+        $result = $query->orderBy($order, $orderDirection)->paginate($perPage);
         $result->getCollection()->transform(function ($item) {
             if ($item->doctor) {
                 unset($item->doctor->firma);
@@ -52,11 +55,10 @@ class OrdenClinicaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'paciente_id' => 'required|exists:pacientes,id',
-            'consulta_id' => 'required|exists:consultas,id',
-            'folio_orden' => 'required|integer|unique:ordenes_clinicas',
+            'consulta_id' => 'nullable|exists:consultas,id',
             'estado' => 'in:pendiente,en_proceso,cancelada,completada',
             'servicios_solicitados' => 'required|array',
-            'doctor_id' => 'required|exists:informacion_doctor,id',
+            'doctor_id' => 'nullable|exists:informacion_doctor,id',
             'fecha_orden' => 'required|date',
             'observaciones' => 'nullable|string',
             'user_id' => 'required|exists:users,id',
@@ -66,12 +68,21 @@ class OrdenClinicaController extends Controller
         }
         $data = $validator->validated();
         $data['uuid'] = \Illuminate\Support\Str::uuid()->toString();
+
+        //obtenemos el folio de la orden de la configuración del sistema
+        $folioOrden = DB::table('configuracion_sistema')->where('variable', 'folio_orden_clinica')->value('valor');
+        $data['folio_orden'] = is_numeric($folioOrden) ? (int)$folioOrden : 1;
+
         $orden = OrdenClinica::create($data);
         $response = $orden->load(['paciente', 'consulta', 'doctor', 'usuario', 'consumos']);
 
         if ($response->doctor) {
             unset($response->doctor->firma);
         }
+
+        //actualizamos el folio de la orden en la configuración del sistema
+        $nuevoFolio = (is_numeric($folioOrden) ? (int)$folioOrden : 1) + 1;
+        DB::table('configuracion_sistema')->where('variable', 'folio_orden_clinica')->update(['valor' => $nuevoFolio]);
 
         return response()->json($response, 201);
     }
