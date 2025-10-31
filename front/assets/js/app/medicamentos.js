@@ -117,41 +117,6 @@ async function searchMedicamentosByName(name) {
     }
 }
 
-async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
-    if (totalPages <= 1) {
-         $('.pagination_medicamentos').each(function() {
-            $(this).hide();
-         });
-        return; // No need for pagination if there's only one page
-    }
-    $('.pagination_medicamentos').each(function() {
-        const $paginationContainer = $(this);
-        $paginationContainer.empty();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('busqueda')||'';
-        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
-
-        if (actualPage !== 1) {
-            const prevItem = $('<li>', { class: 'page-item' });
-            prevItem.html(`<a class="page-link" href="medicamentos-catalog.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}" data-page="prev">Anterior</a>`);
-            $paginationContainer.append(prevItem);
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
-            pageItem.html(`<a class="page-link" href="medicamentos-catalog.php?registros=${perPage}&pagina=${i}${searchParam}" data-page="${i}">${i}</a>`);
-            $paginationContainer.append(pageItem);
-        }
-
-        if (totalPages !== actualPage) {
-            const nextItem = $('<li>', { class: 'page-item' });
-            nextItem.html(`<a class="page-link" href="medicamentos-catalog.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}" data-page="next">Siguiente</a>`);
-            $paginationContainer.append(nextItem);
-        }
-    });
-}
-
 async function renderMedicamentosTable(perPage = 50, page = 1, search = '') {
     showLoading();
 
@@ -185,7 +150,7 @@ async function renderMedicamentosTable(perPage = 50, page = 1, search = '') {
         tableBody.appendChild(row);
     });
 
-    LoadPagesControl(medicamentos.last_page, perPage, page);
+    LoadPagesControl('medicamentos-catalog',medicamentos.last_page, perPage, page);
     hideLoading();
     document.querySelector('.info').classList.remove('d-none');
     document.getElementById('total_medicamentos').textContent = medicamentos.total;

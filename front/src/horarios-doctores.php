@@ -159,6 +159,11 @@ $user = include(__DIR__ . '/../src/user_session.php');
         loadEvent();
     });
 
+     document.getElementById('frm_doctor_select').addEventListener('change', function () {
+        const doctorId = this.value;
+        renderHorariosTable(doctorId);
+    });
+
     function loadEvent() {
         loadDoctoresSelect();
     }

@@ -593,7 +593,7 @@ async function LoadConsultasTable(perPage = 50, actualPage = 1, searchTerm = '',
         renderTableConsultas(data.data);
         $('#consultas_container').removeClass('d-none');
         $('#total-consultas').text(data.total);
-        await LoadPagesControl(data.last_page, perPage, actualPage);
+        await LoadPagesControl('consultas',data.last_page, perPage, actualPage);
     } catch (error) {
         console.error('Error loading consultas table:', error);
     }finally {
@@ -851,42 +851,6 @@ function ChangeRecords(){
     window.location.search = `?registros=${registros}&pagina=1&busqueda=${encodeURIComponent(busqueda)}&direccion=${direccion}`;
 }
 
-async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
-    if (totalPages <= 1) {
-         $('.pagination_control').each(function() {
-            $(this).hide();
-         });
-        return; // No need for pagination if there's only one page
-    }
-    $('.pagination_control').each(function() {
-        const $paginationContainer = $(this);
-        $paginationContainer.empty();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('busqueda')||'';
-        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
-         const direccion = urlParams.get('direccion') || 'desc';
-
-        if (actualPage !== 1) {
-            const prevItem = $('<li>', { class: 'page-item' });
-            prevItem.html(`<a class="page-link" href="consultas.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}&direccion=${direccion}" data-page="prev">Anterior</a>`);
-            $paginationContainer.append(prevItem);
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
-            pageItem.html(`<a class="page-link" href="consultas.php?registros=${perPage}&pagina=${i}${searchParam}&direccion=${direccion}" data-page="${i}">${i}</a>`);
-            $paginationContainer.append(pageItem);
-        }
-
-        if (totalPages !== actualPage) {
-            const nextItem = $('<li>', { class: 'page-item' });
-            nextItem.html(`<a class="page-link" href="consultas.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}&direccion=${direccion}" data-page="next">Siguiente</a>`);
-            $paginationContainer.append(nextItem);
-        }
-    });
-}
-
 function GoToAddPaciente(){
     window.location.href = 'add-patient.php?o=consultas';
 }
@@ -1086,17 +1050,27 @@ async function ImprimirReceta(){
 
             consultaData.estatus = 'completada';
             const servicios = sessionStorage.getItem('servicios_medicos');
+            let createOrdenClinica = false;
+            let serviciosSolicitadosOrdenClinica = [];
             consultaData.servicios_medicos = servicios ? JSON.parse(servicios) : [];
             if(consultaData.servicios_medicos && consultaData.servicios_medicos.length > 0){
                 consultaData.servicios_medicos.forEach(servicio => {
                     if (servicio.categoria && servicio.categoria.toLowerCase() === 'enfermeria') {
                         consultaData.estatus = 'enfermeria';
+                        createOrdenClinica = true;
+                        serviciosSolicitadosOrdenClinica.push(servicio);
                     }
                 });
             }
             document.getElementById('consulta_estatus').value= consultaData.estatus;
             console.log(consultaData);
-            const updatedConsulta = await updateConsulta(consultaData);
+            //const updatedConsulta = await updateConsulta(consultaData);
+            if(createOrdenClinica) {
+                consultaData.serviciosSolicitados= serviciosSolicitadosOrdenClinica;
+                consultaData.paciente_id = parseInt(document.getElementById('paciente_id').value, 10);
+                consultaData.doctor_id = parseInt(document.getElementById('doctor_id').value, 10);
+                await createOrdenClinicaPorConsulta(consultaData);
+            }
             enableButtons();
             downloadRecetaPdf(response.uuid);
         } catch (error) {

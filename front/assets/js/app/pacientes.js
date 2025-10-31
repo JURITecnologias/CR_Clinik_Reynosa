@@ -344,12 +344,12 @@ async function loadPacientesGrid(registros, pagina,buscar) {
         renderPacienteInfoCardList(pacientes.data);
         hideLoading();
         document.getElementById('pacientes_grid_section').classList.remove('d-none');
-        LoadPagesControl(pacientes.last_page, registros, pagina);
+        LoadPagesControl('patients',pacientes.last_page, registros, pagina);
         return;
     }
     const pacientes = await getPacientes(registros, pagina);
     renderPacienteInfoCardList(pacientes.data);
-    LoadPagesControl(pacientes.last_page, registros, pagina);
+    LoadPagesControl('patients',pacientes.last_page, registros, pagina);
     hideLoading();
     document.getElementById('pacientes_grid_section').classList.remove('d-none');
 }
@@ -438,7 +438,7 @@ async function loadPacientesTable(registros, pagina,buscar) {
         } else {
             renderPacienteInfoTable(pacientes.data);
             document.getElementById('patients_container').classList.remove('d-none');
-            LoadPagesControl(pacientes.last_page, registros, pagina);
+            LoadPagesControl('all-patients-list',pacientes.last_page, registros, pagina);
         }
 
         document.getElementById('total-pacientes').textContent = pacientes.total || 0;
@@ -447,7 +447,8 @@ async function loadPacientesTable(registros, pagina,buscar) {
     }
     const pacientes = await getPacientes(registros, pagina);
     renderPacienteInfoTable(pacientes.data);
-     document.getElementById('total-pacientes').textContent = pacientes.total || 0;
+    document.getElementById('total-pacientes').textContent = pacientes.total || 0;
+    LoadPagesControl('all-patients-list',pacientes.last_page, registros, pagina);
     return;
 }
 
@@ -712,41 +713,6 @@ async function LookForUserByName(page='patients.php'){
     const pagina = urlParams.get('pagina') ? parseInt(urlParams.get('pagina'), 10) : 1;
 
     window.location.href = page+'?registros='+registros+'&pagina='+pagina+'&busqueda='+document.getElementById('searchInput').value;
-}
-
-async function LoadPagesControl(totalPages,perPage = 50,actualPage=1){
-    if (totalPages <= 1) {
-         $('.pagination_pacientes').each(function() {
-            $(this).hide();
-         });
-        return; // No need for pagination if there's only one page
-    }
-    $('.pagination_pacientes').each(function() {
-        const $paginationContainer = $(this);
-        $paginationContainer.empty();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('busqueda')||'';
-        const searchParam = searchTerm ? `&busqueda=${encodeURIComponent(searchTerm)}` : '';
-
-        if (actualPage !== 1) {
-            const prevItem = $('<li>', { class: 'page-item' });
-            prevItem.html(`<a class="page-link" href="patients.php?registros=${perPage}&pagina=${actualPage - 1}${searchParam}" data-page="prev">Anterior</a>`);
-            $paginationContainer.append(prevItem);
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = $('<li>', { class: 'page-item' + (i === actualPage ? ' active' : '') });
-            pageItem.html(`<a class="page-link" href="patients.php?registros=${perPage}&pagina=${i}${searchParam}" data-page="${i}">${i}</a>`);
-            $paginationContainer.append(pageItem);
-        }
-
-        if (totalPages !== actualPage) {
-            const nextItem = $('<li>', { class: 'page-item' });
-            nextItem.html(`<a class="page-link" href="patients.php?registros=${perPage}&pagina=${actualPage + 1}${searchParam}" data-page="next">Siguiente</a>`);
-            $paginationContainer.append(nextItem);
-        }
-    });
 }
 
 function ConfirmDeletePaciente(id,refererer='patients.php'){

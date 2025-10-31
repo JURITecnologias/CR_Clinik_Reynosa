@@ -210,7 +210,7 @@ $page = end( $link_array );
     <script src="assets/js/app/horario-doctores.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php' || $page == 'paciente-consultas-previas.php' || $page == 'detalle-consulta.php' || $page == 'citas.php') { ?>
+    <?php if($page == 'consultas.php' || $page == 'nueva-consulta.php' || $page == 'paciente-consultas-previas.php' || $page == 'detalle-consulta.php' || $page == 'citas.php' ) { ?>
     <script src="assets/js/app/consultas.js"></script>
     <?php } ?>
 
@@ -228,3 +228,19 @@ $page = end( $link_array );
     <?php } ?>
 
     <script src="assets/js/app/notificaciones.js"></script>
+
+    <?php if($page == 'categorias-consumibles.php' || $page == 'consumibles.php') { ?>
+    <script src="assets/js/app/categorias-consumibles.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'consumibles.php' || $page=="agregar-kit.php") { ?>
+    <script src="assets/js/app/consumibles.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'kit-consumibles.php') { ?>
+    <script src="assets/js/app/kit-consumibles.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'ordenes-clinicas.php' || $page == 'nueva-consulta.php') { ?>
+    <script src="assets/js/app/orden-clinica.js"></script>
+    <?php } ?>

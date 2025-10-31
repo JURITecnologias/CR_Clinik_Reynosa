@@ -70,7 +70,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
                             <!-- Columna 4: Puedes agregar contenido aquí -->
                             <div class="d-flex justify-content-end">
                                 <nav aria-label="Page navigation">
-                                    <ul class="pagination pagination-sm mb-0 pagination_medicamentos" id="pagination_medicamentos">
+                                    <ul class="pagination pagination-sm mb-0 pagination_control" id="pagination_medicamentos">
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" tabindex="-1">Anterior</a>
                                         </li>

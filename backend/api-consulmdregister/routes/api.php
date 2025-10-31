@@ -261,7 +261,7 @@ Route::middleware(['basic.auth', 'check.role:Main Admin|Admon','check.permission
     Route::delete('/receta-medica/uuid/{uuid}', [\App\Http\Controllers\RecetaMedicaController::class, 'destroyByUuid']);
 });
 
-
+//notificaciones routes
 Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('notificaciones', [NotificacionController::class, 'index']);  
     Route::get('notificaciones/roles', [NotificacionController::class, 'getByRoles']);
@@ -279,4 +279,101 @@ Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor','check.perm
 
 Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor','check.permission:borrar'])->group(function () {
     Route::delete('notificaciones/{id}', [NotificacionController::class, 'destroy']);
+});
+
+// consumibles routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('consumibles', [\App\Http\Controllers\ConsumibleController::class, 'index']);
+    Route::get('consumibles/{id}', [\App\Http\Controllers\ConsumibleController::class, 'show']); 
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:escribir,modificar'])->group(function () {
+    Route::post('consumibles', [\App\Http\Controllers\ConsumibleController::class, 'store']);
+    Route::put('consumibles/{id}', [\App\Http\Controllers\ConsumibleController::class, 'update']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:borrar'])->group(function () {
+    Route::delete('consumibles/{id}', [\App\Http\Controllers\ConsumibleController::class, 'destroy']);
+});
+
+// categoria consumibles routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('categoria-consumibles', [\App\Http\Controllers\CategoriaConsumibleController::class, 'index']);
+    Route::get('categoria-consumibles/{id}', [\App\Http\Controllers\CategoriaConsumibleController::class, 'show']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:escribir,modificar'])->group(function () {
+    Route::post('categoria-consumibles', [\App\Http\Controllers\CategoriaConsumibleController::class, 'store']);
+    Route::put('categoria-consumibles/{id}', [\App\Http\Controllers\CategoriaConsumibleController::class, 'update']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:borrar'])->group(function () {
+    Route::delete('categoria-consumibles/{id}', [\App\Http\Controllers\CategoriaConsumibleController::class, 'destroy']);
+});
+
+
+// kits predefinidos routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('kits-predefinidos', [\App\Http\Controllers\KitPredefinidoController::class, 'index']);
+    Route::get('kits-predefinidos/{id}', [\App\Http\Controllers\KitPredefinidoController::class, 'show']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:escribir,modificar'])->group(function () {
+    Route::post('kits-predefinidos', [\App\Http\Controllers\KitPredefinidoController::class, 'store']);
+    Route::put('kits-predefinidos/{id}', [\App\Http\Controllers\KitPredefinidoController::class, 'update']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:borrar'])->group(function () {
+    Route::delete('kits-predefinidos/{id}', [\App\Http\Controllers\KitPredefinidoController::class, 'destroy']);
+});
+
+
+// kit consumibles routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('kit-consumibles', [\App\Http\Controllers\KitConsumibleController::class, 'index']);
+    Route::get('kit-consumibles/{id}', [\App\Http\Controllers\KitConsumibleController::class, 'show']);
+});
+
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:escribir,modificar'])->group(function () {
+    Route::post('kit-consumibles', [\App\Http\Controllers\KitConsumibleController::class, 'store']);
+    Route::post('kit-consumibles/multiple', [\App\Http\Controllers\KitConsumibleController::class, 'storeMultiple']);
+    Route::put('kit-consumibles/{id}', [\App\Http\Controllers\KitConsumibleController::class, 'update']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:borrar'])->group(function () {
+    Route::delete('kit-consumibles/{id}', [\App\Http\Controllers\KitConsumibleController::class, 'destroy']);
+});
+
+// orden clinica routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('ordenes-clinicas', [\App\Http\Controllers\OrdenClinicaController::class, 'index']);
+    Route::get('ordenes-clinicas/{id}', [\App\Http\Controllers\OrdenClinicaController::class, 'show']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:escribir,modificar'])->group(function () {
+    Route::post('ordenes-clinicas', [\App\Http\Controllers\OrdenClinicaController::class, 'store']);
+    Route::put('ordenes-clinicas/{id}', [\App\Http\Controllers\OrdenClinicaController::class, 'update']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:borrar'])->group(function () {
+    Route::delete('ordenes-clinicas/{id}', [\App\Http\Controllers\OrdenClinicaController::class, 'destroy']);
+});
+
+// orden clinica consumo routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('ordenes-clinicas-consumos/orden-clinica/{ocid}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'getByOrdenClinicaId']);
+    Route::get('ordenes-clinicas-consumos', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'index']); 
+    Route::get('ordenes-clinicas-consumos/{id}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'show']);
+   
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:escribir,modificar'])->group(function () {
+    Route::post('ordenes-clinicas-consumos', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'store']);
+    Route::post('ordenes-clinicas-consumos/multiple', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'storeMultiple']);
+    Route::put('ordenes-clinicas-consumos/{id}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'update']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:borrar'])->group(function () {
+    Route::delete('ordenes-clinicas-consumos/{id}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'destroy']);
 });
