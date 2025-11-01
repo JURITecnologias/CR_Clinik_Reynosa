@@ -105,4 +105,18 @@ class OrdenClinicaConsumoController extends Controller
 
         return response()->json($consumos);
     }
+
+    public function updateCantidad(Request $request, $id)
+    {
+        $consumo = OrdenClinicaConsumo::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'cantidad' => 'required|integer|min:1',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $consumo->cantidad = $request->input('cantidad');
+        $consumo->save();
+        return response()->json($consumo->load(['ordenClinica', 'consumible', 'kit', 'usuario']));
+    }
 }

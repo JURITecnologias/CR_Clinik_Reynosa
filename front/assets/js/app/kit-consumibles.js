@@ -1,7 +1,12 @@
-async function getKitconsumibles(per_page=50, page=1, search='') {
+async function getKitconsumibles(per_page=50, page=1, search='', activo=false) {
     try {
-        const url = search !== '' ? `${apiHost + apiPath}/kits-predefinidos?per_page=${per_page}&page=${page}&search=${encodeURIComponent(search)}` :
+        let url = search !== '' ? `${apiHost + apiPath}/kits-predefinidos?per_page=${per_page}&page=${page}&search=${encodeURIComponent(search)}` :
                                  `${apiHost + apiPath}/kits-predefinidos?per_page=${per_page}&page=${page}`;
+
+        if (activo) {
+            url += `&activo=1`;
+        }
+
         const response = await fetch(url, {
             method: 'GET',
             headers: headersRequest

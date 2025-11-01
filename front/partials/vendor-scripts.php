@@ -233,14 +233,14 @@ $page = end( $link_array );
     <script src="assets/js/app/categorias-consumibles.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consumibles.php' || $page=="agregar-kit.php") { ?>
+    <?php if($page == 'consumibles.php' || $page=="agregar-kit.php" || $page=="orden-clinica.php") { ?>
     <script src="assets/js/app/consumibles.js"></script>
     <?php } ?>
 
-    <?php if($page == 'kit-consumibles.php') { ?>
+    <?php if($page == 'kit-consumibles.php' || $page == 'orden-clinica.php') { ?>
     <script src="assets/js/app/kit-consumibles.js"></script>
     <?php } ?>
 
-    <?php if($page == 'ordenes-clinicas.php' || $page == 'nueva-consulta.php') { ?>
+    <?php if($page == 'ordenes-clinicas.php' || $page == 'nueva-consulta.php' || $page == 'orden-clinica.php') { ?>
     <script src="assets/js/app/orden-clinica.js"></script>
     <?php } ?>
