@@ -351,9 +351,10 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('ordenes-clinicas/{id}', [\App\Http\Controllers\OrdenClinicaController::class, 'show']);
 });
 
-Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:escribir,modificar'])->group(function () {
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera'])->group(function () {
     Route::post('ordenes-clinicas', [\App\Http\Controllers\OrdenClinicaController::class, 'store']);
     Route::put('ordenes-clinicas/{id}', [\App\Http\Controllers\OrdenClinicaController::class, 'update']);
+    Route::patch('ordenes-clinicas/{id}/estado', [\App\Http\Controllers\OrdenClinicaController::class, 'updateEstado']);
 });
 
 Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:borrar'])->group(function () {
@@ -368,12 +369,10 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
    
 });
 
-Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:escribir,modificar'])->group(function () {
+Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera'])->group(function () {
     Route::post('ordenes-clinicas-consumos', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'store']);
     Route::post('ordenes-clinicas-consumos/multiple', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'storeMultiple']);
     Route::put('ordenes-clinicas-consumos/{id}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'update']);
-});
-
-Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:borrar'])->group(function () {
     Route::delete('ordenes-clinicas-consumos/{id}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'destroy']);
+    Route::patch('ordenes-clinicas-consumos/{id}/cantidad', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'updateCantidad']);
 });

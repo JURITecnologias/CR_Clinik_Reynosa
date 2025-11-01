@@ -18,6 +18,12 @@ class KitPredefinidoController extends Controller
             $query->where('nombre', 'like', "%$search%")
                   ->orWhere('descripcion', 'like', "%$search%") ;
         }
+
+        if ($request->has('activo')) {
+            $activo = $request->query('activo') === 'true' || $request->query('activo') === true;
+            $query->where('es_activo', $activo);
+        }
+
         return $query->orderBy('nombre')->paginate($perPage);
     }
 

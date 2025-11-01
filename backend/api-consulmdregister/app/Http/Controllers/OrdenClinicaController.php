@@ -62,6 +62,7 @@ class OrdenClinicaController extends Controller
             'fecha_orden' => 'required|date',
             'observaciones' => 'nullable|string',
             'user_id' => 'required|exists:users,id',
+            'atencion_usuario_id' => 'nullable|exists:users,id',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -122,6 +123,7 @@ class OrdenClinicaController extends Controller
             'fecha_orden' => 'sometimes|required|date',
             'observaciones' => 'nullable|string',
             'user_id' => 'sometimes|required|exists:users,id',
+            'atencion_usuario_id' => 'nullable|exists:users,id',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -136,5 +138,19 @@ class OrdenClinicaController extends Controller
         $orden = OrdenClinica::findOrFail($id);
         $orden->delete();
         return response()->json(['message' => 'Orden clínica eliminada']);
+    }
+
+    public function updateEstado(Request $request, $id)
+    {
+        $orden = OrdenClinica::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'estado' => 'required|in:pendiente,en_proceso,cancelada,completada',
+            'atencion_usuario_id' => 'nullable|exists:users,id',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $orden->update($validator->validated());
+        return response()->json($orden);
     }
 }

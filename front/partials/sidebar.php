@@ -144,7 +144,7 @@ function userHasAnyRole($user, $roles)
                     </li>
 
                      <li>
-                        <a href="under-maintenance.php" class="<?php echo ($page =='ordenes_clinicas.php') ? 'active' : '' ;?>">
+                        <a href="ordenes-clinicas.php" class="<?php echo ($page =='ordenes_clinicas.php') ? 'active' : '' ;?>">
                             <i class="fa fa-ambulance"></i><span>Ordenes Clínicas</span>
                         </a>
                     </li>

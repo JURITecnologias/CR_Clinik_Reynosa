@@ -23,6 +23,7 @@ class OrdenClinica extends Model
         'fecha_orden',
         'observaciones',
         'user_id',
+        'atencion_usuario_id',
     ];
 
     protected $casts = [
