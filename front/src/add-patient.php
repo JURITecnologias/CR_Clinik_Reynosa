@@ -89,12 +89,12 @@
                                                 <input type="text" class="form-control" id="frm_add_paciente_curp">
                                             </div>
                                         </div>
-                                        <div class="col-xl-4 col-md-6">
+                                        <!-- <div class="col-xl-4 col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">NSS(Numero de seguro social)</label>
                                                 <input type="text" class="form-control" id="frm_add_paciente_nss">
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-xl-4 col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Estado Civil</label>

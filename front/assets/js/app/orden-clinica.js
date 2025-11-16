@@ -201,7 +201,7 @@ function renderOrdenesClinicasTable(ordenesData) {
                 (isOpen ? '<button onclick="atenderOrden(' + orden.id + ')" class="btn btn-lg btn-primary">Atender Orden</button>' : '') +
                 (isOnProgress ? '<a href="orden-clinica.php?p=' + btoa(orden.id) + '" class="btn btn-lg btn-success">Continuar Atención</a>' : '') +
                 (isNotCancelledOrCompleted ? '<button onclick="ConfirmCancelarOrden(' + orden.id + ');" class="btn btn-lg btn-danger border me-1"><i class="ti ti-ban" title="Cancelar esta orden"></i></button>' : '') +
-                ((isAdmin || IsDoctor) ? '<a href="javascript:void(OpenEditFormConsumible(' + orden.id + '));" class="btn btn-lg btn-danger border me-1"><i class="ti ti-trash" title="Eliminar esta orden"></i></a>' : '') +
+                //((isAdmin || IsDoctor) ? '<a href="javascript:void(OpenEditFormConsumible(' + orden.id + '));" class="btn btn-lg btn-danger border me-1"><i class="ti ti-trash" title="Eliminar esta orden"></i></a>' : '') +
             '</td>';
         tableBody.appendChild(row);
     });

@@ -173,24 +173,44 @@ class PdfRecetaController extends Controller
         // Agregar líneas de texto para la receta médica, aquí se agregan los medicamentos
         for ($i = 0; $i < count($medicamentos); $i++) {
 
-            $medicamento = utf8_decode($medicamentos[$i]['nombre']. " dosis:  ". $medicamentos[$i]['dosis']. " cada ". $medicamentos[$i]['frecuencia']." por ". $medicamentos[$i]['duracion']);
+            $pdf->SetFont('Arial', 'B', 10); // Cambiar a negritas
+            $medicamento = utf8_decode($medicamentos[$i]['nombre']);
             $pdf->SetXY(7, $starPosY + ($i * ($lineHeight - 3))); // Reducir el margen ajustando el espacio entre líneas
             $pdf->Cell(0, 5, $medicamento, 0, 1, 'L');
+
+            $indicacionesMedicamentos="";
+            $indicacionesMedicamentos .=  ($medicamentos[$i]['dosis']) ? " dosis:  ". $medicamentos[$i]['dosis'] : "";
+            $indicacionesMedicamentos .=  ($medicamentos[$i]['frecuencia']) ? " cada ". $medicamentos[$i]['frecuencia'] : "";
+            $indicacionesMedicamentos .=  ($medicamentos[$i]['duracion']) ? " por ". $medicamentos[$i]['duracion'] : "";
+            $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
+            $pdf->SetXY(7, $starPosY + ($i * ($lineHeight-3)) + 5); // Reducir el margen ajustando el espacio entre líneas
+            $pdf->Cell(0, 5, $indicacionesMedicamentos, 0, 1, 'L');
+
+            $starPosY += 5; // Ajustar la posición Y para la siguiente línea
             
         }
-
         // si hay servicios medicos agregarlos
-        $serviciosMedicos = $receta->servicios_medicos ?? [];
-        if (count($serviciosMedicos) > 0) {
-            $pdf->SetFont('Arial', 'B', 9); // Cambiar a negritas
-            $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 5); // Reducir el margen ajustando el espacio entre líneas
-            $pdf->Cell(0, 5, utf8_decode("SERVICIOS MÉDICOS: "), 0, 1, 'L');
+        // $serviciosMedicos = $receta->servicios_medicos ?? [];
+        // if (count($serviciosMedicos) > 0) {
+        //     $pdf->SetFont('Arial', 'B', 9); // Cambiar a negritas
+        //     $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 5); // Reducir el margen ajustando el espacio entre líneas
+        //     $pdf->Cell(0, 5, utf8_decode("SERVICIOS MÉDICOS: "), 0, 1, 'L');
+        //     $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
+        //     for ($j = 0; $j < count($serviciosMedicos); $j++) {
+        //         $servicio = utf8_decode("- " . $serviciosMedicos[$j]['nombre']. " ". ($serviciosMedicos[$j]['solicitud'] ?? ''));
+        //         $pdf->SetXY(7, $starPosY + ((count($medicamentos) + $j) * ($lineHeight - 3)) + 10); // Reducir el margen ajustando el espacio entre líneas
+        //         $pdf->Cell(0, 5, $servicio, 0, 1, 'L');
+        //     }
+        // }
+        if ($receta->consulta->indicaciones) {
+
             $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
-            for ($j = 0; $j < count($serviciosMedicos); $j++) {
-                $servicio = utf8_decode("- " . $serviciosMedicos[$j]['nombre']. " ". ($serviciosMedicos[$j]['solicitud'] ?? ''));
-                $pdf->SetXY(7, $starPosY + ((count($medicamentos) + $j) * ($lineHeight - 3)) + 10); // Reducir el margen ajustando el espacio entre líneas
-                $pdf->Cell(0, 5, $servicio, 0, 1, 'L');
-            }
+            $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 5); // Reducir el margen ajustando el espacio entre líneas
+            $pdf->Cell(0, 5, utf8_decode("INDICACIONES: "), 0, 1, 'L');
+
+            $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
+            $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 10); // Reducir el margen ajustando el espacio entre líneas
+            $pdf->MultiCell(0, 5, utf8_decode($receta->consulta->indicaciones), 0, 'L');
         }
         
         
@@ -235,6 +255,20 @@ class PdfRecetaController extends Controller
 
         // Insertar el QR en el PDF
         $pdf->Image($tempPath, 183, 57, 25, 25); // Ajusta posición y tamaño
+
+        // marca de agua diciendo demo de sistema
+        // Marca de agua "DEMO DE SISTEMA"
+        $pdf->SetFont('Arial', 'B', 50);
+        $pdf->SetTextColor(200, 200, 200); // Gris claro
+        // Imprimir texto de marca de agua sin rotación
+        $pdf->Text(20, 85, 'DEMO DE SISTEMA');
+        $pdf->SetTextColor(0, 0, 0); // Restaurar color
+
+        $pdf->SetFont('Arial', 'B', 50);
+        $pdf->SetTextColor(200, 200, 200); // Gris claro
+        // Imprimir texto de marca de agua sin rotación
+        $pdf->Text(20, 115, 'DEMO DE SISTEMA');
+        $pdf->SetTextColor(0, 0, 0); // Restaurar color
 
         // Opcional: eliminar el archivo temporal después
         unlink($tempPath);

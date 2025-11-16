@@ -306,7 +306,7 @@ async function renderPacienteInfoLayout(paciente) {
     document.getElementById('patient-email-label').textContent = paciente.email || '';
     document.getElementById('patient-direccion-label').textContent = paciente.direccion || '';
     document.getElementById('patient-curp-label').textContent = paciente.curp || '';
-    document.getElementById('patient-nss-label').textContent = paciente.numero_seguro || '';
+    //document.getElementById('patient-nss-label').textContent = paciente.numero_seguro || '';
     document.getElementById('patient-contacto-emergencia-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].contacto_emergencia || '' : '';
     document.getElementById('patient-estado-civil-label').textContent = paciente.historial_medico && paciente.historial_medico.length > 0 ? paciente.historial_medico[0].estado_civil || '' : '';
 
@@ -383,7 +383,7 @@ async function loadPacienteInForm(id) {
         document.getElementById('frm_add_paciente_email').value = paciente.email || '';
         document.getElementById('frm_add_paciente_direccion').value = paciente.direccion || '';
         document.getElementById('frm_add_paciente_curp').value = paciente.curp || '';
-        document.getElementById('frm_add_paciente_nss').value = paciente.numero_seguro || '';
+        //document.getElementById('frm_add_paciente_nss').value = paciente.numero_seguro || '';
         if (paciente.historial_medico) {
             const historial = paciente.historial_medico[0];
             document.getElementById('paciente_historial_id').value = historial.id || '';
@@ -492,8 +492,7 @@ async function AddPacienteBasicInfo(){
         telefono: document.getElementById('frm_add_paciente_telefono').value,
         email: document.getElementById('frm_add_paciente_email').value,
         direccion: document.getElementById('frm_add_paciente_direccion').value,
-        curp: document.getElementById('frm_add_paciente_curp').value,
-        numero_seguro: document.getElementById('frm_add_paciente_nss').value
+        curp: document.getElementById('frm_add_paciente_curp').value
     };
 
     try {
@@ -536,7 +535,7 @@ async function EditPacienteBasicInfo(){
         email: document.getElementById('frm_add_paciente_email').value,
         direccion: document.getElementById('frm_add_paciente_direccion').value,
         curp: document.getElementById('frm_add_paciente_curp').value,
-        numero_seguro: document.getElementById('frm_add_paciente_nss').value
+        //numero_seguro: document.getElementById('frm_add_paciente_nss').value
     };
 
     try {
