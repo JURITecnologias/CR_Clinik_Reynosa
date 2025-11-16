@@ -138,14 +138,14 @@ ob_start(); ?>
                             <span class="form-control-plaintext">kg</span>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
+                    <!-- <div class="col-xl-4 col-md-4 col-sm-6">
                         <div class="mb-3 d-flex align-items-center">
                             <label class="form-control-plaintext">Talla:</label>
                             &nbsp;&nbsp;
                             <input type="text" class="form-control-plaintext" id="frm_signos_vitales_talla" value="" readonly>
                             <span class="form-control-plaintext">cm</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-4 col-md-4 col-sm-6">
                         <div class="mb-3 d-flex align-items-center">
                             <label class="form-control-plaintext">Estatura:</label>
@@ -195,12 +195,11 @@ ob_start(); ?>
         </div>
         <!-- end complaint information -->
         <!-- start Sintomas information -->
-        <div class="card">
+        <!-- <div class="card">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
                 <h5 class="d-inline-flex align-items-center mb-0">Sintomas</h5>
             </div>
             <div class="card-body">
-                <!-- start row -->
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12">
                         <div class="mb-0">
@@ -209,9 +208,8 @@ ob_start(); ?>
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
             </div>
-        </div>
+        </div> -->
         <!-- end complaint information -->
 
         <!-- start Diagnostico information -->
@@ -235,12 +233,11 @@ ob_start(); ?>
         <!-- end complaint information -->
 
         <!-- start Indicaciones information -->
-        <div class="card">
+        <!-- <div class="card">
             <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
                 <h5 class="d-inline-flex align-items-center mb-0">Indicaciones</h5>
             </div>
             <div class="card-body">
-                <!-- start row -->
                 <div class="row row-gap-3">
                     <div class="col-xl-12 col-md-12 col-sm-12">
                         <div class="mb-0">
@@ -249,9 +246,8 @@ ob_start(); ?>
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
             </div>
-        </div>
+        </div> -->
         <!-- end assessment information -->
 
         <!-- start medications information -->
@@ -315,7 +311,19 @@ ob_start(); ?>
                     </div>
                 </div>
 
-
+                <div class="row align-items-center">
+                     <div class="col-xl-6 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label mb-1">Indicaciones</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-md-12 col-sm-12">
+                        <div class="mb-2">
+                            <textarea class="form-control-plaintext" id="frm_indicaciones" rows="2" id="frm_indicaciones"></textarea>
+                            <div class="invalid-feedback" id="invalid_frm_indicaciones"></div>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>

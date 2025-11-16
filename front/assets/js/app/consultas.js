@@ -541,7 +541,7 @@ async function renderConsultaPaciente(consulta){
     const historialMedico= consulta.paciente.historial_medico ? consulta.paciente.historial_medico[0] : 'N/A';
     document.getElementById('paciente_genero').innerText =historialMedico.sexo;
     document.getElementById('frm_motivo_consulta').value = consulta.motivo_consulta || '';
-    document.getElementById('frm_sintomas').value = consulta.sintomas || '';
+    //document.getElementById('frm_sintomas').value = consulta.sintomas || '';
     document.getElementById('frm_diagnostico').value = consulta.diagnostico || '';
     document.getElementById('frm_indicaciones').value = consulta.indicaciones || '';
 
@@ -555,7 +555,7 @@ async function renderConsultaPaciente(consulta){
         document.getElementById('frm_signos_vitales_saturacion_oxigeno').value = consulta.signos_vitales.saturacion_oxigeno || '';
         document.getElementById('frm_signos_vitales_presion_arterial').value = consulta.signos_vitales.presion_arterial || '';
         document.getElementById('frm_signos_vitales_peso').value = consulta.signos_vitales.peso || '';
-        document.getElementById('frm_signos_vitales_talla').value = consulta.signos_vitales.talla || '';
+        //document.getElementById('frm_signos_vitales_talla').value = consulta.signos_vitales.talla || '';
         document.getElementById('frm_signos_vitales_estatura').value = consulta.signos_vitales.estatura || '';
     }
 
@@ -695,7 +695,8 @@ async function LoadConsulta(p, showDeleteButton = true) {
 function ValidaConsulta(){
     //validamos signos vitales
     const motivoConsulta= document.getElementById('frm_motivo_consulta').value.trim();
-    const sintomas= document.getElementById('frm_sintomas').value.trim();
+    const sintomas= '';
+    //const sintomas= document.getElementById('frm_sintomas').value.trim();
     const diagnostico= document.getElementById('frm_diagnostico').value.trim();
     const indicaciones= document.getElementById('frm_indicaciones').value.trim();
     const consultaId = document.getElementById('consulta_id').value;
@@ -714,15 +715,15 @@ function ValidaConsulta(){
         document.getElementById('frm_motivo_consulta').classList.remove('is-invalid');
     }
 
-    if(sintomas.length < 10){
-        const errorElement = document.getElementById('invalid_frm_sintomas');
-        errorElement.textContent = 'Por favor, ingrese síntomas válidos (mínimo 10 caracteres).';
-        document.getElementById('frm_sintomas').classList.add('is-invalid');
-        isvalid=false;
-        if(!error_onComponent) error_onComponent = 'frm_sintomas';
-    }else{
-        document.getElementById('frm_sintomas').classList.remove('is-invalid');
-    }
+    // if(sintomas.length < 10){
+    //     const errorElement = document.getElementById('invalid_frm_sintomas');
+    //     errorElement.textContent = 'Por favor, ingrese síntomas válidos (mínimo 10 caracteres).';
+    //     document.getElementById('frm_sintomas').classList.add('is-invalid');
+    //     isvalid=false;
+    //     if(!error_onComponent) error_onComponent = 'frm_sintomas';
+    // }else{
+    //     document.getElementById('frm_sintomas').classList.remove('is-invalid');
+    // }
 
     if(diagnostico.length < 10){
         const errorElement = document.getElementById('invalid_frm_diagnostico');
@@ -734,15 +735,15 @@ function ValidaConsulta(){
         document.getElementById('frm_diagnostico').classList.remove('is-invalid');
     }
 
-    if(indicaciones.length < 10){
-        const errorElement = document.getElementById('invalid_frm_indicaciones');
-        errorElement.textContent = 'Por favor, ingrese indicaciones válidas (mínimo 10 caracteres).';
-        document.getElementById('frm_indicaciones').classList.add('is-invalid');
-        isvalid=false;
-        if(!error_onComponent) error_onComponent = 'frm_indicaciones';
-    }else{
-        document.getElementById('frm_indicaciones').classList.remove('is-invalid');
-    }
+    // if(indicaciones.length < 10){
+    //     const errorElement = document.getElementById('invalid_frm_indicaciones');
+    //     errorElement.textContent = 'Por favor, ingrese indicaciones válidas (mínimo 10 caracteres).';
+    //     document.getElementById('frm_indicaciones').classList.add('is-invalid');
+    //     isvalid=false;
+    //     if(!error_onComponent) error_onComponent = 'frm_indicaciones';
+    // }else{
+    //     document.getElementById('frm_indicaciones').classList.remove('is-invalid');
+    // }
 
     const consultaData = validarSignosVitales();
     if(!consultaData) {
@@ -1064,7 +1065,7 @@ async function ImprimirReceta(){
             }
             document.getElementById('consulta_estatus').value= consultaData.estatus;
             console.log(consultaData);
-            //const updatedConsulta = await updateConsulta(consultaData);
+            const updatedConsulta = await updateConsulta(consultaData);
             if(createOrdenClinica) {
                 consultaData.serviciosSolicitados= serviciosSolicitadosOrdenClinica;
                 consultaData.paciente_id = parseInt(document.getElementById('paciente_id').value, 10);
@@ -1099,7 +1100,8 @@ async function ProcesaReceta() {
     const frecuenciaRespiratoria = document.getElementById('frm_signos_vitales_frecuencia_respiratoria').value;
     const saturacionOxigeno = document.getElementById('frm_signos_vitales_saturacion_oxigeno').value;
     const peso = document.getElementById('frm_signos_vitales_peso').value;
-    const talla = document.getElementById('frm_signos_vitales_talla').value;
+    const estatura = document.getElementById('frm_signos_vitales_estatura').value;
+    //const talla = document.getElementById('frm_signos_vitales_talla').value;
     const diagnostico = document.getElementById('frm_diagnostico').value;
 
 
@@ -1174,7 +1176,7 @@ async function ProcesaReceta() {
             frecuencia: frecuenciaRespiratoria,
             saturacion: saturacionOxigeno,
             peso: peso,
-            talla: talla
+            estatura: estatura
         },
         diagnostico: diagnostico,
         servicios_medicos: servicios_medicos,

@@ -22,8 +22,9 @@ function validarSignosVitales(){
     const saturacionOxigeno = parseFloat(document.getElementById('frm_signos_vitales_saturacion_oxigeno').value);
     const presionArterial = document.getElementById('frm_signos_vitales_presion_arterial').value.trim();
     const peso = parseFloat(document.getElementById('frm_signos_vitales_peso').value);
-    const talla = parseFloat(document.getElementById('frm_signos_vitales_talla').value);
-    const estatura = parseFloat(document.getElementById('frm_signos_vitales_estatura').value);
+    //const talla = parseFloat(document.getElementById('frm_signos_vitales_talla').value);
+    //const estatura = parseFloat(document.getElementById('frm_signos_vitales_estatura').value);
+    let estatura = parseInt(document.getElementById('frm_signos_vitales_estatura').value, 0);
 
     let isValid = true;
 
@@ -67,32 +68,52 @@ function validarSignosVitales(){
     } else {
         document.getElementById('frm_signos_vitales_presion_arterial').classList.remove('is-invalid');
     }
-    if (isNaN(peso) || peso < 3 || peso > 300) {
+
+    if (!isNaN(peso) && (peso < 1 || peso > 300)) {
         const errorElement = document.getElementById('invalid_frm_signos_vitales_peso');
-        errorElement.textContent = 'Por favor, ingrese un peso válido entre 3 kg y 300 kg.';
+        errorElement.textContent = 'Por favor, ingrese un peso válido entre 1 kg y 300 kg.';
+        document.getElementById('frm_signos_vitales_peso').classList.add('is-invalid');
+        isValid = false;
+    } 
+    if ((document.getElementById('frm_signos_vitales_peso').value.trim() !== '' && (isNaN(peso) || !Number.isInteger(peso)))) {
+        const errorElement = document.getElementById('invalid_frm_signos_vitales_peso');
+        errorElement.textContent = 'Por favor, ingrese un peso válido como número entero.';
         document.getElementById('frm_signos_vitales_peso').classList.add('is-invalid');
         isValid = false;
     } else {
         document.getElementById('frm_signos_vitales_peso').classList.remove('is-invalid');
     }
-    if (isNaN(talla) || talla < 30 || talla > 250) {
-        const errorElement = document.getElementById('invalid_frm_signos_vitales_talla');
-        errorElement.textContent = 'Por favor, ingrese una talla válida entre 30 cm y 250 cm.';
-        document.getElementById('frm_signos_vitales_talla').classList.add('is-invalid');
-        isValid = false;
-    } else {
-        document.getElementById('frm_signos_vitales_talla').classList.remove('is-invalid');
-    }
-    if (isNaN(estatura) || estatura < 30 || estatura > 250) {
+    console.log(isValid);
+    // if (isNaN(talla) || talla < 30 || talla > 250) {
+    //     const errorElement = document.getElementById('invalid_frm_signos_vitales_talla');
+    //     errorElement.textContent = 'Por favor, ingrese una talla válida entre 30 cm y 250 cm.';
+    //     document.getElementById('frm_signos_vitales_talla').classList.add('is-invalid');
+    //     isValid = false;
+    // } else {
+    //     document.getElementById('frm_signos_vitales_talla').classList.remove('is-invalid');
+    // }
+    if (!isNaN(estatura) &&  estatura > 250) {
+        console.log('entro estatura');
         const errorElement = document.getElementById('invalid_frm_signos_vitales_estatura');
-        errorElement.textContent = 'Por favor, ingrese una estatura válida entre 30 cm y 250 cm.';
+        errorElement.textContent = 'Por favor, ingrese una estatura válida entre 20 cm y 250 cm.';
+        document.getElementById('frm_signos_vitales_estatura').classList.add('is-invalid');
+        isValid = false;
+    }
+
+    if(document.getElementById('frm_signos_vitales_estatura').value.trim() !== '' && (isNaN(estatura) || !Number.isInteger(estatura))) {
+         console.log('entro estatura NaN   ');
+        const errorElement = document.getElementById('invalid_frm_signos_vitales_estatura');
+        errorElement.textContent = 'Por favor, ingrese una estatura válida como número entero.';
         document.getElementById('frm_signos_vitales_estatura').classList.add('is-invalid');
         isValid = false;
     } else {
         document.getElementById('frm_signos_vitales_estatura').classList.remove('is-invalid');
+        estatura = isNaN(estatura) ? 0 : estatura;
     }
 
     if (!isValid) {
+            console.log('Peso ingresado:', peso);
+        console.log(isValid);
         return;
     }
 
@@ -103,7 +124,7 @@ function validarSignosVitales(){
         presion_arterial: presionArterial,
         saturacion_oxigeno: saturacionOxigeno,
         peso: peso,
-        talla: talla,
+        talla: null,
         estatura: estatura
     };
 
