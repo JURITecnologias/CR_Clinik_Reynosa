@@ -9,7 +9,7 @@
 <p class="mb-3">Edad <span class="float-end text-dark" id="paciente-edad-label"></span></p>
 <p class="mb-3">Género <span class="float-end text-dark" id="paciente-genero-label"></span></p>
 <p class="mb-3">CURP <span class="float-end text-dark" id="paciente-curp-label"></span></p>
-<p class="mb-3">NSS <span class="float-end text-dark" id="paciente-nss-label"></span></p>
+<!-- <p class="mb-3">NSS <span class="float-end text-dark" id="paciente-nss-label"></span></p> -->
 <p class="mb-3">Estado Civil <span class="float-end text-dark" id="paciente-estado-civil-label"></span></p>
 <!-- <p class="mb-3">Grupo Sanguíneo <span class="float-end text-dark" id="paciente-grupo-sanguineo-label">O+ve</span></p> -->
 <p class="mb-3">Teléfono <span class="float-end text-dark" id="paciente-telefono-label"></span></p>

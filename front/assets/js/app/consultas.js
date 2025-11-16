@@ -248,7 +248,7 @@ function renderPacienteBasicInfo(paciente) {
     document.getElementById('paciente-genero-label').innerText =paciente.sexo || 'N/A';
     document.getElementById('paciente-edad-label').innerText = calcularEdad(paciente.fecha_nacimiento);
     document.getElementById('paciente-curp-label').innerText = paciente.curp || 'N/A';
-    document.getElementById('paciente-nss-label').innerText = paciente.nss || 'N/A';
+    //document.getElementById('paciente-nss-label').innerText = paciente.nss || 'N/A';
     document.getElementById('paciente-estado-civil-label').innerText = historialMedico ? historialMedico.estado_civil : 'N/A';
     document.getElementById('paciente-direccion-label').innerText = paciente.direccion || 'N/A';
     document.getElementById('paciente-contacto-emergencia-label').innerText = paciente.contacto_emergencia || 'N/A';
