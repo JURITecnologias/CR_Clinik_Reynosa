@@ -1,6 +1,7 @@
 <?php ob_start(); 
 // include session file for user authentication  
 $user = include(__DIR__ . '/user_session.php');
+
 ?>
 
     <!-- ========================
@@ -15,11 +16,8 @@ $user = include(__DIR__ . '/user_session.php');
             <!-- Page Header -->
             <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
                 <div class="breadcrumb-arrow">
-                    <h4 class="mb-1">Bienvenido, Administrador</h4>
-                    <p class="mb-0">Hoy tienes 10 visitas, <a href="visits.php" class="text-decoration-underline">Ver Detalles</a></p>
-                </div>
-                <div id="reportrange" class="reportrange-picker bg-white d-flex align-items-center">
-                    <i class="ti ti-calendar text-body fs-14 me-1"></i><span class="reportrange-picker-field">16 Abr 25 - 16 Abr 25</span>
+                    <h4 class="mb-1">Bienvenido, <?php echo $user['user']['name'] ?></h4>
+                    
                 </div>
             </div>
             <!-- End Page Header -->
@@ -27,82 +25,88 @@ $user = include(__DIR__ . '/user_session.php');
             <!-- row start -->
             <div class="row">
 
-                <!-- col start -->
+                <!-- col start  Total pacientes-->
                 <div class="col-xl-3 col-md-6 d-flex">
                     <div class="card pb-2 flex-fill">
-                        <div class="d-flex align-items-center justify-content-between gap-1 card-body pb-0 mb-1">
+                        <div class="d-none align-items-center justify-content-between gap-1 card-body pb-0 mb-1" id="totalPacientesInfoContainer">
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-primary rounded-circle flex-shrink-0"><i class="ti ti-user-exclamation fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
                                     <p class="mb-1 text-truncate">Pacientes</p>
-                                    <h5 class="mb-0">108</h5>
+                                    <h5 class="mb-0">Total: <span id="totalPacientes">0</span></h5>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <span class="badge badge-soft-success">+20%</span>
+                        </div>
+                        <div id="loadingTotalPacientes">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                <div class="spinner-grow text-primary m-2" role="status"></div>
                             </div>
                         </div>
-                        <div id="chart-1" class="chart-set"></div>
                     </div>
                 </div>
                 <!-- col end -->
 
-                <!-- col start -->
+                <!-- col start Total citas -->
                 <div class="col-xl-3 col-md-6 d-flex">
                     <div class="card pb-2 flex-fill">
-                        <div class="d-flex align-items-center justify-content-between gap-1 card-body pb-0 mb-1">
+                        <div class="d-none align-items-center justify-content-between gap-1 card-body pb-0 mb-1" id="totalCitasInfoContainer">
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-orange rounded-circle flex-shrink-0"><i class="ti ti-calendar-check fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
                                     <p class="mb-1 text-truncate">Citas</p>
-                                    <h5 class="mb-0">658</h5>
+                                    <h5 class="mb-0">Total: <span id="totalCitas">0</span></h5>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <span class="badge badge-soft-danger">-15%</span>
+                        </div>
+                        <div id="loadingTotalCitas">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                               <div class="spinner-grow text-primary m-2" role="status"></div>
                             </div>
                         </div>
-                        <div id="chart-2" class="chart-set"></div>
                     </div>
                 </div>
                 <!-- col end -->
 
-                <!-- col start -->
+                <!-- col start Ordenes clinicas -->
                 <div class="col-xl-3 col-md-6 d-flex">
                     <div class="card pb-2 flex-fill">
-                        <div class="d-flex align-items-center justify-content-between gap-1 card-body pb-0 mb-1">
+                        <div class="d-none align-items-center justify-content-between gap-1 card-body pb-0 mb-1" id="totalOrdenesClinicasInfoContainer">
                             <div class="d-flex align-items-center overflow-hidden">
                                 <span class="avatar bg-purple rounded-circle flex-shrink-0"><i class="ti ti-stethoscope fs-20"></i></span>
                                 <div class="ms-2 overflow-hidden">
-                                    <p class="mb-1 text-truncate">Doctores</p>
-                                    <h5 class="mb-0">565</h5>
+                                    <p class="mb-1 text-truncate">Ordenes Clinicas</p>
+                                    <h5 class="mb-0">Total Completas:<span id="totalOrdenesClinicasCompletas">0</span></h5>
+                                    <h5 class="mb-0">Total Pendientes:<span id="totalOrdenesClinicasPendientes">0</span></h5>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <span class="badge badge-soft-success">+18%</span>
+                        </div>
+                         <div id="loadingTotalOrdenesClinicas">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                               <div class="spinner-grow text-primary m-2" role="status"></div>
                             </div>
                         </div>
-                        <div id="chart-3" class="chart-set"></div>
                     </div>
                 </div>
                 <!-- col end -->
 
-                <!-- col start -->
+                <!-- col start Consultas fuera de horarios -->
                 <div class="col-xl-3 col-md-6 d-flex">
                     <div class="card pb-2 flex-fill">
-                        <div class="d-flex align-items-center justify-content-between gap-1 card-body pb-0 mb-1">
+                        <div class="d-none align-items-center justify-content-between gap-1 card-body pb-0 mb-1" id="totalFuerHorarioInfoContainer">
                             <div class="d-flex align-items-center overflow-hidden">
-                                <span class="avatar bg-pink rounded-circle flex-shrink-0"><i class="ti ti-moneybag fs-20"></i></span>
+                                <span class="avatar bg-danger rounded-circle flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-alert-octagon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14.897 1a4 4 0 0 1 2.664 1.016l.165 .156l4.1 4.1a4 4 0 0 1 1.168 2.605l.006 .227v5.794a4 4 0 0 1 -1.016 2.664l-.156 .165l-4.1 4.1a4 4 0 0 1 -2.603 1.168l-.227 .006h-5.795a3.999 3.999 0 0 1 -2.664 -1.017l-.165 -.156l-4.1 -4.1a4 4 0 0 1 -1.168 -2.604l-.006 -.227v-5.794a4 4 0 0 1 1.016 -2.664l.156 -.165l4.1 -4.1a4 4 0 0 1 2.605 -1.168l.227 -.006h5.793zm-2.887 14l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007zm-.01 -8a1 1 0 0 0 -.993 .883l-.007 .117v4l.007 .117a1 1 0 0 0 1.986 0l.007 -.117v-4l-.007 -.117a1 1 0 0 0 -.993 -.883z" /></svg></span>
                                 <div class="ms-2 overflow-hidden">
-                                    <p class="mb-1 text-truncate">Transacciones</p>
-                                    <h5 class="mb-0">$5,523.56</h5>
+                                    <p class="mb-1 text-truncate">Consultas Fuera de Horario (ultimos 60 dias)</p>
+                                    <h5 class="mb-0">Total: <span id="totalFuerHorario">0</span></h5>
+                                    <h5 class="mb-0">Total de consultas: <span id="totalConsultas">0</span></h5>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <span class="badge badge-soft-success">+12%</span>
+                        </div>
+                        <div id="loadingTotalFuerHorario">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                               <div class="spinner-grow text-primary m-2" role="status"></div>
                             </div>
                         </div>
-                        <div id="chart-4" class="chart-set"></div>
                     </div>
                 </div>
                 <!-- col end -->

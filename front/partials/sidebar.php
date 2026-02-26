@@ -168,7 +168,20 @@ function userHasAnyRole($user, $roles)
                             <i class="ti ti-prescription"></i><span>Farmacia</span>
                         </a>
                     </li> -->
-
+                    <?php
+                        
+                        $requiredRoles = ['Admon', 'Main Admin'];
+                        if (userHasAnyRole($user, $requiredRoles)) {
+                    ?>
+                     <li class="menu-title" aria-disabled="true"><span>Reportes</span></li>
+                     <li>
+                        <a href="reporte-servicio-medico.php" class="<?php echo ($page =='reporte-servicio-medico.php') ? 'active' : '' ;?>">
+                            <i class="ti ti-chart-bar"></i><span>Servicios Medicos </span>
+                        </a>
+                    </li>
+                    <?php
+                        }
+                    ?>
                     <li class="menu-title" aria-disabled="true"><span>Administraci&oacuten</span></li>
 <!-- 
                     <li>

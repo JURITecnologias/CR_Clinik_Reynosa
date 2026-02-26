@@ -17,6 +17,7 @@ $page = end( $link_array );
     <!-- Daterangepikcer JS -->
 	<script src="assets/js/moment.min.js"></script>
 	<script src="assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="assets/js/app/dashboard.js"></script>
 <?php }?>          
 
 <?php if ($page == 'add-doctors.php' || $page == 'add-patient.php' || $page == 'all-doctors-list.php' || $page == 'appointments.php' || $page == 'calendar.php' || $page == 'edit-doctors.php' || $page == 'edit-patient.php' || $page == 'form-pickers.php' || $page == 'index.php' || $page == 'kanban-view.php' || $page == 'layout-dark.php' || $page == 'layout-fullwidth.php' || $page == 'layout-hidden.php' || $page == 'layout-hoverview.php' || $page == 'layout-mini.php' || $page == 'layout-rtl.php' || $page == 'notes.php'  || $page == 'patient-details-appointments.php' || $page == 'patient-details-visit-history.php' || $page == 'patients.php' || $page == 'pharmacy.php' || $page == 'plans-billings-settings.php' || $page == 'staffs.php' || $page == 'start-visits.php' || $page == 'todo.php' || $page == 'visits.php' || $page == 'widgets.php' || $page == 'nueva-consulta.php') {   ?>     
@@ -197,7 +198,7 @@ $page = end( $link_array );
     <script src="assets/js/app/servicios.js"></script>
     <?php } ?>
 
-    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page='patiens.php' || $page == "doctor-details.php" || $page == 'horarios-doctores.php' || $page == 'citas.php') {   ?>
+    <?php if ($page == 'doctors.php' || $page == 'all-doctors-list.php' || $page == 'add-doctors.php' || $page == 'edit-doctors.php' || $page=='patiens.php' || $page == "doctor-details.php" || $page == 'horarios-doctores.php' || $page == 'citas.php') {   ?>
     <script src="assets/js/app/doctors.js"></script>
     <?php } ?>
 
@@ -243,4 +244,8 @@ $page = end( $link_array );
 
     <?php if($page == 'ordenes-clinicas.php' || $page == 'nueva-consulta.php' || $page == 'orden-clinica.php') { ?>
     <script src="assets/js/app/orden-clinica.js"></script>
+    <?php } ?>
+
+    <?php if($page == 'reporte-servicio-medico.php') { ?>
+    <script src="assets/js/app/reporte-servicio-medico.js"></script>
     <?php } ?>
