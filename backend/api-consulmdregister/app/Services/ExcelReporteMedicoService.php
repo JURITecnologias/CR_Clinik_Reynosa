@@ -49,6 +49,7 @@ class ExcelReporteMedicoService
         $spreadsheet = IOFactory::load(storage_path('app/templates/informe_medico_template.xlsx'));
         $sheet = $spreadsheet->setActiveSheetIndex(0);
 
+        ## Pagina de SERVICIOS MEDICOS
         // reporteServicios devuelve colección
         $data = $this->reportServiceProvider->reporteServicios($month, $year)->toArray();
         
