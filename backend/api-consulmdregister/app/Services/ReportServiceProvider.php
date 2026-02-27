@@ -71,7 +71,7 @@ class ReportServiceProvider
 
         $sql = "
             SELECT 
-                sm.nombre AS servicio,
+                LOWER(sm.nombre) AS servicio,
                 DAY(con.fecha_consulta) AS dia,
                 MONTH(con.fecha_consulta) AS mes,
                 YEAR(con.fecha_consulta) AS anio,
