@@ -62,6 +62,28 @@ class ExcelReporteMedicoService
         'oxigeno' => 29
     ];
 
+    protected $MapConsultasExtGeneralYEspMujeres = [
+        '<1 año' => 10,
+        '1-5 a' => 11,
+        '6-12 a' => 12,
+        '13-19 a' => 13,
+        '20-29 a' => 14,
+        '30-49 a' => 15,
+        '50-59 a' => 16,
+        '60 ˃' => 17
+    ];
+
+    protected $MapConsultasExtGeneralYEspHombres = [
+        '<1 año' => 19,
+        '1-5 a' => 20,
+        '6-12 a' => 21,
+        '13-19 a' => 22,
+        '20-29 a' => 23,
+        '30-49 a' => 24,
+        '50-59 a' => 25,
+        '60 ˃' => 26
+    ];
+
     public function __construct(ReportServiceProvider $reportServiceProvider)
     {
         $this->reportServiceProvider = $reportServiceProvider;
@@ -72,6 +94,7 @@ class ExcelReporteMedicoService
         $spreadsheet = IOFactory::load(storage_path('app/templates/informe_medico_template.xlsx'));
         $sheet = $spreadsheet->setActiveSheetIndex(0);
 
+        // Generar cada sección del reporte médico con manejo de errores
        try {
             $sheetSerciosMedicos = $spreadsheet->setActiveSheetIndex(0);
             $this->generarExcelMedico($sheetSerciosMedicos, $month, $year);
@@ -80,6 +103,7 @@ class ExcelReporteMedicoService
             throw new \Exception("Error al generar la sección médica en el reporte médico: " . $e->getMessage());
         }
 
+        // Generar sección de enfermería con manejo de errores
         try {
             $sheetEnfermeria = $spreadsheet->setActiveSheetIndex(1);
             $this->generarExcelEnfermeria($sheetEnfermeria, $month, $year);
@@ -87,7 +111,17 @@ class ExcelReporteMedicoService
             // Manejar el error, por ejemplo, registrarlo o lanzar una excepción personalizada
             throw new \Exception("Error al generar la sección de enfermería en el reporte médico: " . $e->getMessage());
         }
+
+        // Generar sección de consulta externa general y especialidad con manejo de errores
+        try {
+            $sheetConsultaExtGeneralYEsp = $spreadsheet->setActiveSheetIndex(2);
+            $this->generarExcelConsultaExtGeneralYEsp($sheetConsultaExtGeneralYEsp, $month, $year);
+        } catch (\Exception $e) {
+            // Manejar el error, por ejemplo, registrarlo o lanzar una excepción personalizada
+            throw new \Exception("Error al generar la sección de consulta externa general y especialidad en el reporte médico: " . $e->getMessage());
+        }
         
+
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($outputPath);
@@ -172,6 +206,29 @@ class ExcelReporteMedicoService
             }
             $columnaDia = Coordinate::stringFromColumnIndex(3 + $item->dia); 
             $sheet->setCellValue($columnaDia . $row, $item->total ?? 0);
+        }
+    }
+
+    protected function generarExcelConsultaExtGeneralYEsp($sheet, $month, $year)
+    {
+        $data = $this->reportServiceProvider->DatosConsultaExtGeneralYEsp($month, $year);
+
+        # llenar el mes y año en el template
+        $sheet->setCellValue('C6', "MES: {$this->Meses[$month]}   AÑO:  {$year} ");
+
+        //$rowprint=30;
+        foreach ($data as $item) {
+            $mapa = strtoupper($item->sexo) === 'F' ? $this->MapConsultasExtGeneralYEspMujeres : $this->MapConsultasExtGeneralYEspHombres;
+            $row = $mapa[$item->rango_edad] ?? null;
+            if($row) {
+                $sheet->setCellValue('D' . $row, $item->total_consultas ?? 0);
+            }
+            // $sheet->setCellValue('C' . $rowprint, $item->rango_edad);
+            // $sheet->setCellValue('D' . $rowprint, $item->sexo);
+            // $sheet->setCellValue('E' . $rowprint, $item->total_consultas);
+            // $sheet->setCellValue('F' . $rowprint, ($row) ? 'not empy' : 'empty'); // Porcentaje
+            // $sheet->setCellValue('G' . $rowprint, ($row) ? $row: ''); // Porcentaje
+            // $rowprint++;
         }
     }
 }

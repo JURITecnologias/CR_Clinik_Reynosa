@@ -388,8 +388,9 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
 });
 
 Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:ver'])->group(function () {
-    Route::get('/reports/reporte-servicios', [\App\Http\Controllers\ReportsController::class, 'reporteServicios']);
-    Route::get('/reports/reporte-servicios-enfermeria', [\App\Http\Controllers\ReportsController::class, 'reporteServiciosEnfermeria']);
+    Route::get('/reports/servicios', [\App\Http\Controllers\ReportsController::class, 'reporteServicios']);
+    Route::get('/reports/servicios-enfermeria', [\App\Http\Controllers\ReportsController::class, 'reporteServiciosEnfermeria']);
+    Route::get('/reports/consulta-ext-general-esp', [\App\Http\Controllers\ReportsController::class, 'reporteConsultaExtGeneralYEsp']);
     Route::get('/reports/queue/{uuid}', [\App\Http\Controllers\ReportsController::class, 'getQueuedReport']);
     Route::post('/reports/queue/generar-reporte-medico', [\App\Http\Controllers\ReportsController::class, 'dispatchGenerarReporteMedico']);
     Route::get('/reports/queue/download/{uuid}', [\App\Http\Controllers\ReportsController::class, 'downloadReport']);

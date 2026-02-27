@@ -36,6 +36,14 @@ class ReportsController extends Controller
         return $this->reportService->reporteServiciosEnfermeria($month, $year);
     }
 
+    public function reporteConsultaExtGeneralYEsp(Request $request)
+    {
+        $month = $request->input('month');
+        $year = $request->input('year');
+
+        return $this->reportService->DatosConsultaExtGeneralYEsp($month, $year);
+    }
+
     public function dispatchGenerarReporteMedico(Request $request)
     {
         $month = $request->input('month');
