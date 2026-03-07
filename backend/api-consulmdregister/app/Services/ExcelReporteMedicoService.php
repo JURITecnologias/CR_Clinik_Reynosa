@@ -120,6 +120,14 @@ class ExcelReporteMedicoService
             // Manejar el error, por ejemplo, registrarlo o lanzar una excepción personalizada
             throw new \Exception("Error al generar la sección de consulta externa general y especialidad en el reporte médico: " . $e->getMessage());
         }
+
+        try {
+            $sheetUnidadDeEmergencia = $spreadsheet->setActiveSheetIndex(5);
+            $this->generarExcelUnidadDeEmergencia($sheetUnidadDeEmergencia, $month, $year);
+        } catch (\Exception $e) {
+            // Manejar el error, por ejemplo, registrarlo o lanzar una excepción personalizada
+            throw new \Exception("Error al generar la sección de unidad de emergencia en el reporte médico: " . $e->getMessage());
+        }
         
 
 
@@ -229,6 +237,25 @@ class ExcelReporteMedicoService
             // $sheet->setCellValue('F' . $rowprint, ($row) ? 'not empy' : 'empty'); // Porcentaje
             // $sheet->setCellValue('G' . $rowprint, ($row) ? $row: ''); // Porcentaje
             // $rowprint++;
+        }
+    }
+
+    protected function generarExcelUnidadDeEmergencia($sheet, $month, $year)
+    {
+        $data = $this->reportServiceProvider->DatosUnidadDeUrgencia($month, $year);
+
+        # llenar el mes y año en el template
+        $sheet->setCellValue('C6', "MES: {$this->Meses[$month]}   AÑO:  {$year} ");
+
+        foreach ($data as $item) {
+            $mapa = strtoupper($item->sexo) === 'F' ? $this->MapConsultasExtGeneralYEspMujeres : $this->MapConsultasExtGeneralYEspHombres;
+            $row = $mapa[$item->rango_edad] ?? null;
+            if($row) {
+                $sheet->setCellValue('D' . $row, $item->accidentes_violencia ?? 0);
+                $sheet->setCellValue('F' . $row, $item->urgencia_calificada ?? 0);
+                $sheet->setCellValue('H' . $row, $item->urgencia_no_calificada ?? 0);
+                $sheet->setCellValue('J' . $row, $item->trabajo_parto ?? 0);
+            }
         }
     }
 }
