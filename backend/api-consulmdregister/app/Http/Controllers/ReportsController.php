@@ -40,7 +40,7 @@ class ReportsController extends Controller
     {
         $month = $request->input('month');
         $year = $request->input('year');
-        
+
         return $this->reportService->DatosUnidadDeUrgencia($month, $year);
     }
 
@@ -79,6 +79,18 @@ class ReportsController extends Controller
 
         return response()->json($report);
 
+    }
+
+    public function getListQueueReportsByMonthYear(Request $request)
+    {
+        $month = $request->input('month');
+        $year = $request->input('year');
+
+        $reports = Report::where('month', $month)
+                         ->where('year', $year)
+                         ->get();
+
+        return response()->json($reports);
     }
 
     public function downloadReport($uuid)
