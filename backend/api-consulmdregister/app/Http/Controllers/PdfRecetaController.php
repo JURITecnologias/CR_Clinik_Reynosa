@@ -202,15 +202,17 @@ class PdfRecetaController extends Controller
         //         $pdf->Cell(0, 5, $servicio, 0, 1, 'L');
         //     }
         // }
+
+        $starPosY = 112;
         if ($receta->consulta->indicaciones) {
 
             $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
-            $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 5); // Reducir el margen ajustando el espacio entre líneas
-            $pdf->Cell(0, 5, utf8_decode("INDICACIONES: "), 0, 1, 'L');
+            $pdf->SetXY(6, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 5); // Reducir el margen ajustando el espacio entre líneas
+            $pdf->Cell(0, 7, utf8_decode("INDICACIONES: ".$receta->consulta->indicaciones), 0, 1, 'L');
 
-            $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
-            $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 10); // Reducir el margen ajustando el espacio entre líneas
-            $pdf->MultiCell(0, 5, utf8_decode($receta->consulta->indicaciones), 0, 'L');
+            // $pdf->SetFont('Arial', '', 9); // Cambiar a negritas
+            // $pdf->SetXY(7, $starPosY + (count($medicamentos) * ($lineHeight - 3)) + 10); // Reducir el margen ajustando el espacio entre líneas
+            // $pdf->MultiCell(0, 5, utf8_decode($receta->consulta->indicaciones), 0, 'L');
         }
         
         

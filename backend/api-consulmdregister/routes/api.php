@@ -376,3 +376,24 @@ Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera'])
     Route::delete('ordenes-clinicas-consumos/{id}', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'destroy']);
     Route::patch('ordenes-clinicas-consumos/{id}/cantidad', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'updateCantidad']);
 });
+
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('/dashboard/pacientes/total', [\App\Http\Controllers\DashboardController::class, 'getTotalPacientes']);
+    Route::get('/dashboard/citas/ultimos-60-dias', [\App\Http\Controllers\DashboardController::class, 'getTotalCitasUltimos60Dias']);
+    Route::get('/dashboard/citas/doctor/{doctorId}/ultimos-60-dias', [\App\Http\Controllers\DashboardController::class, 'getTotalCitasPorDoctorUltimos60Dias']);
+    Route::get('/dashboard/ordenes-clinicas/ultimos-60-dias', [\App\Http\Controllers\DashboardController::class, 'getTotalOrdenesClinicasUltimos60Dias']);
+    Route::get('/dashboard/consultas/fuera-horario/ultimos-60-dias', [\App\Http\Controllers\DashboardController::class, 'getTotalConsultasFueraDeHorarioUltimos60Dias']);
+    Route::get('/dashboard/citas/upcoming', [\App\Http\Controllers\DashboardController::class, 'getLastCitasUpcoming']);
+    Route::get('/dashboard/consultas/metricas/hombre-mujer', [\App\Http\Controllers\DashboardController::class, 'getMetrictPacientesConsultarHombreOMujer']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:ver'])->group(function () {
+    Route::get('/reports/servicios', [\App\Http\Controllers\ReportsController::class, 'reporteServicios']);
+    Route::get('/reports/servicios-enfermeria', [\App\Http\Controllers\ReportsController::class, 'reporteServiciosEnfermeria']);
+    Route::get('/reports/unidad-emergencia', [\App\Http\Controllers\ReportsController::class, 'reporteUnidadDeEmergencia']);
+    Route::get('/reports/consulta-ext-general-esp', [\App\Http\Controllers\ReportsController::class, 'reporteConsultaExtGeneralYEsp']);
+    Route::get('/reports/queue/list', [\App\Http\Controllers\ReportsController::class, 'getListQueueReportsByMonthYear']);
+    Route::get('/reports/queue/{uuid}', [\App\Http\Controllers\ReportsController::class, 'getQueuedReport']);
+    Route::post('/reports/queue/generar-reporte-medico', [\App\Http\Controllers\ReportsController::class, 'dispatchGenerarReporteMedico']);
+    Route::get('/reports/queue/download/{uuid}', [\App\Http\Controllers\ReportsController::class, 'downloadReport']);
+});
