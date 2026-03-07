@@ -39,7 +39,7 @@ jobs:
     - name: Composer update
       run: |
         cd backend/api-consulmdregister
-        composer update --audit --config="audit.ignore-reasons=security-advisory"
+        composer update --no-audit
 
     - name: Show selected options
       run: |
