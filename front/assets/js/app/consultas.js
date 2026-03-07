@@ -142,7 +142,11 @@ function renderTableConsultas(consultas) {
         const $row = $('<tr>');
         $row.append($('<td>#CON').text(consulta.id));
         $row.append($('<td>').text(consulta.paciente.nombre + " " + consulta.paciente.apellido));
-        $row.append($('<td>').html(`${consulta.doctor.nombre_completo}<br><small>${consulta.doctor.titulo}</small>`));
+        if(!consulta.doctor){
+            $row.append($('<td>').html('Sin asignar'));
+        } else {
+            $row.append($('<td>').html(`${consulta.doctor.nombre_completo}<br><small>${consulta.doctor.titulo}</small>`));
+        }
         $row.append($('<td>').text(formattedDate));
         $row.append($('<td>').html('<span class="badge ' + badgeClass + '" style="font-size: 1rem; font-weight: bold;">' + consulta.estatus.charAt(0).toUpperCase() + consulta.estatus.slice(1) + '</span>'));
         if(hasEditPermission && IsDoctor && consulta.estatus === 'abierta'){
