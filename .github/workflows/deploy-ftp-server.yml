@@ -37,12 +37,12 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Composer update
-      env:
-        COMPOSER_AUDIT_BLOCK_INSECURE: 'false'
       run: |
         cd backend/api-consulmdregister
-        export COMPOSER_AUDIT_ABANDONED=ignore
-        composer update --no-audit --ignore-platform-reqs --no-interaction
+        composer config audit.abandoned ignore
+        composer config audit.block-insecure false
+        
+        composer update --no-audit --no-interaction --ignore-platform-reqs
 
     - name: Show selected options
       run: |
