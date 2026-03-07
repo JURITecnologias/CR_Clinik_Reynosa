@@ -88,6 +88,7 @@ class ReportsController extends Controller
 
         $reports = Report::where('month', $month)
                          ->where('year', $year)
+                         ->orderBy('created_at', 'desc')
                          ->get();
 
         return response()->json($reports);

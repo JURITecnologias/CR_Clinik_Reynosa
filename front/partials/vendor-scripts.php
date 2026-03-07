@@ -247,5 +247,5 @@ $page = end( $link_array );
     <?php } ?>
 
     <?php if($page == 'reporte-servicio-medico.php') { ?>
-    <script src="assets/js/app/reporte-servicio-medico.js"></script>
+    <script src="assets/js/app/reporte-servicios.js"></script>
     <?php } ?>
