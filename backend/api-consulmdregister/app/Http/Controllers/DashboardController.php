@@ -107,4 +107,17 @@ class DashboardController extends Controller
             'data' => $data
         ]);
     }
+
+    public function getLastCitasProgramadas()
+    {
+        $citas = DB::table('citas_pacientes')
+        ->join('pacientes', 'citas_pacientes.paciente_id', '=', 'pacientes.id')
+        ->select('citas_pacientes.id', DB::raw("CONCAT(pacientes.nombre, ' ', pacientes.apellido) as nombre_paciente"), 'citas_pacientes.fecha_cita', 'citas_pacientes.hora_cita', 'pacientes.sexo','pacientes.id as paciente_id')
+            ->where('fecha_cita', '>=', now())
+            ->orderBy('fecha_cita', 'asc')
+            ->limit(10)
+            ->get();
+
+        return response()->json($citas);
+    }
 }
