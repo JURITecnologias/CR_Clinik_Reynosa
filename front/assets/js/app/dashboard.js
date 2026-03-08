@@ -142,6 +142,22 @@ async function getUltimosPacientesRegistrados(){
     }
 }
 
+async function getUltimasDiezConsultas() {
+    try {
+        const response = await fetch(apiHost + apiPath + `/dashboard/consultas/ultimas-diez`, {
+            method: 'GET',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching last citas programadas:', error);
+        throw error;
+    }
+}
+
 function updateTotalPacientes() {
     totalpacientes=getTotalPacientes().then(data => {
         document.getElementById('totalPacientes').innerHTML = data.total_pacientes;
@@ -276,6 +292,54 @@ function updateUltimosPacientesRegistrados() {
     });
 }
 
+function updateLastConsultas() {
+    ultimasconsultas = getUltimasDiezConsultas().then(data => {
+        const tableBody = document.getElementById('ultimasConsultasTable');
+        tableBody.innerHTML = '';
+        data.forEach(consulta => {
+            const row = document.createElement('tr');
+            const linkPaciente=`paciente-detalle.php?b=`+btoa(consulta.paciente_id);
+            const fechaConsulta = new Date(consulta.created_at);
+            const opcionesFormato = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaFormateada = fechaConsulta.toLocaleDateString('es-ES', opcionesFormato).charAt(0).toUpperCase() + fechaConsulta.toLocaleDateString('es-ES', opcionesFormato).slice(1);
+            const badgeClass = consulta.estatus === 'abierta' ? 'badge-soft-primary' :
+                           consulta.estatus === 'enfermeria' ? 'badge-soft-warning' :
+                           consulta.estatus === 'completada' ? 'badge-soft-success' : 'badge-soft-secondary';
+            row.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="${linkPaciente}" class="avatar avatar-xs me-2">
+                                <i class="ti ti-user"></i>
+                            </a>
+                            <div>
+                                <h6 class="fs-14 mb-0 fw-medium">
+                                    <a href="${linkPaciente}">${consulta.nombre_paciente}</a>
+                                </h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${fechaFormateada}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h6 class="fs-14 mb-0 fw-medium">${consulta.nombre_doctor || 'N/A'}</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge ${badgeClass} text-capitalize">${consulta.estatus}</span>
+                    </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        document.getElementById('loadingUltimasConsultas').classList.add('d-none');
+        document.getElementById('ultimasConsultasTableContainer')?.classList.remove('d-none');
+    }).catch(error => {
+        console.error('Error updating last consultas:', error);
+    });
+
+}
+
 function updateHorarioDoctores() {
     const diaDeLaSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][new Date().getDay()];
     
@@ -356,6 +420,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUltimosPacientesRegistrados();
     updateChartPacientesPorSexo();
     updateHorarioDoctores();
+    updateLastConsultas();
 });
 
 function getChartEstadisticasPacientes(){

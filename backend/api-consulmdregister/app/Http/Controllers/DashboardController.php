@@ -69,7 +69,6 @@ class DashboardController extends Controller
 
         $totalConsultas= DB::table('consultas')
             ->where('created_at', '>=', now()->subDays(120))
-            ->where('fuera_de_horario', false)
             ->count();
 
         return response()->json(['total_consultas_fuera_de_horario_ultimos_60_dias' => $totalConsultasFueraDeHorario,
@@ -150,5 +149,20 @@ class DashboardController extends Controller
         $horarios = $this->reportService->DatosHorariosDoctores($diaSemana);    
 
         return response()->json($horarios);
+    }
+
+    public function getUltimasDiezConsultas(Request $request)
+    {
+        $limit = $request->input('limit', 10);
+
+        $consultas = DB::table('consultas')
+            ->join('pacientes', 'consultas.paciente_id', '=', 'pacientes.id')
+            ->join('informacion_doctor', 'consultas.doctor_id', '=', 'informacion_doctor.id')
+            ->select('consultas.id', DB::raw("CONCAT(pacientes.nombre, ' ', pacientes.apellido) as nombre_paciente"), 'consultas.fecha_consulta', 'pacientes.sexo','pacientes.id as paciente_id','informacion_doctor.nombre_completo as nombre_doctor','informacion_doctor.titulo as titulo_doctor','consultas.estatus','consultas.created_at')
+            ->orderBy('fecha_consulta', 'desc')
+            ->limit($limit)
+            ->get();
+
+        return response()->json($consultas);
     }
 }

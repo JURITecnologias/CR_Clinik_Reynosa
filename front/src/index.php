@@ -100,8 +100,8 @@ $user = include(__DIR__ . '/user_session.php');
                                 </svg></span>
                             <div class="ms-2 overflow-hidden">
                                 <p class="mb-1 text-truncate">Consultas Fuera de Horario (ultimos 60 dias)</p>
-                                <h5 class="mb-0">Total: <span id="totalFuerHorario">0</span></h5>
-                                <h5 class="mb-0">Total de consultas: <span id="totalConsultas">0</span></h5>
+                                <h5 class="mb-0">Total: <span id="totalFuerHorario">0</span> de <span id="totalConsultas">0</span></h5>
+                                <h5 class="mb-0"></h5>
                             </div>
                         </div>
                     </div>
@@ -368,159 +368,28 @@ $user = include(__DIR__ . '/user_session.php');
         <!-- card start -->
         <div class="card shadow flex-fill w-100 mb-0">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <h5 class="mb-0">Últimas Citas</h5>
-                <a href="appointments.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todas</a>
+                <h5 class="mb-0">Últimas Consultas</h5>
+                <a href="consultas.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todas</a>
             </div>
             <div class="card-body">
                 <!-- tabla inicio -->
-                <div class="table-responsive table-nowrap">
+                <div id="loadingUltimasConsultas" class="">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                        <div class="spinner-grow text-primary m-2" role="status"></div>
+                    </div>
+                </div>
+                <div class="table-responsive table-nowrap d-none" id="ultimasConsultasTableContainer">
                     <table class="table border mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>ID del Paciente</th>
                                 <th>Nombre del Paciente</th>
-                                <th>Tipo de Sesión</th>
+                                <th>Fecha y hora consulta</th>
                                 <th>Nombre del Doctor</th>
-                                <th>Fecha y Hora</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><a href="javascript:void(0);" class="link-muted" data-bs-toggle="modal" data-bs-target="#view_appointment_modal">#PT0025</a></td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/avatars/avatar-31.jpg" alt="paciente" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">James Carter</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Visita</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="doctor-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/doctors/doctor-01.jpg" alt="doctor" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="doctor-details.php">Dr. Andrew Clark</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>17 Jun 2025, 09:00 AM a 10:00 AM</td>
-                                <td><span class="badge badge-soft-purple">En progreso</span></td>
-
-                            </tr>
-                            <tr>
-                                <td><a href="javascript:void(0);" class="link-muted" data-bs-toggle="modal" data-bs-target="#view_appointment_modal">#PT0024</a></td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/avatars/avatar-54.jpg" alt="paciente" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Emily Davis</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Consulta</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="doctor-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/doctors/doctor-07.jpg" alt="doctor" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="doctor-details.php">Dr. Katherine Brooks</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>10 Jun 2025, 10:30 AM a 11:30 AM</td>
-                                <td><span class="badge badge-soft-purple">En progreso</span></td>
-
-                            </tr>
-                            <tr>
-                                <td><a href="javascript:void(0);" class="link-muted" data-bs-toggle="modal" data-bs-target="#view_appointment_modal">#PT0023</a></td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/avatars/avatar-38.jpg" alt="paciente" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Michael Johnson</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Visita</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="doctor-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/doctors/doctor-12.jpg" alt="doctor" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="doctor-details.php">Dr. Benjamin Harris</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>22 May 2025, 01:15 PM a 02:15 PM</td>
-                                <td><span class="badge badge-soft-success">Completado</span></td>
-
-                            </tr>
-                            <tr>
-                                <td><a href="javascript:void(0);" class="link-muted" data-bs-toggle="modal" data-bs-target="#view_appointment_modal">#PT0022</a></td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/avatars/avatar-43.jpg" alt="paciente" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Olivia Miller</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Consulta</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="doctor-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/doctors/doctor-03.jpg" alt="doctor" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="doctor-details.php">Dr. Laura Mitchell</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>15 May 2025, 11:30 AM a 12:30 PM</td>
-                                <td><span class="badge badge-soft-success">Completado</span></td>
-
-                            </tr>
-                            <tr>
-                                <td><a href="javascript:void(0);" class="link-muted" data-bs-toggle="modal" data-bs-target="#view_appointment_modal">#PT0021</a></td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="patient-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/avatars/avatar-41.jpg" alt="paciente" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">David Smith</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Consulta</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="doctor-details.php" class="avatar avatar-xs me-2">
-                                            <img src="assets/img/doctors/doctor-15.jpg" alt="doctor" class="rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="doctor-details.php">Dr. Christopher Lewis</a></h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>30 Abr 2025, 12:20 PM a 01:20 PM</td>
-                                <td><span class="badge badge-soft-success">Completado</span></td>
-
-                            </tr>
+                        <tbody id="ultimasConsultasTable">
+                            
                         </tbody>
                     </table>
                 </div>
