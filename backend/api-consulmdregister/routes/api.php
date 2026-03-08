@@ -387,6 +387,7 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('/dashboard/consultas/metricas/hombre-mujer', [\App\Http\Controllers\DashboardController::class, 'getMetrictPacientesConsultarHombreOMujer']);
     Route::get('/dashboard/citas/programadas', [\App\Http\Controllers\DashboardController::class, 'getLastCitasProgramadas']);
     Route::get('/dashboard/pacientes/ultimos-registrados', [\App\Http\Controllers\DashboardController::class, 'getLastPacientesRegistrados']);
+    Route::get('/dashboard/doctores/horarios',[\App\Http\Controllers\DashboardController::class, 'getHorarioDoctores']);
 });
 
 Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:ver'])->group(function () {

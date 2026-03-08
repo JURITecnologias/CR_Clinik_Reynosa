@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report;
+use App\Services\ReportServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
 
+    private $reportService;
+    public function __construct(ReportServiceProvider $reportService)
+    {
+        $this->reportService = $reportService;
+    }
     
     public function getTotalPacientes()
     {
@@ -131,5 +138,17 @@ class DashboardController extends Controller
             ->get();
 
         return response()->json($pacientes);
+    }
+
+    public function getHorarioDoctores(Request $request)
+    {
+        $diaSemana = $request->input('dia_semana');
+        if(!$diaSemana || !in_array($diaSemana,['lunes','martes','miercoles','jueves','viernes','sabado','domingo'])){
+            return response()->json(['message' => 'Parámetro dia_semana es requerido y debe ser un día válido.'], 400);
+        }
+
+        $horarios = $this->reportService->DatosHorariosDoctores($diaSemana);    
+
+        return response()->json($horarios);
     }
 }

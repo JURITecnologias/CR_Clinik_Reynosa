@@ -110,6 +110,22 @@ async function getTotalPacientesPorSexo($month, $year){
     }
 }
 
+async function getHorarioDoctores($diaSemana){
+    try {
+       const response = await fetch(apiHost + apiPath + `/dashboard/doctores/horarios/?dia_semana=${$diaSemana}`, {
+                method: 'GET',
+                headers: headersRequest
+            });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching last citas programadas:', error);
+        throw error;
+    }
+}
+
 async function getUltimosPacientesRegistrados(){
     try {
        const response = await fetch(apiHost + apiPath + `/dashboard/pacientes/ultimos-registrados`, {
@@ -260,6 +276,76 @@ function updateUltimosPacientesRegistrados() {
     });
 }
 
+function updateHorarioDoctores() {
+    const diaDeLaSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][new Date().getDay()];
+    
+    getHorarioDoctores(diaDeLaSemana).then(data => {
+        const divBody = document.getElementById('doctoresHorarioContainer');
+        if (!divBody) return;
+        divBody.innerHTML = '';
+
+        // 1. AGRUPAR: Aseguramos que el nombre no tenga espacios extra
+        const doctoresAgrupados = data.reduce((acc, current) => {
+            const nombreKey = current.nombre_completo.trim(); // Limpiamos espacios
+            
+            if (!acc[nombreKey]) {
+                acc[nombreKey] = {
+                    nombre: nombreKey,
+                    titulo: current.titulo,
+                    turnos: []
+                };
+            }
+            
+            const nuevoTurno = `${current.hora_inicio} - ${current.hora_fin}`;
+            
+            // Evitamos duplicar exactamente el mismo horario si la API lo manda repetido
+            if (!acc[nombreKey].turnos.includes(nuevoTurno)) {
+                acc[nombreKey].turnos.push(nuevoTurno);
+            }
+            
+            return acc;
+        }, {});
+
+        console.log('Doctores procesados:', doctoresAgrupados); // Revisa esto en tu consola
+
+        // 2. RENDERIZAR
+        Object.values(doctoresAgrupados).forEach(doctor => {
+            const row = document.createElement('div');
+            
+            // Generamos los badges. Usamos 'd-inline-block' para que se vean bien
+            const htmlHorarios = doctor.turnos.map(turno => 
+                `<span class="badge badge-soft-success d-block mb-1" style="font-size: 12px;">${turno}</span>`
+            ).join('');
+
+            row.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-2">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-md me-2 badge-soft-success rounded-circle">
+                            <i class="ti ti-stethoscope fs-20"></i>
+                        </div>
+                        <div class="ms-2">
+                            <h6 class="fw-semibold fs-14 text-truncate mb-1">
+                                ${doctor.nombre}
+                            </h6>
+                            <p class="fs-13 mb-0 text-muted">${doctor.titulo}</p>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 ms-2 text-end">
+                        ${htmlHorarios}
+                    </div>
+                </div>
+            `;
+            divBody.appendChild(row);
+        });
+
+        document.getElementById('loadingHorarioDoctores')?.classList.add('d-none');
+        document.getElementById('doctoresHorarioContainer')?.classList.remove('d-none');
+
+    }).catch(error => {
+        console.error('Error updating horario doctores:', error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     updateTotalPacientes();
     updateTotalCitas();
@@ -269,6 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getChartEstadisticasPacientes();
     updateUltimosPacientesRegistrados();
     updateChartPacientesPorSexo();
+    updateHorarioDoctores();
 });
 
 function getChartEstadisticasPacientes(){

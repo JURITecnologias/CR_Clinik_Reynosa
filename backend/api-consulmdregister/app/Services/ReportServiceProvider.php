@@ -223,4 +223,23 @@ class ReportServiceProvider
         // lo regresas al controlador como colección
         return $datos_filtrados;
     }
+
+    public function DatosHorariosDoctores($diaSemana){
+        $sql = "
+            SELECT 
+                d.nombre_completo,
+                d.titulo,
+                h.hora_inicio,
+                h.hora_fin
+            FROM horarios_doctores h
+            INNER JOIN informacion_doctor d
+            WHERE dia_semana='".$diaSemana."'
+            ORDER BY d.nombre_completo,hora_inicio
+        ";
+
+        $resultados = DB::select($sql);
+
+        // lo regresas al controlador como colección
+        return collect($resultados);
+    }
 }

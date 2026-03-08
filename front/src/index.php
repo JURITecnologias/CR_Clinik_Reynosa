@@ -326,89 +326,30 @@ $user = include(__DIR__ . '/user_session.php');
             <div class="col-xl-4 col-md-6 d-flex">
                 <div class="card shadow flex-fill w-100">
                     <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <h5 class="mb-0">Doctores</h5>
-                        <a href="doctors.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
+                        <h5 class="mb-0">Horario Doctores De Hoy</h5>
                     </div>
                     <div class="card-body">
-                        <div class="overflow-auto">
+                        <div id="loadingHorarioDoctores" class="">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                                <div class="spinner-grow text-primary m-2" role="status"></div>
+                            </div>
+                        </div>
+                        <div class="overflow-auto d-none" id="doctoresHorarioContainer">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="d-flex align-items-center">
-                                    <a href="doctor-details.php" class="avatar flex-shrink-0">
-                                        <img src="assets/img/doctors/doctor-01.jpg" class="rounded" alt="doctor">
+                                    <a href="javascript:void(0);" class="avatar me-2 badge-soft-success rounded-circle">
+                                        <i class="ti ti-stethoscope fs-20"></i>
                                     </a>
                                     <div class="ms-2">
                                         <div>
-                                            <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. William Harrison</a></h6>
-                                            <p class="fs-13 mb-0">Cardiología</p>
+                                            <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Nombre Doctor</a></h6>
+                                            <p class="fs-13 mb-0">Titulo Doctor</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex-shrink-0 ms-2">
-                                    <span class="badge badge-soft-success">Disponible</span>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                                    <a href="doctor-details.php" class="avatar flex-shrink-0">
-                                        <img src="assets/img/doctors/doctor-11.jpg" class="rounded" alt="doctor">
-                                    </a>
-                                    <div class="ms-2">
-                                        <div>
-                                            <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Victoria Adams</a></h6>
-                                            <p class="fs-13 mb-0">Urología</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-shrink-0 ms-2">
-                                    <span class="badge badge-soft-danger">No disponible</span>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                                    <a href="doctor-details.php" class="avatar flex-shrink-0">
-                                        <img src="assets/img/doctors/doctor-06.jpg" class="rounded" alt="doctor">
-                                    </a>
-                                    <div class="ms-2">
-                                        <div>
-                                            <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Jonathan Bennett</a></h6>
-                                            <p class="fs-13 mb-0">Radiología</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-shrink-0 ms-2">
-                                    <span class="badge badge-soft-success">Disponible</span>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                                    <a href="doctor-details.php" class="avatar flex-shrink-0">
-                                        <img src="assets/img/doctors/doctor-07.jpg" class="rounded" alt="doctor">
-                                    </a>
-                                    <div class="ms-2">
-                                        <div>
-                                            <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Natalie Brooks</a></h6>
-                                            <p class="fs-13 mb-0">Cirugía de ORL</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-shrink-0 ms-2">
-                                    <span class="badge badge-soft-success">Disponible</span>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-0">
-                                <div class="d-flex align-items-center">
-                                    <a href="doctor-details.php" class="avatar flex-shrink-0">
-                                        <img src="assets/img/doctors/doctor-12.jpg" class="rounded" alt="doctor">
-                                    </a>
-                                    <div class="ms-2">
-                                        <div>
-                                            <h6 class="fw-semibold fs-14 text-truncate mb-1"><a href="doctor-details.php">Dr. Samuel Reed</a></h6>
-                                            <p class="fs-13 mb-0">Dermatología</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-shrink-0 ms-2">
-                                    <span class="badge badge-soft-success">Disponible</span>
+                                    <span class="badge badge-soft-success">00:00 - 13:00</span>
+                                    <p><span class="badge badge-soft-success">15:00 - 20:00</span></p>
                                 </div>
                             </div>
                         </div>
@@ -421,125 +362,7 @@ $user = include(__DIR__ . '/user_session.php');
         <!-- row end -->
 
         <!-- row start -->
-        <div class="row">
-            <!-- col start -->
-            <div class="col-xl-5 d-flex">
-                <div class="card shadow flex-fill w-100">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0">Departamentos Principales</h5>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="row row-gap-3 align-items-center mb-4">
-                            <div class="col-sm-6">
-                                <div class="position-relative">
-                                    <canvas id="attendance" height="180"></canvas>
-                                    <div class="position-absolute text-center top-50 start-50 translate-middle">
-                                        <p class="fs-13 mb-1">Citas</p>
-                                        <h3>3656</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-sm-start text-center">
-                                    <p class="text-dark mb-2"><i class="ti ti-circle-filled text-info fs-13 me-1"></i>Cardiología</p>
-                                    <p class="text-dark mb-2"><i class="ti ti-circle-filled text-cyan fs-13 me-1"></i>Neurología</p>
-                                    <p class="text-dark mb-2"><i class="ti ti-circle-filled text-purple fs-13 me-1"></i>Dermatología</p>
-                                    <p class="text-dark mb-2"><i class="ti ti-circle-filled text-orange fs-13 me-1"></i>Ortopedia</p>
-                                    <p class="text-dark mb-2"><i class="ti ti-circle-filled text-warning fs-13 me-1"></i>Urología</p>
-                                    <p class="text-dark mb-0"><i class="ti ti-circle-filled text-indigo fs-13 me-1"></i>Radiología</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="border rounded p-1">
-                            <div class="row g-0">
-                                <div class="col-6 p-2 border-end text-center">
-                                    <h5 class="mb-1">$2512.32</h5>
-                                    <p class="mb-0 text-body">Ingresos Generados</p>
-                                </div>
-                                <div class="col-6 p-2 text-center">
-                                    <h5 class="mb-1">3125+</h5>
-                                    <p class="mb-0 text-body">Citas el mes pasado</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- col end -->
 
-            <!-- col start -->
-            <div class="col-xl-7 d-flex">
-                <!-- tarjeta inicio -->
-                <div class="card shadow flex-fill w-100">
-                    <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <h5 class="mb-0">Registro de Pacientes</h5>
-                        <a href="medical-results.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
-                    </div>
-                    <div class="card-body">
-                        <!-- tabla inicio -->
-                        <div class="table-responsive table-nowrap">
-                            <table class="table border mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Nombre del Paciente</th>
-                                        <th>Diagnóstico</th>
-                                        <th>Departamento</th>
-                                        <th>Última Visita</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">James Carter</a></h6>
-                                        </td>
-                                        <td>Masculino</td>
-                                        <td><span class="badge badge-soft-info">Cardiología</span></td>
-                                        <td>17 Jun 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Emily Davis</a></h6>
-                                        </td>
-                                        <td>Femenino</td>
-                                        <td><span class="badge badge-soft-success">Urología</span></td>
-                                        <td>10 Jun 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Michael John</a></h6>
-                                        </td>
-                                        <td>Masculino</td>
-                                        <td><span class="badge badge-soft-info">Radiología</span></td>
-                                        <td>22 May 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">Olivia Miller</a></h6>
-                                        </td>
-                                        <td>Femenino</td>
-                                        <td><span class="badge badge-soft-purple">Cirugía de ORL</span></td>
-                                        <td>15 May 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="fs-14 mb-0 fw-medium"><a href="patient-details.php">David Smith</a></h6>
-                                        </td>
-                                        <td>Masculino</td>
-                                        <td><span class="badge badge-soft-teal">Dermatología</span></td>
-                                        <td>30 Abr 2025</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- tabla fin -->
-                    </div>
-                </div>
-                <!-- tarjeta fin -->
-            </div>
-            <!-- col end -->
-
-        </div>
         <!-- row end -->
 
         <!-- card start -->
