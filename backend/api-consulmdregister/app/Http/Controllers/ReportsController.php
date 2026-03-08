@@ -109,5 +109,12 @@ class ReportsController extends Controller
         return Response::download($report->file_path, 'informe_medico.xlsx');
     }
 
+    public function getTotalPacientesPorSexo(Request $request)
+    {
+        $month = $request->input('month');
+        $year = $request->input('year');
+
+        return $this->reportService->getTotalPacientesPorSexo($month, $year);
+    }
     
 }

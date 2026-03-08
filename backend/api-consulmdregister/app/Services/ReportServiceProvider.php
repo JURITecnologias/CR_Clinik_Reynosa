@@ -145,6 +145,26 @@ class ReportServiceProvider
         
     }
 
+    public function getTotalPacientesPorSexo($month, $year)
+    {
+        $sql = "
+            SELECT 
+                p.sexo,
+                COUNT(1) AS total
+            FROM consultas c
+            INNER JOIN pacientes p  ON p.id=c.paciente_id
+            WHERE
+                MONTH(c.fecha_consulta) = ".$month."
+            AND YEAR(c.fecha_consulta) = ".$year."
+            GROUP BY p.sexo
+        ";
+
+        $resultados = DB::select($sql);
+
+        // lo regresas al controlador como colección
+        return collect($resultados);
+    }
+
     public function DatosUnidadDeUrgencia($month, $year)
     {
         #validamos que month y year sean números enteros
@@ -202,5 +222,24 @@ class ReportServiceProvider
 
         // lo regresas al controlador como colección
         return $datos_filtrados;
+    }
+
+    public function DatosHorariosDoctores($diaSemana){
+        $sql = "
+            SELECT 
+                d.nombre_completo,
+                d.titulo,
+                h.hora_inicio,
+                h.hora_fin
+            FROM horarios_doctores h
+            INNER JOIN informacion_doctor d
+            WHERE dia_semana='".$diaSemana."'
+            ORDER BY d.nombre_completo,hora_inicio
+        ";
+
+        $resultados = DB::select($sql);
+
+        // lo regresas al controlador como colección
+        return collect($resultados);
     }
 }

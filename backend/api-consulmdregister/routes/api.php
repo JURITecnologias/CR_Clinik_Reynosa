@@ -369,6 +369,7 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
    
 });
 
+# Ordenes Clinicas Consumos routes
 Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera'])->group(function () {
     Route::post('ordenes-clinicas-consumos', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'store']);
     Route::post('ordenes-clinicas-consumos/multiple', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'storeMultiple']);
@@ -377,6 +378,7 @@ Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera'])
     Route::patch('ordenes-clinicas-consumos/{id}/cantidad', [\App\Http\Controllers\OrdenClinicaConsumoController::class, 'updateCantidad']);
 });
 
+# Dashboard routes
 Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('/dashboard/pacientes/total', [\App\Http\Controllers\DashboardController::class, 'getTotalPacientes']);
     Route::get('/dashboard/citas/ultimos-60-dias', [\App\Http\Controllers\DashboardController::class, 'getTotalCitasUltimos60Dias']);
@@ -385,15 +387,25 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('/dashboard/consultas/fuera-horario/ultimos-60-dias', [\App\Http\Controllers\DashboardController::class, 'getTotalConsultasFueraDeHorarioUltimos60Dias']);
     Route::get('/dashboard/citas/upcoming', [\App\Http\Controllers\DashboardController::class, 'getLastCitasUpcoming']);
     Route::get('/dashboard/consultas/metricas/hombre-mujer', [\App\Http\Controllers\DashboardController::class, 'getMetrictPacientesConsultarHombreOMujer']);
+    Route::get('/dashboard/citas/programadas', [\App\Http\Controllers\DashboardController::class, 'getLastCitasProgramadas']);
+    Route::get('/dashboard/pacientes/ultimos-registrados', [\App\Http\Controllers\DashboardController::class, 'getLastPacientesRegistrados']);
+    Route::get('/dashboard/doctores/horarios',[\App\Http\Controllers\DashboardController::class, 'getHorarioDoctores']);
+    Route::get('/dashboard/consultas/ultimas-diez', [\App\Http\Controllers\DashboardController::class, 'getUltimasDiezConsultas']);
 });
 
+# Reports queue routes
 Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:ver'])->group(function () {
-    Route::get('/reports/servicios', [\App\Http\Controllers\ReportsController::class, 'reporteServicios']);
-    Route::get('/reports/servicios-enfermeria', [\App\Http\Controllers\ReportsController::class, 'reporteServiciosEnfermeria']);
-    Route::get('/reports/unidad-emergencia', [\App\Http\Controllers\ReportsController::class, 'reporteUnidadDeEmergencia']);
-    Route::get('/reports/consulta-ext-general-esp', [\App\Http\Controllers\ReportsController::class, 'reporteConsultaExtGeneralYEsp']);
     Route::get('/reports/queue/list', [\App\Http\Controllers\ReportsController::class, 'getListQueueReportsByMonthYear']);
     Route::get('/reports/queue/{uuid}', [\App\Http\Controllers\ReportsController::class, 'getQueuedReport']);
     Route::post('/reports/queue/generar-reporte-medico', [\App\Http\Controllers\ReportsController::class, 'dispatchGenerarReporteMedico']);
     Route::get('/reports/queue/download/{uuid}', [\App\Http\Controllers\ReportsController::class, 'downloadReport']);
+});
+
+# Reprotes generales routes
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('/reports/servicios', [\App\Http\Controllers\ReportsController::class, 'reporteServicios']);
+    Route::get('/reports/servicios-enfermeria', [\App\Http\Controllers\ReportsController::class, 'reporteServiciosEnfermeria']);
+    Route::get('/reports/unidad-emergencia', [\App\Http\Controllers\ReportsController::class, 'reporteUnidadDeEmergencia']);
+    Route::get('/reports/consulta-ext-general-esp', [\App\Http\Controllers\ReportsController::class, 'reporteConsultaExtGeneralYEsp']);
+    Route::get('/reports/pacientes/total-por-sexo', [\App\Http\Controllers\ReportsController::class, 'getTotalPacientesPorSexo']);
 });
