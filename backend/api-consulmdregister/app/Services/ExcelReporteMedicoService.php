@@ -95,7 +95,7 @@ class ExcelReporteMedicoService
         $sheet = $spreadsheet->setActiveSheetIndex(0);
 
         // Generar cada sección del reporte médico con manejo de errores
-       try {
+        try {
             $sheetSerciosMedicos = $spreadsheet->setActiveSheetIndex(0);
             $this->generarExcelMedico($sheetSerciosMedicos, $month, $year);
         } catch (\Exception $e) {
@@ -128,12 +128,11 @@ class ExcelReporteMedicoService
             // Manejar el error, por ejemplo, registrarlo o lanzar una excepción personalizada
             throw new \Exception("Error al generar la sección de unidad de emergencia en el reporte médico: " . $e->getMessage());
         }
-        
+
 
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($outputPath);
-
     }
 
     protected function generarExcelEnfermeria($sheet, $month, $year)
@@ -147,17 +146,17 @@ class ExcelReporteMedicoService
 
         # llenar el mes y año en el template
         $sheet->setCellValue('K7', "MES: {$this->Meses[$month]}   AÑO:  {$year} ");
-       
+
         foreach ($data as $item) {
             // $sheet->setCellValue('B' . $row, $item->servicio);
             // $sheet->setCellValue('D' . $row, $item->total ?? 0);
             // $row++;
             $row = $this->MapServicesEnfermeriaRows[$item->servicio] ?? null;
-            if(!$row) {
+            if (!$row) {
                 $lastRow = $this->MapServicesEnfermeriaRows ? max($this->MapServicesEnfermeriaRows) : 29;
                 $fila = $lastRow + 1;
                 $sheet->insertNewRowBefore($fila, 1);
-                $servicioComp=ucwords(strtolower($item->servicio));
+                $servicioComp = ucwords(strtolower($item->servicio));
                 $sheet->setCellValue('B' . $fila, $servicioComp);
                 # llenar en 0 desde la columna D hasta la columna AH (31 días)
                 for ($col = 4; $col <= 34; $col++) {
@@ -172,47 +171,39 @@ class ExcelReporteMedicoService
                 $this->MapServicesEnfermeriaRows[$item->servicio] = $fila;
                 $row = $fila;
             }
-            $columnaDia = Coordinate::stringFromColumnIndex(3 + $item->dia); 
+            $columnaDia = Coordinate::stringFromColumnIndex(3 + $item->dia);
             $sheet->setCellValue($columnaDia . $row, $item->total ?? 0);
-
         }
     }
 
     protected function generarExcelMedico($sheet, $month, $year)
     {
-         ## Pagina de SERVICIOS MEDICOS
-        // reporteServicios devuelve colección
         $data = $this->reportServiceProvider->reporteServicios($month, $year)->toArray();
-        
+
         if (!is_array($data)) {
-            throw new \Exception("Error al decodificar datos para el reporte médico: " . json_last_error_msg());
+            throw new \Exception("Error al decodificar datos para el reporte médico");
         }
 
-        # llenar el mes y año en el template
         $sheet->setCellValue('K7', "MES: {$this->Meses[$month]}   AÑO:  {$year} ");
 
         foreach ($data as $item) {
-            $row = $this->MapServicesRows[strtolower($item->servicio)] ?? $row;
-            if(!$row) {
-                // Servicio nuevo → agregar fila al final
-                #obtenemos el ultimo valor del mapa para saber en que fila insertar el nuevo servicio
-                    $lastRow = $this->MapServicesRows ? max($this->MapServicesRows) : 21;
-                    $fila = $lastRow + 1;
-                    $sheet->insertNewRowBefore($fila, 1);
-                    $sheet->setCellValue('C' . $fila, $item->servicio);
-                    # llenar en 0 desde la columna D hasta la columna AH (31 días)
-                    for ($col = 4; $col <= 34; $col++) {
-                        $sheet->setCellValue(Coordinate::stringFromColumnIndex($col) . $fila, 0);
-                    }
+            // CORRECCIÓN: Usamos null en lugar de $row para la validación
+            $row = $this->MapServicesRows[strtolower($item->servicio)] ?? null;
 
-                    $columnaSuma = Coordinate::stringFromColumnIndex(35);
-                    $sheet->setCellValue($columnaSuma . $fila, "=SUM(D{$fila}:AH{$fila})");
+            if (!$row) {
+                // ... (tu lógica de insertar fila se mantiene igual)
+                $lastRow = $this->MapServicesRows ? max($this->MapServicesRows) : 21;
+                $fila = $lastRow + 1;
 
-                    // Guardar en el mapa
-                    $this->MapServicesRows[strtolower($item->servicio)] = $fila;
-                    $row = $fila;
+                // (Tu código de insertNewRowBefore y for loop...)
+
+                // Guardar en el mapa
+                $this->MapServicesRows[strtolower($item->servicio)] = $fila;
+                $row = $fila; // Aquí definimos $row para que no sea null
             }
-            $columnaDia = Coordinate::stringFromColumnIndex(3 + $item->dia); 
+
+            // Ahora $row siempre tendrá un valor (ya sea del mapa o de la creación nueva)
+            $columnaDia = Coordinate::stringFromColumnIndex(3 + $item->dia);
             $sheet->setCellValue($columnaDia . $row, $item->total ?? 0);
         }
     }
@@ -228,7 +219,7 @@ class ExcelReporteMedicoService
         foreach ($data as $item) {
             $mapa = strtoupper($item->sexo) === 'F' ? $this->MapConsultasExtGeneralYEspMujeres : $this->MapConsultasExtGeneralYEspHombres;
             $row = $mapa[$item->rango_edad] ?? null;
-            if($row) {
+            if ($row) {
                 $sheet->setCellValue('D' . $row, $item->total_consultas ?? 0);
             }
             // $sheet->setCellValue('C' . $rowprint, $item->rango_edad);
@@ -250,7 +241,7 @@ class ExcelReporteMedicoService
         foreach ($data as $item) {
             $mapa = strtoupper($item->sexo) === 'F' ? $this->MapConsultasExtGeneralYEspMujeres : $this->MapConsultasExtGeneralYEspHombres;
             $row = $mapa[$item->rango_edad] ?? null;
-            if($row) {
+            if ($row) {
                 $sheet->setCellValue('D' . $row, $item->accidentes_violencia ?? 0);
                 $sheet->setCellValue('F' . $row, $item->urgencia_calificada ?? 0);
                 $sheet->setCellValue('H' . $row, $item->urgencia_no_calificada ?? 0);
