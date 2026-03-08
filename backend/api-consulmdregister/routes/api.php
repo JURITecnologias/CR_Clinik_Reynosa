@@ -386,6 +386,7 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('/dashboard/citas/upcoming', [\App\Http\Controllers\DashboardController::class, 'getLastCitasUpcoming']);
     Route::get('/dashboard/consultas/metricas/hombre-mujer', [\App\Http\Controllers\DashboardController::class, 'getMetrictPacientesConsultarHombreOMujer']);
     Route::get('/dashboard/citas/programadas', [\App\Http\Controllers\DashboardController::class, 'getLastCitasProgramadas']);
+    Route::get('/dashboard/pacientes/ultimos-registrados', [\App\Http\Controllers\DashboardController::class, 'getLastPacientesRegistrados']);
 });
 
 Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:ver'])->group(function () {
@@ -400,4 +401,5 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('/reports/servicios-enfermeria', [\App\Http\Controllers\ReportsController::class, 'reporteServiciosEnfermeria']);
     Route::get('/reports/unidad-emergencia', [\App\Http\Controllers\ReportsController::class, 'reporteUnidadDeEmergencia']);
     Route::get('/reports/consulta-ext-general-esp', [\App\Http\Controllers\ReportsController::class, 'reporteConsultaExtGeneralYEsp']);
+    Route::get('/reports/pacientes/total-por-sexo', [\App\Http\Controllers\ReportsController::class, 'getTotalPacientesPorSexo']);
 });

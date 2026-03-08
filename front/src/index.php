@@ -199,7 +199,7 @@ $user = include(__DIR__ . '/user_session.php');
             </div>
             <!-- col end -->
 
-             <!-- col start -->
+            <!-- col start -->
             <div class="col-xl-2 col-md-4 col-sm-6">
                 <a href="citas.php" class="card">
                     <div class="card-body text-center">
@@ -254,70 +254,28 @@ $user = include(__DIR__ . '/user_session.php');
             <div class="col-xl-4 d-flex">
                 <div class="card flex-fill w-100">
                     <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <h5 class="mb-0">Reportes de Pacientes</h5>
-                        <a href="lab-results.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
+                        <h5 class="mb-0">Registro de Pacientes</h5>
+                        <a href="patients.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todos</a>
                     </div>
-                    <div class="card-body pb-1">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <a href="javascript:void(0);" class="avatar me-2 badge-soft-primary rounded-circle">
-                                    <i class="ti ti-droplet fs-20"></i>
-                                </a>
-                                <div>
-                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">David Marshall</a></h6>
-                                    <p class="mb-0 fs-13">Hemoglobina</p>
-                                </div>
-                            </div>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
+                    <div id="loadingUltimosPacientes" class="">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                            <div class="spinner-grow text-primary m-2" role="status"></div>
                         </div>
+                    </div>
+                    <div class="card-body pb-1" id="ListUltimosPacientesContainer">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <div class="d-flex align-items-center">
                                 <a href="javascript:void(0);" class="avatar me-2 badge-soft-success rounded-circle">
-                                    <i class="ti ti-mood-neutral fs-20"></i>
+                                    <i class="ti ti-user fs-20"></i>
                                 </a>
                                 <div>
-                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Thomas McLean</a></h6>
-                                    <p class="mb-0 fs-13">Rayos X</p>
+                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">David Marshall</a></h6>
+                                    <p class="mb-0 fs-13">Alta en Sistema: 3 Abril 2023</p>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
+                            <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-eye"></i></a>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <a href="javascript:void(0);" class="avatar me-2 badge-soft-danger rounded-circle">
-                                    <i class="ti ti-rainbow fs-20"></i>
-                                </a>
-                                <div>
-                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Greta Kinney</a></h6>
-                                    <p class="mb-0 fs-13">Resonancia Magnética</p>
-                                </div>
-                            </div>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <a href="javascript:void(0);" class="avatar me-2 badge-soft-purple rounded-circle">
-                                    <i class="ti ti-rosette fs-20"></i>
-                                </a>
-                                <div>
-                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Larry Wilburn</a></h6>
-                                    <p class="mb-0 fs-13">Análisis de Sangre</p>
-                                </div>
-                            </div>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <a href="javascript:void(0);" class="avatar me-2 badge-soft-teal rounded-circle">
-                                    <i class="ti ti-radio fs-20"></i>
-                                </a>
-                                <div>
-                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="patient-details.php">Reyan Verol</a></h6>
-                                    <p class="mb-0 fs-13">Tomografía</p>
-                                </div>
-                            </div>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light me-1"><i class="ti ti-download"></i></a>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -331,26 +289,33 @@ $user = include(__DIR__ . '/user_session.php');
                         <a href="visits.php" class="btn btn-sm btn-white flex-shrink-0">Ver Todas</a>
                     </div>
                     <div class="card-body">
-                        <div id="patients-visits" class="mb-3"></div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <span class="avatar bg-primary rounded-circle flex-shrink-0"><i class="ti ti-gender-male fs-20"></i></span>
-                                <div class="ms-2">
-                                    <h6 class="mb-1 fs-14 fw-semibold">Hombres</h6>
-                                    <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Desde la semana pasada</p>
-                                </div>
+                        <div id="loadingGraficaPacientesSexo" class="">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                                <div class="spinner-grow text-primary m-2" role="status"></div>
                             </div>
-                            <h6 class="mb-0">69%</h6>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mb-0">
-                            <div class="d-flex align-items-center">
-                                <span class="avatar bg-purple rounded-circle flex-shrink-0"><i class="ti ti-gender-female fs-20"></i></span>
-                                <div class="ms-2">
-                                    <h6 class="mb-1 fs-14 fw-semibold">Mujeres</h6>
-                                    <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Desde la semana pasada</p>
+                        <div id="pacientes-visitas-sexo" class="mb-3" style="margin-top: 50px;"></div>
+                        <div id="pacientes-visitas-sexo-leyenda" class="d-none">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="avatar bg-primary rounded-circle flex-shrink-0"><i class="ti ti-gender-male fs-20"></i></span>
+                                    <div class="ms-2">
+                                        <h6 class="mb-1 fs-14 fw-semibold">Hombres</h6>
+                                        <!-- <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Desde la semana pasada</p> -->
+                                    </div>
                                 </div>
+                                <h6 class="mb-0"><span id="porcentaje-hombres">69%</span></h6>
                             </div>
-                            <h6 class="mb-0">56%</h6>
+                            <div class="d-flex align-items-center justify-content-between mb-0">
+                                <div class="d-flex align-items-center">
+                                    <span class="avatar bg-purple rounded-circle flex-shrink-0"><i class="ti ti-gender-female fs-20"></i></span>
+                                    <div class="ms-2">
+                                        <h6 class="mb-1 fs-14 fw-semibold">Mujeres</h6>
+                                        <!-- <p class="mb-1 fs-13 text-truncate"><span class="text-success">-15%</span> Desde la semana pasada</p> -->
+                                    </div>
+                                </div>
+                                <h6 class="mb-0"><span id="porcentaje-mujeres">56%</span></h6>
+                            </div>
                         </div>
                     </div>
                 </div>

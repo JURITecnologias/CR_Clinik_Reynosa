@@ -120,4 +120,16 @@ class DashboardController extends Controller
 
         return response()->json($citas);
     }
+
+    # obtenemos los ultimos pacientes registrados
+    public function getLastPacientesRegistrados()
+    {
+        $pacientes = DB::table('pacientes')
+            ->select('id', DB::raw("CONCAT(nombre, ' ', apellido) as nombre_completo"), 'fecha_nacimiento', 'sexo', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->limit(7)
+            ->get();
+
+        return response()->json($pacientes);
+    }
 }

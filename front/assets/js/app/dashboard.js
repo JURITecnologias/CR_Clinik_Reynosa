@@ -94,6 +94,37 @@ async function getMetrictPacientesConsultarHombreOMujer($month, $year){
     }
 }
 
+async function getTotalPacientesPorSexo($month, $year){
+    try {
+       const response = await fetch(apiHost + apiPath + `/reports/pacientes/total-por-sexo?month=${$month}&year=${$year}`, {
+                method: 'GET',
+                headers: headersRequest
+            });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching last citas programadas:', error);
+        throw error;
+    }
+}
+
+async function getUltimosPacientesRegistrados(){
+    try {
+       const response = await fetch(apiHost + apiPath + `/dashboard/pacientes/ultimos-registrados`, {
+                method: 'GET',
+                headers: headersRequest
+            });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching last pacientes registrados:', error);
+        throw error;
+    }
+}
 
 function updateTotalPacientes() {
     totalpacientes=getTotalPacientes().then(data => {
@@ -191,6 +222,44 @@ function updateLastCitasProgramadas() {
     });
 }
 
+function updateUltimosPacientesRegistrados() {
+    ultimospacientesregistrados = getUltimosPacientesRegistrados().then(data => {
+       
+        const divBody = document.getElementById('ListUltimosPacientesContainer');
+        divBody.innerHTML = '';
+        data.forEach(paciente => {
+            const row = document.createElement('tr');
+            const sexo = (paciente.sexo === 'M') ? 'Masculino' : 'Femenino';
+            const linkPaciente=`paciente-detalle.php?b=`+btoa(paciente.paciente_id);
+            const fechaRegistro = new Date(paciente.created_at);
+            const opcionesFormato = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaFormateada = fechaRegistro.toLocaleDateString('es-ES', opcionesFormato).charAt(0).toUpperCase() + fechaRegistro.toLocaleDateString('es-ES', opcionesFormato).slice(1);
+            const edad= calcularEdad(paciente.fecha_nacimiento);
+            row.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <a href="javascript:void(0);" class="avatar me-2 badge-soft-success rounded-circle">
+                                    <i class="ti ti-user fs-20"></i>
+                                </a>
+                                <div>
+                                    <h6 class="fs-14 fw-semibold text-truncate mb-1"><a href="${linkPaciente}">${paciente.nombre_completo} - ${sexo}</a></h6>
+                                    <p class="mb-0 fs-13">Reg.: ${fechaFormateada}</p>
+                                    <p class="mb-0 fs-13">Edad: ${edad}  Género: ${sexo}</p>
+                                    
+                                </div>
+                            </div>
+                            <a href="paciente-detalle.php?b=${btoa(paciente.id)}" class="btn btn-icon btn-light me-1"><i class="ti ti-eye"></i></a>
+                        </div>
+            `;
+            divBody.appendChild(row);
+        });
+        document.getElementById('loadingUltimosPacientes').classList.add('d-none');
+        document.getElementById('ListUltimosPacientesContainer')?.classList.remove('d-none');
+    }).catch(error => {
+        console.error('Error updating last pacientes registrados:', error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     updateTotalPacientes();
     updateTotalCitas();
@@ -198,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotalConsultasFueraHorario();
     updateLastCitasProgramadas();
     getChartEstadisticasPacientes();
+    updateUltimosPacientesRegistrados();
+    updateChartPacientesPorSexo();
 });
 
 function getChartEstadisticasPacientes(){
@@ -213,6 +284,7 @@ function getChartEstadisticasPacientes(){
         console.error('Error fetching metric pacientes consultar hombre o mujer:', error);
     });
 }
+
 function renderPacienteStats(apiData) {
     if ($('#chart-pacientes').length > 0) {
         
@@ -282,4 +354,103 @@ function renderPacienteStats(apiData) {
         var chart = new ApexCharts(document.querySelector("#chart-pacientes"), sCol);
         chart.render();
     }
+}
+
+function renderChartPacientesPorSexo(apiData) {
+    if ($('#pacientes-visitas-sexo').length > 0) {
+        // 1. Obtener los totales
+        const totalHombres = apiData.find(d => d.sexo === 'M')?.total || 0;
+        const totalMujeres = apiData.find(d => d.sexo === 'F')?.total || 0;
+        const sumaTotal = totalHombres + totalMujeres;
+
+        // 2. Calcular los porcentajes (Evitamos división por cero)
+        const porcHombres = sumaTotal > 0 ? Math.round((totalHombres / sumaTotal) * 100) : 0;
+        const porcMujeres = sumaTotal > 0 ? Math.round((totalMujeres / sumaTotal) * 100) : 0;
+
+        document.getElementById('porcentaje-hombres').innerHTML = `${porcHombres}%`;
+        document.getElementById('porcentaje-mujeres').innerHTML = `${porcMujeres}%`;
+
+        var Patientsoptions = {
+            // Ahora pasamos los porcentajes calculados
+            series: [porcHombres, porcMujeres],
+            chart: {
+                height: 400,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    offsetY: -20,
+                    startAngle: -135,
+                    endAngle: 135,
+                    hollow: {
+                        margin: 15,
+                        size: '60%',
+                        background: '#fff'
+                    },
+                    track: {
+                        background: '#f2f2f2', // Un gris claro queda mejor que blanco sobre blanco
+                        strokeWidth: '97%',
+                        margin: 5, 
+                    },
+                    dataLabels: {
+                        show: true,
+                        name: {
+                            show: true,
+                            fontSize: '16px',
+                            color: '#64748B',
+                            offsetY: -10
+                        },
+                        value: {
+                            show: true,
+                            fontSize: '22px',
+                            color: '#0F172A',
+                            offsetY: 5,
+                            fontWeight: 700,
+                            formatter: function (val) {
+                                return val + "%"; // Agregamos el símbolo de %
+                            }
+                        },
+                        total: {
+                            show: true,
+                            showAlways: true,
+                            label: 'Total Pacientes',
+                            fontSize: '14px',
+                            fontWeight: 400,
+                            color: '#334155',
+                            // 3. Mostramos el número real (15) en el centro en lugar del promedio de %
+                            formatter: function (w) {
+                                return sumaTotal;
+                            }
+                        }
+                    }
+                }
+            },
+            stroke: {
+                lineCap: 'round' // Esto hace que las puntas de las barras sean redondeadas
+            },
+            colors: ['#1F6DB2', '#6A1B9A'],
+            labels: ['Hombres', 'Mujeres'],
+        };
+
+        // Limpiar el contenedor antes de renderizar
+        document.querySelector("#pacientes-visitas-sexo").innerHTML = '';
+        var Patientschart = new ApexCharts(document.querySelector("#pacientes-visitas-sexo"), Patientsoptions);
+        if (Patientschart) Patientschart.render();
+    }
+}
+
+function updateChartPacientesPorSexo() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    document.getElementById('loadingGraficaPacientesSexo').classList.remove('d-none');
+    getTotalPacientesPorSexo(currentMonth, currentYear).then(data => {
+        renderChartPacientesPorSexo(data);
+        document.getElementById('loadingGraficaPacientesSexo').classList.add('d-none');
+        //$('#pacientes-visitas-sexo').removeClass('d-none');
+        document.getElementById('pacientes-visitas-sexo').classList.remove('d-none');
+        document.getElementById('pacientes-visitas-sexo-leyenda').classList.remove('d-none');
+    }).catch(error => {
+        console.error('Error fetching total pacientes por sexo:', error);
+    });
 }
