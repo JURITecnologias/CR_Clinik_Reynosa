@@ -112,7 +112,7 @@ async function getTotalPacientesPorSexo($month, $year){
 
 async function getHorarioDoctores($diaSemana){
     try {
-       const response = await fetch(apiHost + apiPath + `/dashboard/doctores/horarios/?dia_semana=${$diaSemana}`, {
+       const response = await fetch(apiHost + apiPath + `/dashboard/doctores/horarios?dia_semana=${$diaSemana}`, {
                 method: 'GET',
                 headers: headersRequest
             });
@@ -121,7 +121,7 @@ async function getHorarioDoctores($diaSemana){
         }
         return await response.json();
     } catch (error) {
-        console.error('Error fetching last citas programadas:', error);
+        console.error('Error fetching horario doctores:', error);
         throw error;
     }
 }
