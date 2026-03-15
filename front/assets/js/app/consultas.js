@@ -1,3 +1,56 @@
+// Cierra la consulta sin receta ni servicios
+async function CerrarConsulta() {
+    const consultaId = document.getElementById('consulta_id').value;
+    if (!consultaId) {
+        renderAlertMessage('No se encontró el ID de la consulta.', 'danger');
+        return;
+    }
+    try {
+        disableButtons();
+        // Cambia el estatus a 'cerrada' y limpia receta
+         const consultaData = ValidaConsulta();
+        if (!consultaData) return;
+        consultaData.estatus = 'completada';
+        consultaData.medicamentos = [];
+        consultaData.servicios_medicos = [];
+        consultaData.receta = null;
+        await updateConsulta(consultaData);
+        document.getElementById('consulta_estatus').value = 'cerrada';
+        renderAlertMessage('Consulta cerrada correctamente.', 'success');
+        // Opcional: redirigir o refrescar
+        updateRecetaButtonsState();
+
+        window.location.reload();
+
+    } catch (error) {
+        renderAlertMessage('Error al cerrar la consulta.', 'danger');
+    } finally {
+        enableButtons();
+    }
+}
+// Actualiza el estado de los botones de receta y cerrar consulta
+function updateRecetaButtonsState() {
+    let medicamentos = sessionStorage.getItem('medicamentos');
+    medicamentos = medicamentos ? JSON.parse(medicamentos) : [];
+    let servicios = sessionStorage.getItem('servicios_medicos');
+    servicios = servicios ? JSON.parse(servicios) : [];
+
+    const btnImprimir = document.getElementById('btn_imprimir_receta');
+    const btnCerrar = document.getElementById('btn_cerrar_consulta');
+
+    const hayMedicamentos = medicamentos.length > 0;
+    const hayServicios = servicios.length > 0;
+
+    if (!hayMedicamentos && !hayServicios) {
+        // No hay medicamentos ni servicios: mostrar cerrar consulta, deshabilitar imprimir
+        btnCerrar.classList.remove('d-none');
+        btnImprimir.disabled = true;
+    } else {
+        // Hay medicamentos o servicios: ocultar cerrar consulta, habilitar imprimir
+        btnCerrar.classList.add('d-none');
+        btnImprimir.disabled = false;
+    }
+}
 async function getConsultas(perPage = 50, actualPage = 1, searchTerm = '', order='fecha_consulta', orderDirection='asc') {
     try {
         const response = await fetch(apiHost + apiPath + `/consultas?per_page=${perPage}&page=${actualPage}&search=${encodeURIComponent(searchTerm)}&order_by=${order}&order_direction=${orderDirection}`, {
@@ -64,6 +117,7 @@ async function getUltimasCincoConsultasPacienteId(pacienteId,per_page=10) {
 
 async function updateConsulta(consultaData) {
     try {
+        console.log(apiHost + apiPath + `/consultas/${consultaData.id}`)
         const response = await fetch(apiHost + apiPath + `/consultas/${consultaData.id}`, {
             method: 'PUT',
             headers: headersRequest,
@@ -72,7 +126,13 @@ async function updateConsulta(consultaData) {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return await response.json();
+        const text = await response.text();
+        try {
+            return JSON.parse(text);
+        } catch (jsonError) {
+            console.error('Respuesta no es JSON:', text);
+            throw new Error('Respuesta no es JSON: ' + text);
+        }
     } catch (error) {
         console.error('Error updating consulta:', error);
         throw error;
@@ -366,6 +426,7 @@ function appendMedicamentoToList() {
         document.getElementById('frm_medicamento_dosis').value = '';
         document.getElementById('frm_medicamento_duracion').value = '';
         document.getElementById('frm_medicamento_frecuencia').value = '';
+        updateRecetaButtonsState();
     } catch (error) {
         console.error('Error al agregar medicamento:', error);
         renderAlertMessage('Error al agregar medicamento. Por favor, intente nuevamente.', 'danger');
@@ -407,6 +468,7 @@ async function appendServicioMedicoToList() {
         document.getElementById('frm_servicio_id').value = '';
         document.getElementById('frm_servicio_nombre').value = '';
         document.getElementById('frm_servicio_solicitud').value = '';
+        updateRecetaButtonsState();
     } catch (error) {
         console.error('Error al agregar servicio médico:', error);
         renderAlertMessage('Error al agregar servicio médico. Por favor, intente nuevamente.', 'danger');
@@ -640,6 +702,7 @@ async function LoadConsulta(p, showDeleteButton = true) {
                 renderServicioMedicoCard(servicio, showDeleteButton);
             });
         }
+        updateRecetaButtonsState();
 
         renderPacienteBasicInfo(consulta.paciente);
         renderPacienteHistorialMedico(consulta.paciente.historial_medico ? consulta.paciente.historial_medico[0] : null);
@@ -662,9 +725,12 @@ async function LoadConsulta(p, showDeleteButton = true) {
             if (error.response && error.response.status !== 404) {
                 renderAlertMessage("Error al obtener la receta. Por favor, intente nuevamente.", 'danger');
             }
+            if(consulta.estatus === 'completada') document.getElementById('btn_imprimir_receta').classList.add('d-none');
             console.error('Error fetching receta:', error);
 
         }
+
+        if(consulta.estatus === 'completada') document.getElementById('btn_cerrar_consulta').classList.add('d-none');
 
         enableButtons();
 

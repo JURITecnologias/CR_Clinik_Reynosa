@@ -201,61 +201,70 @@ class ConsultasController extends Controller
 
     public function update(Request $request, $id)
     {
-        $consulta = Consulta::with('signosVitales')->findOrFail($id);
-
-        $request->validate([
-            'estatus' => 'nullable|in:abierta,enfermeria,completada',
-
-            // Datos clínicos
-            'motivo_consulta' => 'nullable|string',
-            'sintomas' => 'nullable|string',
-            'diagnostico' => 'nullable|string',
-            'indicaciones' => 'nullable|string',
-            'medicamentos' => 'nullable|array',
-            'servicios_medicos' => 'nullable|array',
-
-            // Signos vitales
-            'temperatura' => 'nullable|numeric',
-            'frecuencia_cardiaca' => 'nullable|integer',
-            'frecuencia_respiratoria' => 'nullable|integer',
-            'presion_arterial' => 'nullable|string',
-            'saturacion_oxigeno' => 'nullable|integer',
-            'peso' => 'nullable|numeric',
-            'talla' => 'nullable|numeric',
-            'motivos_consulta' => 'nullable|array',
-        ]);
-        
-
-        // Actualizar consulta
-        $consulta->update($request->only([
-            'motivo_consulta',
-            'sintomas',
-            'diagnostico',
-            'indicaciones',
-            'medicamentos',
-            'servicios_medicos',
-            'estatus',
-            'motivos_consulta',
-        ]));
-
-        // Actualizar signos vitales si existen
-        if ($consulta->signosVitales) {
-            $consulta->signosVitales->update($request->only([
-                'temperatura',
-                'frecuencia_cardiaca',
-                'frecuencia_respiratoria',
-                'presion_arterial',
-                'saturacion_oxigeno',
-                'peso',
-                'talla',
-                'estatura',
-            ]));
+        $consulta = Consulta::with('signosVitales')->find($id);
+        if (!$consulta) {
+            return response()->json(['mensaje' => 'Consulta no encontrada'], 404);
         }
 
-        return response()->json([
-            'consulta' => $consulta->load('signosVitales'),
-            'mensaje' => 'Consulta y signos vitales actualizados correctamente'
-        ]);
+        try {
+            $validated = $request->validate([
+                'estatus' => 'nullable|in:abierta,enfermeria,completada',
+                'motivo_consulta' => 'nullable|string',
+                'sintomas' => 'nullable|string',
+                'diagnostico' => 'nullable|string',
+                'indicaciones' => 'nullable|string',
+                'medicamentos' => 'nullable|array',
+                'servicios_medicos' => 'nullable|array',
+                'temperatura' => 'nullable|numeric',
+                'frecuencia_cardiaca' => 'nullable|integer',
+                'frecuencia_respiratoria' => 'nullable|integer',
+                'presion_arterial' => 'nullable|string',
+                'saturacion_oxigeno' => 'nullable|integer',
+                'peso' => 'nullable|numeric',
+                'talla' => 'nullable|numeric',
+                'motivos_consulta' => 'nullable|array',
+            ]);
+
+            $consulta->update($request->only([
+                'motivo_consulta',
+                'sintomas',
+                'diagnostico',
+                'indicaciones',
+                'medicamentos',
+                'servicios_medicos',
+                'estatus',
+                'motivos_consulta',
+            ]));
+
+            // Actualizar signos vitales si existen
+            if ($consulta->signosVitales) {
+                $consulta->signosVitales->update($request->only([
+                    'temperatura',
+                    'frecuencia_cardiaca',
+                    'frecuencia_respiratoria',
+                    'presion_arterial',
+                    'saturacion_oxigeno',
+                    'peso',
+                    'talla',
+                    'estatura',
+                ]));
+            }
+
+            return response()->json([
+                'consulta' => $consulta->load('signosVitales'),
+                'mensaje' => 'Consulta y signos vitales actualizados correctamente'
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'mensaje' => 'Error en la validación de los datos',
+                'errores' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'mensaje' => 'Error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // Eliminar (soft delete)
