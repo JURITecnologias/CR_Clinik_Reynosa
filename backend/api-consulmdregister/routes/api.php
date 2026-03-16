@@ -287,6 +287,22 @@ Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
     Route::get('consumibles/{id}', [\App\Http\Controllers\ConsumibleController::class, 'show']); 
 });
 
+// Movimientos de inventario (entradas, salidas, ajustes)
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('movimientos-consumos', [\App\Http\Controllers\MovimientoConsumoController::class, 'all']); // listar todos con filtros
+    Route::get('movimientos-consumos/{id}', [\App\Http\Controllers\MovimientoConsumoController::class, 'show']); // detalle
+    Route::get('consumibles/{consumible_uuid}/movimientos', [\App\Http\Controllers\MovimientoConsumoController::class, 'index']);
+});
+
+// Movimientos de inventario por consumible (entradas, salidas, ajustes)
+Route::middleware(['basic.auth','check.permission:ver'])->group(function () {
+    Route::get('consumibles/{consumible_uuid}/movimientos', [\App\Http\Controllers\MovimientoConsumoController::class, 'index']);
+});
+
+Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:escribir,modificar'])->group(function () {
+    Route::post('consumibles/{consumible_uuid}/movimientos', [\App\Http\Controllers\MovimientoConsumoController::class, 'store']);
+});
+
 Route::middleware(['basic.auth','check.role:Main Admin|Admon','check.permission:escribir,modificar'])->group(function () {
     Route::post('consumibles', [\App\Http\Controllers\ConsumibleController::class, 'store']);
     Route::put('consumibles/{id}', [\App\Http\Controllers\ConsumibleController::class, 'update']);

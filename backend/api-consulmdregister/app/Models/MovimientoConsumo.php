@@ -5,10 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class MovimientoConsumo extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * Serializa las fechas en la zona horaria de México para respuestas JSON.
+     */
+    public function serializeDate(\DateTimeInterface $date)
+    {
+        return Carbon::instance($date)->setTimezone('America/Mexico_City')->toDateTimeString();
+    }
 
     protected $table = 'movimientos_consumos';
 

@@ -5,6 +5,9 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
+    // Cambiar la zona horaria a la de México
+    'timezone' => 'America/Mexico_City',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
