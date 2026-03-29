@@ -242,4 +242,5 @@ class ReportServiceProvider
         // lo regresas al controlador como colección
         return collect($resultados);
     }
+
 }

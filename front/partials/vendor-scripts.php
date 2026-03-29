@@ -249,3 +249,7 @@ $page = end( $link_array );
     <?php if($page == 'reporte-servicio-medico.php') { ?>
     <script src="assets/js/app/reporte-servicios.js"></script>
     <?php } ?>
+
+    <?php if($page == 'inventario-consumibles.php') { ?>
+    <script src="assets/js/app/inventario-consumibles.js"></script>
+    <?php } ?>

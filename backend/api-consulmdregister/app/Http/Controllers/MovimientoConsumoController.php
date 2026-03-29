@@ -39,9 +39,13 @@ class MovimientoConsumoController extends Controller
     public function all(Request $request)
     {
         $perPage = $request->query('per_page', 15);
-        $query = MovimientoConsumo::query();
-        if ($request->has('consumible_id')) {
-            $query->where('consumible_id', $request->query('consumible_id'));
+        $query = MovimientoConsumo::with('consumible');
+        if ($request->has('search')) {
+            $search = $request->query('search');
+            $query->whereHas('consumible', function($q) use ($search) {
+                $q->where('codigo_interno', $search)
+                  ->orWhere('nombre', 'like', '%' . $search . '%');
+            });
         }
         if ($request->has('fecha_inicio')) {
             $fechaInicio = $request->query('fecha_inicio') . ' 00:00:00';
