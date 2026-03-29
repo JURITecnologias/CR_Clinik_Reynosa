@@ -234,7 +234,7 @@ $page = end( $link_array );
     <script src="assets/js/app/categorias-consumibles.js"></script>
     <?php } ?>
 
-    <?php if($page == 'consumibles.php' || $page=="agregar-kit.php" || $page=="orden-clinica.php") { ?>
+    <?php if($page == 'consumibles.php' || $page=="agregar-kit.php" || $page=="orden-clinica.php" || $page=='registrar-movimiento-consumo.php') { ?>
     <script src="assets/js/app/consumibles.js"></script>
     <?php } ?>
 
@@ -250,6 +250,6 @@ $page = end( $link_array );
     <script src="assets/js/app/reporte-servicios.js"></script>
     <?php } ?>
 
-    <?php if($page == 'inventario-consumibles.php') { ?>
+    <?php if($page == 'inventario-consumibles.php' || $page=='registrar-movimiento-consumo.php') { ?>
     <script src="assets/js/app/inventario-consumibles.js"></script>
     <?php } ?>
