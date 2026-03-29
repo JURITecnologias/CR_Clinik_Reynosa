@@ -702,7 +702,13 @@ async function LoadConsulta(p, showDeleteButton = true) {
                 renderServicioMedicoCard(servicio, showDeleteButton);
             });
         }
-        updateRecetaButtonsState();
+
+        try {
+            updateRecetaButtonsState();
+        } catch (error) {
+            
+        }
+       
 
         renderPacienteBasicInfo(consulta.paciente);
         renderPacienteHistorialMedico(consulta.paciente.historial_medico ? consulta.paciente.historial_medico[0] : null);
@@ -730,8 +736,15 @@ async function LoadConsulta(p, showDeleteButton = true) {
 
         }
 
-        if(consulta.estatus === 'completada') document.getElementById('btn_cerrar_consulta').classList.add('d-none');
-
+        if(consulta.estatus === 'completada'){
+            try {
+                document.getElementById('btn_cerrar_consulta').classList.add('d-none');
+            } catch (error) {
+                
+            }
+            
+        } 
+            
         enableButtons();
 
         if(consulta.estatus !== 'abierta' ){
