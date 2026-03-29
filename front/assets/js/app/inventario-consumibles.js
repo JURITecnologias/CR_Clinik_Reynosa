@@ -39,6 +39,23 @@ async function addMovimientoConsumo(uuid_consumible, tipo_movimiento, cantidad, 
 	}
 }
 
+async function getMovimientoConsumibleDetail(id) {
+	try {
+		const response = await fetch(apiHost + apiPath + '/movimientos-consumos/' + id, {
+			method: 'GET',
+			headers: headersRequest
+		});
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(errorData.message || 'Error al agregar movimiento de consumo');
+		}
+		return await response.json();
+	} catch (error) {
+		console.error('Error fetching movimiento consumible detail:', error);
+		throw error;
+	}
+}
+
 // Renderizar la tabla de movimientos
 function renderMovimientosTable(movimientos) {
 	const tbody = document.getElementById('tablaMovimientos');
@@ -64,6 +81,7 @@ function renderMovimientosTable(movimientos) {
 			<td>${mov.consumible?.nombre || ''}</td>
 			<td>${mov.consumible?.unidad_medida || ''}</td>
 			<td><span class="${badgeClass}">${mov.tipo_movimiento.charAt(0).toUpperCase() + mov.tipo_movimiento.slice(1)}</span></td>
+			<td>${mov.cantidad}</td>
 			<td>${mov.cantidad_anterior}</td>
 			<td>${mov.cantidad_nueva}</td>
 			<td>${mov.consumible?.stock_actual ?? ''}</td>
@@ -81,16 +99,6 @@ function updateTotalRegistros(total) {
 
 // Renderizar paginación
 function renderPaginationControl(currentPage, lastPage) {
-	// const pagination = document.getElementById('pagination_control');
-	// if (!pagination) return;
-	// let html = '<ul class="pagination pagination-sm mb-0">';
-	// html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" onclick="cambiarPagina(${currentPage - 1})">Anterior</a></li>`;
-	// for (let i = 1; i <= lastPage; i++) {
-	// 	html += `<li class="page-item${i === currentPage ? ' active' : ''}"><a class="page-link" href="#" onclick="cambiarPagina(${i})">${i}</a></li>`;
-	// }
-	// html += `<li class="page-item${currentPage === lastPage ? ' disabled' : ''}"><a class="page-link" href="#" onclick="cambiarPagina(${currentPage + 1})">Siguiente</a></li>`;
-	// html += '</ul>';
-	// pagination.innerHTML = html;
     LoadPagesControl('inventario-consumibles',lastPage,50,currentPage);
 }
 
@@ -130,15 +138,21 @@ async function cargarMovimientos({ perPage = 50, page = 1 , fechaInicio = '', fe
 // Evento inicial
 document.addEventListener('DOMContentLoaded', function() {
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const perPage = parseInt(urlParams.get('registros')) || 50;
-    const pagina = parseInt(urlParams.get('pagina')) || 1;
-    const fechaInicio = urlParams.get('fecha_inicio') || '';
-    const fechaFin = urlParams.get('fecha_fin') || '';
+	// obtenemos el nombre de la pagina del query string
+	const page = window.location.pathname.split('/').pop();
 
-    const busqueda = urlParams.get('busqueda') || '';
+	if(page=="inventario-consumibles.php"){
+		const urlParams = new URLSearchParams(window.location.search);
+		const perPage = parseInt(urlParams.get('registros')) || 50;
+		const pagina = parseInt(urlParams.get('pagina')) || 1;
+		const fechaInicio = urlParams.get('fecha_inicio') || '';
+		const fechaFin = urlParams.get('fecha_fin') || '';
 
-	cargarMovimientos({ perPage: perPage, page: pagina, fechaInicio: fechaInicio, fechaFin: fechaFin, busqueda: busqueda });
+		const busqueda = urlParams.get('busqueda') || '';
+
+		cargarMovimientos({ perPage: perPage, page: pagina, fechaInicio: fechaInicio, fechaFin: fechaFin, busqueda: busqueda });
+	}
+    
 });
 
 // Función placeholder para ver detalle
@@ -191,7 +205,6 @@ async function  searchConsumablesInModal() {
 		const response = await getConsumibles(50, 1, search);
 		renderConsumablesSearchResults(response.data);
 		
-		console.log(response);
 	} catch (error) {
 		
 	} finally {
@@ -345,7 +358,6 @@ function RemoveSelectedConsumible(consumible_uuid) {
 	if(items) {
 		items = JSON.parse(atob(deobfuscate(items)));
 		items = items.filter(item => item.uuid !== consumible_uuid);
-		console.log('items despues de filtro: ', items);
 		encodeData=obfuscate(btoa(JSON.stringify(items)));
 		sessionStorage.setItem('selected_consumible_movimientos', encodeData);
 	}
@@ -368,7 +380,6 @@ function LoadTableMovimientosCapturados() {
 
 function RemoveItemMovimientoCaptura(consumible_uuid) {
 	RemoveSelectedConsumible(consumible_uuid);
-	console.log('removiendo item con uuid: ', consumible_uuid);
 	LoadTableMovimientosCapturados();
 }
 
@@ -376,8 +387,6 @@ function ShowConfirmacionProcesarMovimientos() {
 	//mostrar modal de confirmacion, si el usuario confirma, llamar a la funcion ProcesarMovimientosCapturados()
 	const modal= new bootstrap.Modal(document.getElementById('modalProcesarMovimientos'));
 	modal.show();
-	// const modal = bootstrap.Modal.getInstance(document.getElementById('modalProcesarMovimientos'));
-	// modal.show();
 }
 
 async function ProcesarMovimientosCapturados() {
@@ -426,4 +435,39 @@ async function ProcesarMovimientosCapturados() {
 		// sessionStorage.removeItem('selected_consumible_movimientos');
 		// document.location.reload();
 	}	
+}
+
+// funciones pagina detalle-movimiento-consumo
+
+async function LoadDataDetalleContumoDetail(id){
+	console.log(id)
+	showLoading();
+	try{
+		const response= await getMovimientoConsumibleDetail(id);
+		renderDetalleMovimientoConsumo(response);
+		document.getElementById('detalle_movimiento_container').classList.remove('d-none');
+	}catch(error) {
+		renderAlertMessage('Error al cargar detalle de movimiento de consumo', 'danger');
+	}finally{
+		hideLoading();
+	}
+}
+
+function renderDetalleMovimientoConsumo(data) {
+	document.getElementById('input_codigo_interno').value = data.consumible?.codigo_interno || '';
+	document.getElementById('input_nombre').value = data.consumible?.nombre || '';
+	document.getElementById('input_unidad').value = data.consumible?.unidad_medida || '';
+	document.getElementById('input_tipo_movimiento').value = data.tipo_movimiento || '';
+	document.getElementById('input_cantidad').value = data.cantidad || '';
+	document.getElementById('input_cantidad_anterior').value = data.cantidad_anterior || '';
+	document.getElementById('input_cantidad_nueva').value = data.cantidad_nueva || '';
+	document.getElementById('input_stock_actual').value = data.consumible?.stock_actual ?? '';
+	document.getElementById('input_fecha').value = formatDateTime(data.created_at) || '';
+	document.getElementById('input_motivo').value = data.motivo || '';
+	referencia='Captura Manual en Modulo de Inv. de Consumibles';
+	if(data.referencia_id!=0 && !data.referencia) {
+		referencia='Referencia Desconocida';
+	}
+	document.getElementById('input_referencia').value = referencia;
+
 }

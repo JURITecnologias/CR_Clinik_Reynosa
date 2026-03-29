@@ -104,6 +104,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
                                 <th>Nombre</th>
                                 <th>Unidad de medida</th>
                                 <th>Tipo movimiento</th>
+                                <th>Cantidad</th>
                                 <th>Cantidad anterior</th>
                                 <th>Cantidad nueva</th>
                                 <th>Stock actual</th>

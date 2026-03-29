@@ -36,30 +36,51 @@ ob_start(); ?>
                 <div class="card-title">Detalle del movimiento</div>
             </div>
             <div class="card-body">
-                <div class="row g-3">
+                <?php include __DIR__ . '/../partials/loading-section.php'; ?>
+                <div class="row g-3 d-none" id="detalle_movimiento_container">
                     <div class="col-md-4">
                         <label class="form-label">Código interno</label>
-                        <input type="text" class="form-control" value="CNS-001" readonly>
+                        <input type="text" class="form-control" id="input_codigo_interno" value="CNS-001" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" value="Guantes quirúrgicos" readonly>
+                        <input type="text" class="form-control" id="input_nombre" value="Guantes quirúrgicos" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Unidad</label>
-                        <input type="text" class="form-control" value="Caja" readonly>
+                        <input type="text" class="form-control" id="input_unidad" value="Caja" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Tipo movimiento</label>
-                        <input type="text" class="form-control" value="Entrada" readonly>
+                        <input type="text" class="form-control" id="input_tipo_movimiento" value="Entrada" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Cantidad</label>
-                        <input type="text" class="form-control" value="30" readonly>
+                        <input type="text" class="form-control" id="input_cantidad" value="30" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Cantidad Anterior</label>
+                        <input type="text" class="form-control" id="input_cantidad_anterior" value="30" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Cantidad Nueva</label>
+                        <input type="text" class="form-control" id="input_cantidad_nueva" value="30" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Stock Actual</label>
+                        <input type="text" class="form-control" id="input_stock_actual" value="30" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Fecha</label>
-                        <input type="text" class="form-control" value="15/03/2026 10:30" readonly>
+                        <input type="text" class="form-control" id="input_fecha" value="15/03/2026 10:30" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Motivo</label>
+                        <input type="text" class="form-control" id="input_motivo" value="Registro manual" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Referencia</label>
+                        <input type="text" class="form-control" id="input_referencia" value="Referencia" readonly>
                     </div>
                 </div>
             </div>
@@ -77,6 +98,7 @@ ob_start(); ?>
     function loadEvent() {
         const p = '<?php echo isset($_GET['p']) ? $_GET['p'] : 'null'; ?>';
         id = atob(deobfuscate(p));
+        LoadDataDetalleContumoDetail(id);
     }
 </script>
 

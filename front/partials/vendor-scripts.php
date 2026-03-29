@@ -250,6 +250,6 @@ $page = end( $link_array );
     <script src="assets/js/app/reporte-servicios.js"></script>
     <?php } ?>
 
-    <?php if($page == 'inventario-consumibles.php' || $page=='registrar-movimiento-consumo.php') { ?>
+    <?php if($page == 'inventario-consumibles.php' || $page=='registrar-movimiento-consumo.php' || $page=='detalle-movimiento-consumo.php') { ?>
     <script src="assets/js/app/inventario-consumibles.js"></script>
     <?php } ?>
