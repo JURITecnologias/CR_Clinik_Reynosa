@@ -199,6 +199,85 @@ class ConsultasController extends Controller
         ], 201);
     }
 
+    public function storeEmergencia(Request $request)
+    {
+        $paciente = Paciente::find($request->paciente_id);
+        if (!$paciente) {
+            return response()->json(['mensaje' => 'El paciente no existe'], 409);
+        }
+
+        $doctorId = $request->input('doctor_id');
+        $doctor = $doctorId ? InformacionDoctor::find($doctorId) : null;
+        if (!$doctor) {
+            return response()->json(['mensaje' => 'El doctor no existe'], 409);
+        }
+
+        $validatedData = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'fecha_consulta' => 'required|date',
+            'estatus' => 'required|in:abierta,enfermeria,completada',
+            'temperatura' => 'nullable|numeric',
+            'frecuencia_cardiaca' => 'nullable|integer',
+            'frecuencia_respiratoria' => 'nullable|integer',
+            'presion_arterial' => 'nullable|string',
+            'saturacion_oxigeno' => 'nullable|integer',
+            'peso' => 'nullable|numeric',
+            'talla' => 'nullable|numeric',
+            'motivos_consulta' => 'nullable|array',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json(['mensaje' => 'Error en la validación de los datos', 'errores' => $validatedData->errors()], 422);
+        }
+
+        $horaConsulta = Carbon::parse($request->input('fecha_consulta', now()))->setTimezone('America/Mexico_City')->format('H:i');
+        $diaConsulta = Carbon::parse($request->input('fecha_consulta', now()))->setTimezone('America/Mexico_City')->locale('es')->dayName;
+        $diaConsulta = str_replace(['á', 'é', 'í', 'ó', 'ú'], ['a', 'e', 'i', 'o', 'u'], $diaConsulta);
+
+        $horario = HorarioDoctor::where('doctor_id', $doctorId)
+            ->where('dia_semana', $diaConsulta)
+            ->where('activo', true)
+            ->whereTime('hora_inicio', '<=', $horaConsulta)
+            ->whereTime('hora_fin', '>=', $horaConsulta)
+            ->first();
+
+        $fueraDeHorario = $horario ? false : true;
+
+        $consulta = Consulta::create($request->only([
+            'paciente_id',
+            'doctor_id',
+            'fecha_consulta',
+            'motivo_consulta',
+            'sintomas',
+            'diagnostico',
+            'indicaciones',
+            'medicamentos',
+            'servicios_medicos',
+            'estatus',
+            'motivos_consulta',
+        ]));
+        $consulta->fuera_de_horario = $fueraDeHorario;
+        $consulta->save();
+
+        $signos = new SignosVitales($request->only([
+            'temperatura',
+            'frecuencia_cardiaca',
+            'frecuencia_respiratoria',
+            'presion_arterial',
+            'saturacion_oxigeno',
+            'peso',
+            'talla',
+            'estatura',
+        ]));
+
+        $signos->consulta_id = $consulta->id;
+        $signos->save();
+
+        return response()->json([
+            'consulta' => $consulta->load(['paciente', 'doctor', 'signosVitales']),
+            'mensaje' => 'Consulta de emergencia registrada con éxito'
+        ], 201);
+    }
+
     public function update(Request $request, $id)
     {
         $consulta = Consulta::with('signosVitales')->find($id);

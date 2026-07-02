@@ -22,7 +22,9 @@ async function getRecetaByConsultaId(consultaId) {
             headers: headersRequest
         });
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const text = await response.text();
+            console.warn('[Receta] Respuesta no ok', response.status, text);
+            throw new Error(`Network response was not ok: ${response.status}`);
         }
         return await response.json();
     } catch (error) {

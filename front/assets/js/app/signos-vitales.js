@@ -16,6 +16,7 @@ async function updateSignosVitales(signosVitales) {
 }
 
 function validarSignosVitales(){
+    console.log('[SignosVitales] Validando campos');
     const temperatura = parseFloat(document.getElementById('frm_signos_vitales_temperatura').value);
     const frecuenciaCardiaca = parseInt(document.getElementById('frm_signos_vitales_frecuencia_cardiaca').value, 10);
     const frecuenciaRespiratoria = parseInt(document.getElementById('frm_signos_vitales_frecuencia_respiratoria').value, 10);
@@ -112,8 +113,15 @@ function validarSignosVitales(){
     }
 
     if (!isValid) {
-            console.log('Peso ingresado:', peso);
-        console.log(isValid);
+        console.log('[SignosVitales] Validación fallida', {
+            temperatura,
+            frecuenciaCardiaca,
+            frecuenciaRespiratoria,
+            saturacionOxigeno,
+            presionArterial,
+            peso,
+            estatura
+        });
         return;
     }
 

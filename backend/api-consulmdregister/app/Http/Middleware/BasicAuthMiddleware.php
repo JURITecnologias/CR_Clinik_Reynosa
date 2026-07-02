@@ -14,16 +14,24 @@ class BasicAuthMiddleware
         $authHeader = $request->header('Authorization');
 
         if (!$authHeader || !str_starts_with($authHeader, 'Basic ')) {
-            return response()->json(['message' => 'Unauthorized'], 401)
-                             ->header('WWW-Authenticate', 'Basic realm="API Access"');
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Decodificar credenciales
-        $encodedCredentials = substr($authHeader, 6);
-        $decoded = base64_decode($encodedCredentials);
-        [$user, $password] = explode(':', $decoded, 2);
+        // Decode and validate credentials format: base64("username:password")
+        $encodedCredentials = trim(substr($authHeader, 6));
+        $decoded = base64_decode($encodedCredentials, true);
 
-        $user = User::where('name', $user)->first();
+        if ($decoded === false || !str_contains($decoded, ':')) {
+            return response()->json(['message' => 'Invalid credentials format'], 401);
+        }
+
+        [$username, $password] = explode(':', $decoded, 2);
+
+        if ($username === '' || $password === '') {
+            return response()->json(['message' => 'Invalid credentials format'], 401);
+        }
+
+        $user = User::where('name', $username)->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);

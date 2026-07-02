@@ -31,7 +31,19 @@ $user = include(__DIR__ . '/../src/user_session.php');
                 )
             ): ?>
                 <div class="gap-2 d-flex align-items-center flex-wrap">
-                    <a href="javascript:void(0);" class="btn btn-primary btn-lg" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="setTimeout(() => document.getElementById('searchPaciente').focus(), 500);"><i class="ti ti-square-rounded-plus me-1"></i>Nueva Consulta</a>
+                    <a href="javascript:void(0);" class="btn btn-primary btn-lg" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="window.consultaContext='consulta'; setTimeout(() => document.getElementById('searchPaciente').focus(), 500);"><i class="ti ti-square-rounded-plus me-1"></i>Nueva Consulta</a>
+                </div>
+            <?php endif; ?>
+
+            <?php if (
+                $user &&
+                $user['roles'] &&
+                (
+                    in_array('Enfermera', $user['roles'])
+                )
+            ): ?>
+                <div class="gap-2 d-flex align-items-center flex-wrap">
+                    <a id="btn-emergencia" href="javascript:void(0);" class="btn btn-danger btn-lg" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightEmergencia" aria-controls="offcanvasRightEmergencia" onclick="window.consultaContext='emergencia'; setTimeout(() => document.getElementById('searchPacienteEmergencia').focus(), 500);"><i class="ti ti-alert-triangle me-1"></i>Emergencia</a>
                 </div>
             <?php endif; ?>
         </div>
@@ -184,6 +196,43 @@ $user = include(__DIR__ . '/../src/user_session.php');
     </div> <!-- end offcanvas body -->
 </div> <!-- end offcanvas -->
 
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRightEmergencia" aria-labelledby="offcanvasRightEmergenciaLabel">
+    <div class="offcanvas-header">
+        <h4 id="offcanvasRightEmergenciaLabel" class="mb-0">Búsqueda de Paciente - Emergencia</h4>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div> <!-- end offcanvas header -->
+
+    <div class="offcanvas-body">
+        <div class="d-flex align-items-center flex-wrap">
+            <a href="javascript:GoToAddPaciente();" class="btn btn-primary btn-lg" style="width: 100%;">Agregar Paciente</a>
+        </div>
+        <div class="mt-4">
+            Buscar paciente por nombre:
+        </div>
+        <div class="input-group mb-3">
+            <input id="searchPacienteEmergencia" type="text" class="form-control" placeholder="Buscar por nombre de paciente" aria-label="Buscar por nombre de paciente" aria-describedby="button-addon-emergencia">
+            <button class="btn btn-danger" type="button" id="button-addon-emergencia" onclick="BuscarPacienteParaEmergencia()">Buscar Paciente</button>
+        </div>
+        <div class="mt-3">
+            <div id="pacientes_list_emergencia" class="list-group">
+                <table class="table mb-0 border" id="table_pacientes_search_emergencia">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th class="no-sort">Fecha Nacimiento</th>
+                            <th class="no-sort">Edad</th>
+                            <th class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end offcanvas body -->
+</div> <!-- end offcanvas -->
+
 <!-- Start Confirm Consulta Modal  -->
 <div class="modal fade" id="modal_confirmar_consulta">
     <div class="modal-dialog modal-dialog-centered modal">
@@ -194,10 +243,17 @@ $user = include(__DIR__ . '/../src/user_session.php');
                 </div>
                 <h5 class="mb-1">Creacion de consulta</h5>
                 <p class="mb-3">Desea crear una nueva consulta para el paciente <br /><span id="nombre_paciente_seleccionado" class="h4"></span>?</p>
+                <div class="mb-3 text-start">
+                    <label for="doctor_select" class="form-label">Doctor asignado</label>
+                    <select id="doctor_select" class="form-select">
+                        <option value="">Cargando doctores...</option>
+                    </select>
+                </div>
                 <div class="d-flex justify-content-center">
                     <input type="hidden" id="paciente_id_seleccionado" value="">
+                    <input type="hidden" id="tipo_consulta_origen" value="consulta">
                     <button onclick="CerrarConfirmacionModal()" class="btn btn-white w-100 position-relative z-1 me-2" data-bs-dismiss="modal">Cancelar</button>
-                    <button onclick="CrearConsulta()" class="btn btn-success w-100 position-relative z-1" data-bs-dismiss="modal">Sí, Crear</button>
+                    <button onclick="ConfirmarCreacionConsulta()" class="btn btn-success w-100 position-relative z-1" data-bs-dismiss="modal">Sí, Crear</button>
                 </div>
             </div>
         </div>

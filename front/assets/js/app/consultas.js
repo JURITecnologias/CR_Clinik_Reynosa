@@ -38,17 +38,29 @@ function updateRecetaButtonsState() {
     const btnImprimir = document.getElementById('btn_imprimir_receta');
     const btnCerrar = document.getElementById('btn_cerrar_consulta');
 
+    if (!btnImprimir && !btnCerrar) {
+        return;
+    }
+
     const hayMedicamentos = medicamentos.length > 0;
     const hayServicios = servicios.length > 0;
 
     if (!hayMedicamentos && !hayServicios) {
         // No hay medicamentos ni servicios: mostrar cerrar consulta, deshabilitar imprimir
-        btnCerrar.classList.remove('d-none');
-        btnImprimir.disabled = true;
+        if (btnCerrar) {
+            btnCerrar.classList.remove('d-none');
+        }
+        if (btnImprimir) {
+            btnImprimir.disabled = true;
+        }
     } else {
         // Hay medicamentos o servicios: ocultar cerrar consulta, habilitar imprimir
-        btnCerrar.classList.add('d-none');
-        btnImprimir.disabled = false;
+        if (btnCerrar) {
+            btnCerrar.classList.add('d-none');
+        }
+        if (btnImprimir) {
+            btnImprimir.disabled = false;
+        }
     }
 }
 async function getConsultas(perPage = 50, actualPage = 1, searchTerm = '', order='fecha_consulta', orderDirection='asc') {
@@ -123,16 +135,22 @@ async function updateConsulta(consultaData) {
             headers: headersRequest,
             body: JSON.stringify(consultaData)
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
         const text = await response.text();
-        try {
-            return JSON.parse(text);
-        } catch (jsonError) {
-            console.error('Respuesta no es JSON:', text);
-            throw new Error('Respuesta no es JSON: ' + text);
+        let data = null;
+        if (text) {
+            try {
+                data = JSON.parse(text);
+            } catch (jsonError) {
+                data = text;
+            }
         }
+        if (!response.ok) {
+            const error = new Error(typeof data === 'string' ? data : data?.mensaje || data?.error || 'Network response was not ok');
+            error.status = response.status;
+            error.responseData = data;
+            throw error;
+        }
+        return data;
     } catch (error) {
         console.error('Error updating consulta:', error);
         throw error;
@@ -146,14 +164,85 @@ async function insertConsulta(consultaData) {
             headers: headersRequest,
             body: JSON.stringify(consultaData)
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+
+        const text = await response.text();
+        let data = null;
+        if (text) {
+            try {
+                data = JSON.parse(text);
+            } catch (jsonError) {
+                data = text;
+            }
         }
-        return await response.json();
+
+        if (!response.ok) {
+            const error = new Error(typeof data === 'string' ? data : data?.mensaje || data?.error || 'Network response was not ok');
+            error.status = response.status;
+            error.responseData = data;
+            throw error;
+        }
+
+        return data;
     } catch (error) {
         console.error('Error inserting consulta:', error);
         throw error;
     }
+}
+
+async function insertConsultaEmergencia(consultaData) {
+    const payload = {
+        ...consultaData,
+        tipo_consulta_origen: 'emergencia'
+    };
+
+    const endpoints = [
+        apiHost + apiPath + '/consultas/emergencia',
+        apiHost + apiPath + '/consultas'
+    ];
+
+    let lastError = null;
+
+    for (const endpoint of endpoints) {
+        try {
+            console.log('[Emergencia] insertConsultaEmergencia -> enviando fetch', endpoint);
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: headersRequest,
+                body: JSON.stringify(payload)
+            });
+
+            console.log('[Emergencia] insertConsultaEmergencia -> status', endpoint, response.status);
+            const text = await response.text();
+            console.log('[Emergencia] insertConsultaEmergencia -> texto de respuesta', endpoint, text);
+            let data = null;
+            if (text) {
+                try {
+                    data = JSON.parse(text);
+                } catch (jsonError) {
+                    data = text;
+                }
+            }
+
+            if (response.ok) {
+                return data;
+            }
+
+            const error = new Error(typeof data === 'string' ? data : data?.mensaje || data?.error || 'Network response was not ok');
+            error.status = response.status;
+            error.responseData = data;
+            error.endpoint = endpoint;
+            lastError = error;
+
+            if (response.status !== 404 && response.status !== 405) {
+                throw error;
+            }
+        } catch (error) {
+            console.error('[Emergencia] Error en endpoint', endpoint, error);
+            lastError = error;
+        }
+    }
+
+    throw lastError || new Error('No se pudo crear la consulta de emergencia');
 }
 
 async function deleteConsulta(consultaId) {
@@ -437,15 +526,32 @@ function appendMedicamentoToList() {
 }
 
 async function appendServicioMedicoToList() {
+    const servicioInput = document.getElementById('frm_servicio_nombre');
     let servicioId = document.getElementById('frm_servicio_id').value;
-    
-    if (!servicioId) servicioId = crypto.randomUUID(); // Generate a UUID if servicioId is empty
-
-    const nombre = document.getElementById('frm_servicio_nombre').value.trim();
+    const nombreIngresado = servicioInput.value.trim();
     const solicitud = document.getElementById('frm_servicio_solicitud').value.trim();
-    const categoria = document.getElementById('frm_servicio_categoria').value.trim();
+    let categoria = document.getElementById('frm_servicio_categoria').value.trim();
 
-    if (nombre.length < 3) {
+    const serviciosCatalogo = servicioInput._serviciosmedicos || [];
+    const servicioSeleccionado = serviciosCatalogo.find(s =>
+        (s.displayName && s.displayName === nombreIngresado) ||
+        (s.nombre && s.nombre.toLowerCase() === nombreIngresado.toLowerCase())
+    );
+
+    if (!servicioId && servicioSeleccionado && servicioSeleccionado.id) {
+        servicioId = servicioSeleccionado.id;
+    }
+
+    const nombre = servicioSeleccionado && servicioSeleccionado.nombre
+        ? servicioSeleccionado.nombre.trim()
+        : nombreIngresado;
+
+    if (!categoria && servicioSeleccionado && servicioSeleccionado.categoria) {
+        categoria = servicioSeleccionado.categoria;
+    }
+
+    // Permite nombres cortos solo cuando provienen del catálogo (id seleccionado).
+    if (nombre.length < 3 && !servicioId) {
         alert('Por favor, ingrese un nombre válido para el servicio médico (mínimo 3 caracteres).');
         return;
     }
@@ -453,6 +559,9 @@ async function appendServicioMedicoToList() {
         alert('Por favor, ingrese una solicitud válida para el servicio médico (mínimo 5 caracteres).');
         return;
     }
+
+    if (!servicioId) servicioId = crypto.randomUUID();
+
     const servicio = {
         id: servicioId,
         nombre: nombre,
@@ -462,7 +571,13 @@ async function appendServicioMedicoToList() {
     const consultaData = SaveConsultaData(null,servicio);
     try {
         disableButtons();
-        const updatedConsulta = updateConsulta(consultaData);
+        await updateConsulta(consultaData);
+
+        const isEmergencyPage = window.location.pathname.toLowerCase().includes('nueva-consulta-emergencia.php');
+        if (isEmergencyPage) {
+            await upsertOrdenClinicaPorServiciosEnConsulta();
+        }
+
         renderServicioMedicoCard(servicio);
         // Clear form fields
         document.getElementById('frm_servicio_id').value = '';
@@ -475,6 +590,115 @@ async function appendServicioMedicoToList() {
     }finally {
         enableButtons();
     }
+}
+
+async function getOrdenesClinicasByConsultaId(consultaId) {
+    const url = new URL(apiHost + apiPath + '/ordenes-clinicas');
+    url.searchParams.set('consulta_id', consultaId);
+    url.searchParams.set('per_page', '20');
+    url.searchParams.set('order', 'created_at');
+    url.searchParams.set('direction', 'desc');
+
+    const response = await fetch(url.toString(), {
+        method: 'GET',
+        headers: headersRequest
+    });
+
+    if (!response.ok) {
+        throw new Error('No se pudieron consultar las órdenes clínicas.');
+    }
+
+    return await response.json();
+}
+
+async function insertOrdenClinicaDesdeConsulta(ordenData) {
+    const response = await fetch(apiHost + apiPath + '/ordenes-clinicas', {
+        method: 'POST',
+        headers: headersRequest,
+        body: JSON.stringify(ordenData)
+    });
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    if (!response.ok) {
+        throw new Error(data?.errors ? JSON.stringify(data.errors) : 'No se pudo crear la orden clínica.');
+    }
+    return data;
+}
+
+async function updateOrdenClinicaDesdeConsulta(ordenId, ordenData) {
+    const response = await fetch(apiHost + apiPath + `/ordenes-clinicas/${ordenId}`, {
+        method: 'PUT',
+        headers: headersRequest,
+        body: JSON.stringify(ordenData)
+    });
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    if (!response.ok) {
+        throw new Error(data?.errors ? JSON.stringify(data.errors) : 'No se pudo actualizar la orden clínica.');
+    }
+    return data;
+}
+
+async function upsertOrdenClinicaPorServiciosEnConsulta() {
+    const consultaId = parseInt(document.getElementById('consulta_id').value, 10);
+    const pacienteId = parseInt(document.getElementById('paciente_id').value, 10);
+    const doctorIdRaw = document.getElementById('doctor_id') ? document.getElementById('doctor_id').value : '';
+    const doctorId = doctorIdRaw ? parseInt(doctorIdRaw, 10) : null;
+    const user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null;
+    const userId = user && user.user ? user.user.id : null;
+
+    let servicios = sessionStorage.getItem('servicios_medicos');
+    servicios = servicios ? JSON.parse(servicios) : [];
+
+    if (!consultaId || !pacienteId || !userId) {
+        return;
+    }
+
+    const ordenes = await getOrdenesClinicasByConsultaId(consultaId);
+    const ordenActiva = (ordenes.data || []).find(orden => orden.estado !== 'cancelada' && orden.estado !== 'completada');
+
+    if (servicios.length === 0) {
+        if (ordenActiva) {
+            await updateOrdenClinicaDesdeConsulta(ordenActiva.id, {
+                estado: 'cancelada',
+                servicios_solicitados: ordenActiva.servicios_solicitados || [],
+                observaciones: 'Orden clínica cancelada automáticamente desde la consulta #' + consultaId + ' al eliminar todos los servicios.',
+                user_id: userId
+            });
+        }
+        return;
+    }
+
+    const serviciosSolicitados = servicios.map(servicio => ({
+        id: servicio.id,
+        nombre: servicio.nombre,
+        categoria: servicio.categoria || null,
+        solicitud: servicio.solicitud || null
+    }));
+
+    if (ordenActiva) {
+        await updateOrdenClinicaDesdeConsulta(ordenActiva.id, {
+            estado: 'pendiente',
+            servicios_solicitados: serviciosSolicitados,
+            observaciones: 'Orden clínica actualizada automáticamente desde la consulta #' + consultaId,
+            user_id: userId
+        });
+        return;
+    }
+
+    const fechaDeOrden = new Date().toISOString().split('T')[0];
+    await insertOrdenClinicaDesdeConsulta({
+        consulta_id: consultaId,
+        paciente_id: pacienteId,
+        doctor_id: Number.isNaN(doctorId) ? null : doctorId,
+        estado: 'pendiente',
+        servicios_solicitados: serviciosSolicitados,
+        fecha_orden: fechaDeOrden,
+        observaciones: 'Orden clínica generada automáticamente desde la consulta de emergencia #' + consultaId,
+        user_id: userId
+    });
 }
 
 function SaveConsultaData(medicamento=null,serviciomedico=null) { 
@@ -555,7 +779,7 @@ function eliminarMedicamento(medicamentoId) {
     }
 }
 
-function eliminarServicio(servicioId) {
+async function eliminarServicio(servicioId) {
     if (!servicioId) return;
     let servicios = sessionStorage.getItem('servicios_medicos');
     if (!servicios) return;
@@ -571,7 +795,14 @@ function eliminarServicio(servicioId) {
     consultaData.servicios_medicos = servicios;
     try {
         disableButtons();
-        const updatedConsulta = updateConsulta(consultaData);
+        await updateConsulta(consultaData);
+
+        const isEmergencyPage = window.location.pathname.toLowerCase().includes('nueva-consulta-emergencia.php');
+        if (isEmergencyPage) {
+            await upsertOrdenClinicaPorServiciosEnConsulta();
+        }
+
+        updateRecetaButtonsState();
     } catch (error) {
         console.error('Error al eliminar servicio médico:', error);
         renderAlertMessage('Error al eliminar servicio médico. Por favor, intente nuevamente.', 'danger');
@@ -717,20 +948,35 @@ async function LoadConsulta(p, showDeleteButton = true) {
         }
 
         try {
-            const receta = await getRecetaByConsultaId(consultaId);
-            if (receta && receta.uuid) {
-                document.getElementById('receta').value = obfuscate(receta.uuid);
+            if (typeof getRecetaByConsultaId === 'function') {
+                const receta = await getRecetaByConsultaId(consultaId);
+                if (receta && receta.uuid) {
+                    const recetaInput = document.getElementById('receta');
+                    if (recetaInput) {
+                        recetaInput.value = obfuscate(receta.uuid);
+                    }
+                }
             }
         } catch (error) {
-            if (error.response && error.response.status !== 404) {
+            if (error?.status !== 404) {
                 renderAlertMessage("Error al obtener la receta. Por favor, intente nuevamente.", 'danger');
             }
-            if(consulta.estatus === 'completada') document.getElementById('btn_imprimir_receta').classList.add('d-none');
-            console.error('Error fetching receta:', error);
+            const btnImprimirReceta = document.getElementById('btn_imprimir_receta');
+            if (consulta.estatus === 'completada' && btnImprimirReceta) {
+                btnImprimirReceta.classList.add('d-none');
+            }
+            if (error?.status !== 404) {
+                console.error('Error fetching receta:', error);
+            } else {
+                console.info('No existe receta para esta consulta todavía.');
+            }
 
         }
 
-        if(consulta.estatus === 'completada') document.getElementById('btn_cerrar_consulta').classList.add('d-none');
+        const btnCerrarConsulta = document.getElementById('btn_cerrar_consulta');
+        if (consulta.estatus === 'completada' && btnCerrarConsulta) {
+            btnCerrarConsulta.classList.add('d-none');
+        }
 
         enableButtons();
 
@@ -751,7 +997,10 @@ async function LoadConsulta(p, showDeleteButton = true) {
         }
 
         if(!hasAdminRole && !hasDoctorRole){
-            document.getElementById('btn_imprimir_receta').classList.add('d-none');
+            const btnImprimirReceta = document.getElementById('btn_imprimir_receta');
+            if (btnImprimirReceta) {
+                btnImprimirReceta.classList.add('d-none');
+            }
         }
         
     } catch (error) {
@@ -774,7 +1023,7 @@ function ValidaConsulta(){
     isvalid=true;
     error_onComponent = null;
 
-    if(motivoConsulta.length < 10){
+    if(motivoConsulta.length > 0 && motivoConsulta.length < 10){
         const errorElement = document.getElementById('invalid_frm_motivo_consulta');
         errorElement.textContent = 'Por favor, ingrese un motivo de consulta válido (mínimo 10 caracteres).';
         document.getElementById('frm_motivo_consulta').classList.add('is-invalid');
@@ -795,7 +1044,7 @@ function ValidaConsulta(){
     //     document.getElementById('frm_sintomas').classList.remove('is-invalid');
     // }
 
-    if(diagnostico.length < 10){
+    if(diagnostico.length > 0 && diagnostico.length < 10){
         const errorElement = document.getElementById('invalid_frm_diagnostico');
         errorElement.textContent = 'Por favor, ingrese un diagnóstico válido (mínimo 10 caracteres).';
         document.getElementById('frm_diagnostico').classList.add('is-invalid');
@@ -846,7 +1095,12 @@ function ValidaConsulta(){
 }
 
 async function GuardarConsulta(renderMessages=true){
+    console.log('[GuardarConsulta] Iniciando guardado');
     const consultaData = ValidaConsulta();
+    if (!consultaData) {
+        console.warn('[GuardarConsulta] Validación fallida, no se enviará la consulta.');
+        return;
+    }
     const citaId = document.getElementById('cita_id').value;
 
     const pacienteId = document.getElementById('paciente_id').value;
@@ -866,7 +1120,9 @@ async function GuardarConsulta(renderMessages=true){
     showLoading();
     disableButtons();
     try {
+        console.log('[GuardarConsulta] Payload listo para enviar', consultaData);
         const updatedConsulta = await updateConsulta(consultaData);
+        console.log('[GuardarConsulta] Respuesta de actualización', updatedConsulta);
         if(citaId){
             await updateCita(citaId, citaData);
         }else{
@@ -878,7 +1134,8 @@ async function GuardarConsulta(renderMessages=true){
         if(renderMessages) renderAlertMessage('Consulta actualizada correctamente.', 'success');
     } catch (error) {
         console.error('Error al actualizar la consulta:', error);
-        if(renderMessages) renderAlertMessage('Error al actualizar la consulta. Por favor, intente nuevamente.', 'danger');
+        const mensaje = error?.responseData?.mensaje || error?.responseData?.error || error?.message || 'Error al actualizar la consulta. Por favor, intente nuevamente.';
+        if(renderMessages) renderAlertMessage(mensaje, 'danger');
     } finally {
         enableButtons();
     }
@@ -967,12 +1224,109 @@ async function BuscarPacienteParaConsulta(){
     }
 }
 
+async function getDoctoresDisponibles() {
+    try {
+        const response = await fetch(apiHost + apiPath + '/doctores', {
+            method: 'GET',
+            headers: headersRequest
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return Array.isArray(data) ? data : (data?.data || []);
+    } catch (error) {
+        console.error('Error obteniendo doctores:', error);
+        return [];
+    }
+}
+
+async function cargarDoctoresEnModal() {
+    const select = document.getElementById('doctor_select');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Cargando doctores...</option>';
+    const doctores = await getDoctoresDisponibles();
+
+    if (!doctores.length) {
+        select.innerHTML = '<option value="">No hay doctores disponibles</option>';
+        return;
+    }
+
+    select.innerHTML = '';
+    doctores.forEach(doctor => {
+        const nombre = doctor.nombre || doctor.name || doctor.user?.name || 'Doctor';
+        const apellido = doctor.apellido || doctor.last_name || '';
+        const label = [nombre, apellido].filter(Boolean).join(' ').trim() || `Doctor #${doctor.id}`;
+        const option = document.createElement('option');
+        option.value = doctor.id;
+        option.textContent = label;
+        select.appendChild(option);
+    });
+
+    const currentValue = select.getAttribute('data-selected');
+    if (currentValue) {
+        select.value = currentValue;
+    }
+}
+
+async function BuscarPacienteParaEmergencia(){
+    const searchInput = document.getElementById('searchPacienteEmergencia');
+    const searchTerm = searchInput.value.trim();
+    if(searchTerm.length < 3){
+        alert("Por favor ingrese al menos 3 caracteres para buscar un paciente.");
+        return;
+    }
+
+    try {
+        const pacientes = await searchPatientByName(200,1,searchTerm);
+        const $tableBody = $('#table_pacientes_search_emergencia tbody');
+        $tableBody.empty();
+        if(pacientes.data.length === 0){
+            $tableBody.append($('<tr>').append($('<td colspan="5" class="text-center">').text('No se encontraron pacientes.')));
+        }
+        pacientes.data.forEach(paciente => {
+            const fechaNacimiento = new Date(paciente.fecha_nacimiento);
+            const formattedFechaNacimiento = fechaNacimiento.toLocaleDateString('es-MX', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+
+            const $row = $('<tr>');
+            $row.append($('<td>').text(paciente.nombre + ' ' + paciente.apellido));
+            $row.append($('<td>').text(formattedFechaNacimiento));
+            $row.append($('<td>').text(calcularEdad(paciente.fecha_nacimiento) + ' años'));
+            $row.append($('<td>').html(`
+                <button class="btn btn-lg btn-danger me-1" title="Seleccionar Paciente para Emergencia" onclick="seleccionarPaciente('${paciente.id}', '${paciente.nombre} ${paciente.apellido}')"><i class="ti ti-check"></i></button>
+            `));
+            $tableBody.append($row);
+        });
+    } catch (error) {
+        console.error("Error al buscar pacientes para emergencia:", error);
+    } finally {
+        hideLoading();
+    }
+}
+
 function seleccionarPaciente(pacienteId, pacienteNombre) {
-    // Open the modal to confirm the selection of the patient
     document.getElementById('paciente_id_seleccionado').value = pacienteId;
+    document.getElementById('tipo_consulta_origen').value = (window.consultaContext === 'emergencia') ? 'emergencia' : 'consulta';
     document.getElementById('nombre_paciente_seleccionado').innerText = pacienteNombre.charAt(0).toUpperCase() + pacienteNombre.slice(1).toLowerCase();
     const confirmarConsulta = new bootstrap.Modal(document.getElementById('modal_confirmar_consulta'));
     confirmarConsulta.show();
+    cargarDoctoresEnModal();
+}
+
+function ConfirmarCreacionConsulta() {
+    const tipoConsulta = document.getElementById('tipo_consulta_origen').value;
+    if (tipoConsulta === 'emergencia') {
+        CrearConsultaEmergencia();
+        return;
+    }
+    CrearConsulta();
 }
 
 function CerrarConfirmacionModal () {
@@ -982,18 +1336,21 @@ function CerrarConfirmacionModal () {
 
 async function CrearConsulta() {
     const pacienteId = document.getElementById('paciente_id_seleccionado').value;
-    const offcanvasElement = document.getElementById('offcanvasRight');
+    const offcanvasId = (window.consultaContext === 'emergencia') ? 'offcanvasRightEmergencia' : 'offcanvasRight';
+    const offcanvasElement = document.getElementById(offcanvasId);
     const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    const doctorId = document.getElementById('doctor_select').value;
+    if (!doctorId) {
+        renderAlertMessage("Seleccione un doctor para continuar.", 'danger');
+        return;
+    }
+
     let PerfilUsuario = null;
     try {
         PerfilUsuario = await getUserProfile();
         if(!PerfilUsuario || !PerfilUsuario.user.id){
             renderAlertMessage("No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
             return; 
-        }
-        if(!PerfilUsuario.doctor_info || !PerfilUsuario.doctor_info.id){
-            renderAlertMessage("Usuario no registrado como doctor. Por favor, complete su registro.", 'danger');
-            return;
         }
     } catch (error) {
         console.log("Error al obtener el perfil del usuario:", error);
@@ -1017,7 +1374,7 @@ async function CrearConsulta() {
 
     const consultaData = {
         paciente_id: parseInt(pacienteId),
-        doctor_id: PerfilUsuario.doctor_info.id,
+        doctor_id: parseInt(doctorId),
         fecha_consulta: new Date().toISOString(),
         motivo_consulta: "",
         sintomas: "",
@@ -1050,6 +1407,97 @@ async function CrearConsulta() {
     }
 
     window.location.href = `nueva-consulta.php?p=${btoa(consultaCreada.consulta.id)}`;
+}
+
+async function CrearConsultaEmergencia() {
+    console.log('[Emergencia] Iniciando creación de consulta de emergencia');
+    const pacienteId = document.getElementById('paciente_id_seleccionado').value;
+    const doctorId = document.getElementById('doctor_select').value;
+    const offcanvasElement = document.getElementById('offcanvasRightEmergencia');
+    const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+
+    if (!doctorId) {
+        renderAlertMessage('Seleccione un doctor para continuar.', 'danger');
+        return;
+    }
+
+    let PerfilUsuario = null;
+    try {
+        console.log('[Emergencia] Obteniendo perfil del usuario');
+        PerfilUsuario = await getUserProfile();
+        console.log('[Emergencia] Perfil obtenido', PerfilUsuario);
+        if(!PerfilUsuario || !PerfilUsuario.user.id){
+            console.error('[Emergencia] No se obtuvo perfil válido del usuario', PerfilUsuario);
+            renderAlertMessage("No se pudo obtener el perfil del usuario. Por favor, inicie sesión nuevamente.", 'danger');
+            return;
+        }
+    } catch (error) {
+        console.error('[Emergencia] Error al obtener el perfil del usuario:', error);
+        renderAlertMessage("Error al obtener el perfil del usuario. Por favor, intente nuevamente.", 'danger');
+        return;
+    } finally {
+        CerrarConfirmacionModal();
+        if (offcanvasInstance) {
+            offcanvasInstance.hide();
+        }
+    }
+
+    if (!pacienteId) {
+        console.error('[Emergencia] No hay paciente seleccionado');
+        CerrarConfirmacionModal();
+        renderAlertMessage("No se ha seleccionado ningún paciente.", 'danger');
+        if (offcanvasInstance) {
+            offcanvasInstance.hide();
+        }
+        return;
+    }
+
+    console.log('[Emergencia] Paciente seleccionado', pacienteId);
+
+    const consultaData = {
+        paciente_id: parseInt(pacienteId),
+        doctor_id: parseInt(doctorId),
+        fecha_consulta: new Date().toISOString(),
+        motivo_consulta: "Emergencia",
+        sintomas: "",
+        diagnostico: "",
+        indicaciones: "",
+        medicamentos: [],
+        servicios_medicos: [],
+        estatus: "abierta",
+        temperatura: null,
+        frecuencia_cardiaca: null,
+        frecuencia_respiratoria: null,
+        presion_arterial: "",
+        saturacion_oxigeno: null,
+        peso: null,
+        talla: null,
+        motivos_consulta: null
+    };
+
+    console.log('[Emergencia] Payload listo para enviar', consultaData);
+
+    let consultaCreada = null;
+    try {
+        console.log('[Emergencia] Enviando petición a /consultas/emergencia');
+        consultaCreada = await insertConsultaEmergencia(consultaData);
+        console.log('[Emergencia] Respuesta recibida', consultaCreada);
+    } catch (error) {
+        console.error('[Emergencia] Error al crear la consulta:', error);
+        const mensaje = error?.responseData?.mensaje || error?.responseData?.error || error?.message || "Error al crear la consulta de emergencia. Por favor, intente nuevamente.";
+        console.error('[Emergencia] Mensaje final mostrado:', mensaje);
+        renderAlertMessage(mensaje, 'danger');
+        return;
+    }
+
+    if(!consultaCreada || !consultaCreada.consulta || !consultaCreada.consulta.id){
+        console.error('[Emergencia] Respuesta sin consulta válida', consultaCreada);
+        renderAlertMessage("Error al crear la consulta de emergencia. Por favor, intente nuevamente.", 'danger');
+        return;
+    }
+
+    console.log('[Emergencia] Redirigiendo a la página de emergencia con ID', consultaCreada.consulta.id);
+    window.location.href = `nueva-consulta-emergencia.php?p=${btoa(consultaCreada.consulta.id)}`;
 }
 
 function disableButtons(){ 

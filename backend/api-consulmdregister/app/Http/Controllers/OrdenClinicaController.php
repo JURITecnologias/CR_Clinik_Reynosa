@@ -12,42 +12,77 @@ class OrdenClinicaController extends Controller
     // Listar órdenes clínicas con paginación y búsqueda
     public function index(Request $request)
     {
-        $perPage = $request->query('per_page', 15);
-        $query = OrdenClinica::with(['paciente', 'consulta', 'doctor', 'usuario', 'consumos', 'consumos.consumible', 'consumos.kit.kit', 'consumos.kit.kit.consumibles']);
-        if ($request->has('search')) {
-            $search = $request->query('search');
-            $query->where('folio_orden', 'like', "%$search%")
-                  ->orWhere('uuid', 'like', "%$search%")
-                  ->orWhere('estado', 'like', "%$search%");
-        }
-        if ($request->has('paciente_id')) {
-            $query->where('paciente_id', $request->query('paciente_id'));
-        }
-        if ($request->has('doctor_id')) {
-            $query->where('doctor_id', $request->query('doctor_id'));
-        }
-        $order = $request->query('order', 'created_at');
-        $orderDirection = $request->query('direction', 'desc');
-        $result = $query->orderBy($order, $orderDirection)->paginate($perPage);
-        $result->getCollection()->transform(function ($item) {
-            if ($item->doctor) {
-                unset($item->doctor->firma);
-                unset($item->doctor->universidad);
-                unset($item->doctor->cedula_profesional);
-                unset($item->doctor->especialista_en);
-                unset($item->doctor->fecha_nacimiento);
-                unset($item->doctor->experiencia);
-                unset($item->doctor->telefono_personal);
-                unset($item->doctor->telefono);
-                unset($item->doctor->telefono_emergencias);
-                unset($item->doctor->direccion);
-                unset($item->doctor->created_at);
-                unset($item->doctor->updated_at);
-                unset($item->doctor->deleted_at);
+        try {
+            $perPage = (int) $request->query('per_page', 15);
+            if ($perPage <= 0) {
+                $perPage = 15;
             }
-            return $item;
-        });
-        return $result;
+
+            $query = OrdenClinica::with(['paciente', 'consulta', 'doctor', 'usuario']);
+
+            if ($request->filled('search')) {
+                $search = trim((string) $request->query('search'));
+                $query->where(function ($q) use ($search) {
+                    $q->where('folio_orden', 'like', "%$search%")
+                        ->orWhere('uuid', 'like', "%$search%")
+                        ->orWhere('estado', 'like', "%$search%")
+                        ->orWhereHas('paciente', function ($pacienteQuery) use ($search) {
+                            $pacienteQuery->where(DB::raw("CONCAT(nombre, ' ', apellido)"), 'like', "%$search%");
+                        })
+                        ->orWhereHas('doctor', function ($doctorQuery) use ($search) {
+                            $doctorQuery->where('nombre_completo', 'like', "%$search%");
+                        });
+                });
+            }
+
+            if ($request->filled('paciente_id') && is_numeric($request->query('paciente_id'))) {
+                $query->where('paciente_id', (int) $request->query('paciente_id'));
+            }
+            if ($request->filled('doctor_id') && is_numeric($request->query('doctor_id'))) {
+                $query->where('doctor_id', (int) $request->query('doctor_id'));
+            }
+            if ($request->filled('consulta_id') && is_numeric($request->query('consulta_id'))) {
+                $query->where('consulta_id', (int) $request->query('consulta_id'));
+            }
+
+            $allowedOrderColumns = ['created_at', 'fecha_orden', 'folio_orden', 'estado'];
+            $order = (string) $request->query('order', 'created_at');
+            if (!in_array($order, $allowedOrderColumns, true)) {
+                $order = 'created_at';
+            }
+
+            $orderDirection = strtolower((string) $request->query('direction', 'desc'));
+            if (!in_array($orderDirection, ['asc', 'desc'], true)) {
+                $orderDirection = 'desc';
+            }
+
+            $result = $query->orderBy($order, $orderDirection)->paginate($perPage);
+            $result->getCollection()->transform(function ($item) {
+                if ($item->doctor) {
+                    unset($item->doctor->firma);
+                    unset($item->doctor->universidad);
+                    unset($item->doctor->cedula_profesional);
+                    unset($item->doctor->especialista_en);
+                    unset($item->doctor->fecha_nacimiento);
+                    unset($item->doctor->experiencia);
+                    unset($item->doctor->telefono_personal);
+                    unset($item->doctor->telefono);
+                    unset($item->doctor->telefono_emergencias);
+                    unset($item->doctor->direccion);
+                    unset($item->doctor->created_at);
+                    unset($item->doctor->updated_at);
+                    unset($item->doctor->deleted_at);
+                }
+                return $item;
+            });
+
+            return $result;
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Error al listar órdenes clínicas',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     // Crear una nueva orden clínica

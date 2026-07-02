@@ -178,6 +178,8 @@ function renderOrdenesClinicasTable(ordenesData) {
     ordenesData.forEach(orden => {
         const row = document.createElement('tr');
         const fechaOrden = new Date(orden.fecha_orden).toLocaleDateString('es-MX');
+        const doctorNombre = orden.doctor && orden.doctor.nombre_completo ? orden.doctor.nombre_completo : 'Sin asignar';
+        const pacienteNombre = orden.paciente ? `${orden.paciente.nombre} ${orden.paciente.apellido}` : 'Paciente no disponible';
         const badgeClass = orden.estado === 'pendiente' ? 'badge-soft-primary' :
                            orden.estado === 'en_proceso' ? 'badge-soft-warning' :
                            orden.estado === 'cancelada' ? 'badge-soft-danger' :
@@ -193,8 +195,8 @@ function renderOrdenesClinicasTable(ordenesData) {
             '<td>' + orden.folio_orden + '</td>' +
             '<td>' + renderServiciosSolicitados(orden.servicios_solicitados) + '</td>' +
             '<td>' + fechaOrden + '</td>' +
-            '<td>Dr. ' + orden.doctor.nombre_completo + '</td>' +
-            '<td>' + orden.paciente.nombre + ' ' + orden.paciente.apellido + '</td>' +
+            '<td>Dr. ' + doctorNombre + '</td>' +
+            '<td>' + pacienteNombre + '</td>' +
             '<td><span class="badge ' + badgeClass + '">' + (orden.estado.charAt(0).toUpperCase() + orden.estado.slice(1)) + '</span></td>' +
             '<td>' +
                 (isCompleted ? '<button onclick="verDetalleOrdenClinica(' + orden.id + ')" class="btn btn-lg btn-info me-1"><i class="ti ti-eye"></i></button>' : '') +
@@ -321,6 +323,17 @@ async function LoadDataTableOrdenesClinicas(per_page = 50, actualPage = 1, searc
     }finally{
         hideLoading();
     }
+}
+
+function buscarOrdenesClinicas() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput ? searchInput.value.trim() : '';
+    const urlParams = new URLSearchParams(window.location.search);
+    const perPage = parseInt(urlParams.get('registros')) || 50;
+    const order = urlParams.get('orden') || 'created_at';
+    const direction = urlParams.get('direccion') || 'desc';
+
+    window.location.search = `?registros=${perPage}&pagina=1&orden=${encodeURIComponent(order)}&direccion=${encodeURIComponent(direction)}&busqueda=${encodeURIComponent(searchTerm)}`;
 }
 
 async function LoadOrdenATender(p,readonly=false) {
