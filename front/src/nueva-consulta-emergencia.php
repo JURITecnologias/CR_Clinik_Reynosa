@@ -78,121 +78,174 @@ $user = include(__DIR__ . '/../src/user_session.php');
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                <h5 class="d-inline-flex align-items-center mb-0">Signos Vitales</h5>
+        <!-- Wizard -->
+        <div id="wizard-container">
+            <div class="nav nav-pills nav-justified" id="wizard-tabs" role="tablist">
+                <button class="nav-link active" id="step1-tab" data-bs-toggle="pill" data-bs-target="#step1" type="button" role="tab" aria-controls="step1" aria-selected="true"><b>Paso 1:</b> Signos Vitales</button>
+                <button class="nav-link" id="step2-tab" data-bs-toggle="pill" data-bs-target="#step2" type="button" role="tab" aria-controls="step2" aria-selected="false"><b>Paso 2:</b> Motivo de Consulta</button>
+                <button class="nav-link" id="step3-tab" data-bs-toggle="pill" data-bs-target="#step3" type="button" role="tab" aria-controls="step3" aria-selected="false"><b>Paso 3:</b> Orden Clínica</button>
             </div>
-            <div class="card-body pb-0">
-                <div class="row">
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Temperatura<span class="text-danger ms-1">*</span></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_temperatura">
-                                <span class="input-group-text">°C</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_temperatura"></div>
+            <div class="tab-content mt-3" id="wizard-content">
+                <!-- Paso 1: Signos Vitales -->
+                <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                            <h5 class="d-inline-flex align-items-center mb-0">Signos Vitales</h5>
+                        </div>
+                        <div class="card-body pb-0">
+                            <div class="row">
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Temperatura<span class="text-danger ms-1">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_temperatura">
+                                            <span class="input-group-text">°C</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_temperatura"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Frecuencia Cardiaca<span class="text-danger ms-1">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_frecuencia_cardiaca">
+                                            <span class="input-group-text">bpm</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_frecuencia_cardiaca"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Frecuencia Respiratoria<span class="text-danger ms-1">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_frecuencia_respiratoria">
+                                            <span class="input-group-text">rpm</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_frecuencia_respiratoria"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Saturación Oxigeno<span class="text-danger ms-1">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_saturacion_oxigeno">
+                                            <span class="input-group-text">%</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_saturacion_oxigeno"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Presion Arterial<span class="text-danger ms-1">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_presion_arterial">
+                                            <span class="input-group-text">mmHg</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_presion_arterial"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Peso</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_peso">
+                                            <span class="input-group-text">kg</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_peso"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Estatura</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="frm_signos_vitales_estatura">
+                                            <span class="input-group-text">cm</span>
+                                            <div class="invalid-feedback" id="invalid_frm_signos_vitales_estatura"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end mb-3 col-12">
+                                    <input type="hidden" id="frm_signos_vitales_id" value="">
+                                    <button class="btn btn-primary btn-save" id="btn_guardar_signos_vitales" onclick="EditarSignosVitales()">Guardar</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Frecuencia Cardiaca<span class="text-danger ms-1">*</span></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_frecuencia_cardiaca">
-                                <span class="input-group-text">bpm</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_frecuencia_cardiaca"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Frecuencia Respiratoria<span class="text-danger ms-1">*</span></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_frecuencia_respiratoria">
-                                <span class="input-group-text">rpm</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_frecuencia_respiratoria"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Saturación Oxigeno<span class="text-danger ms-1">*</span></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_saturacion_oxigeno">
-                                <span class="input-group-text">%</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_saturacion_oxigeno"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Presion Arterial<span class="text-danger ms-1">*</span></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_presion_arterial">
-                                <span class="input-group-text">mmHg</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_presion_arterial"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Peso</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_peso">
-                                <span class="input-group-text">kg</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_peso"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Estatura</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="frm_signos_vitales_estatura">
-                                <span class="input-group-text">cm</span>
-                                <div class="invalid-feedback" id="invalid_frm_signos_vitales_estatura"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-end mb-3 col-12">
-                        <input type="hidden" id="frm_signos_vitales_id" value="">
-                        <button class="btn btn-primary btn-save" id="btn_guardar_signos_vitales" onclick="EditarSignosVitales()">Guardar</button>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="card">
-            <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                <h5 class="d-inline-flex align-items-center mb-0">Motivo de Consulta</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12">
-                        <div class="mb-0">
-                            <div class="mt-2 h5">
-                                <div class="form-check form-check-inline">
-                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="aev" value="aev">
-                                    <label class="form-check-label" for="aev">A E V</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="uc" value="uc">
-                                    <label class="form-check-label" for="uc">UC</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="unc" value="unc">
-                                    <label class="form-check-label" for="unc">UNC</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="trabajo_parto" value="trabajo_parto">
-                                    <label class="form-check-label" for="trabajo_parto">Trabajo de Parto</label>
+                <!-- Paso 2: Motivo de Consulta -->
+                <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                            <h5 class="d-inline-flex align-items-center mb-0">Motivo de Consulta</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12">
+                                    <div class="mb-0">
+                                        <div class="mt-2 h5">
+                                            <div class="form-check form-check-inline">
+                                                <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="aev" value="aev">
+                                                <label class="form-check-label" for="aev">A E V</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="uc" value="uc">
+                                                <label class="form-check-label" for="uc">UC</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="unc" value="unc">
+                                                <label class="form-check-label" for="unc">UNC</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="checkbox" class="form-check-input motivos_consulta_checkbox" id="trabajo_parto" value="trabajo_parto">
+                                                <label class="form-check-label" for="trabajo_parto">Trabajo de Parto</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="frm_motivo_consulta" class="form-label mt-3">Describa el motivo de consulta<span class="text-danger ms-1">*</span></label>
+                                            <textarea class="form-control" id="frm_motivo_consulta" rows="2"></textarea>
+                                            <div class="invalid-feedback" id="invalid_frm_motivo_consulta"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <label for="frm_motivo_consulta" class="form-label mt-3">Describa el motivo de consulta<span class="text-danger ms-1">*</span></label>
-                                <textarea class="form-control" id="frm_motivo_consulta" rows="2"></textarea>
-                                <div class="invalid-feedback" id="invalid_frm_motivo_consulta"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Orden Clínica -->
+                <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                            <h5 class="d-inline-flex align-items-center mb-0">Orden Clinica/ Servicios Medicos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="servicio_medico_entry_form">
+                                <div class="col-xl-4 col-md-6 col-sm-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Servicio a solicitar <span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" id="frm_servicio_nombre" placeholder="Escriba el nombre del servicio" autocomplete="off" style="width: 450px; max-width: 100%;">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-md-8 col-sm-10">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="frm_servicio_solicitud">Solicitud<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" id="frm_servicio_solicitud">
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-md-4 col-sm-6">
+                                    <input type="hidden" id="frm_servicio_id" value="">
+                                    <input type="hidden" id="frm_servicio_categoria" value="">
+                                    <button class="btn-save btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex " onclick="appendServicioMedicoToList()">
+                                        <i class="ti ti-plus"></i>
+                                    </button>
+                                    <button class="btn-save btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;" onclick="appendServicioMedicoToList()">
+                                        <i class="ti ti-plus"></i> Agregar
+                                    </button>
+                                </div>
                             </div>
+                            <hr class="mb-1 p-3 opacity-10" style="border-color: #d3d3d3;">
+                            <div id="lista_servicios" class="d-flex flex-wrap gap-3"></div>
                         </div>
                     </div>
                 </div>
@@ -207,46 +260,14 @@ $user = include(__DIR__ . '/../src/user_session.php');
         <input type="hidden" id="frm_medicamento_frecuencia" value="">
         <input type="hidden" id="frm_medicamento_id" value="">
 
-        <div class="card">
-            <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                <h5 class="d-inline-flex align-items-center mb-0">Orden Clinica/ Servicios Medicos</h5>
-            </div>
-            <div class="card-body">
-                <div class="row" id="servicio_medico_entry_form">
-                    <div class="col-xl-4 col-md-6 col-sm-8">
-                        <div class="mb-3">
-                            <label class="form-label">Servicio a solicitar <span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" id="frm_servicio_nombre" placeholder="Escriba el nombre del servicio" autocomplete="off" style="width: 450px; max-width: 100%;">
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-md-8 col-sm-10">
-                        <div class="mb-3">
-                            <label class="form-label" for="frm_servicio_solicitud">Solicitud<span class="text-danger ms-1">*</span></label>
-                            <input type="text" class="form-control" id="frm_servicio_solicitud">
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-md-4 col-sm-6">
-                        <input type="hidden" id="frm_servicio_id" value="">
-                        <input type="hidden" id="frm_servicio_categoria" value="">
-                        <button class="btn-save btn btn-icon btn-primary btn-lg mt-4 rounded-circle d-none d-md-inline-flex " onclick="appendServicioMedicoToList()">
-                            <i class="ti ti-plus"></i>
-                        </button>
-                        <button class="btn-save btn btn-primary btn-block mt-4 d-md-none" style="width: 100%;" onclick="appendServicioMedicoToList()">
-                            <i class="ti ti-plus"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-1 p-3 opacity-10" style="border-color: #d3d3d3;">
-                <div id="lista_servicios" class="d-flex flex-wrap gap-3"></div>
-            </div>
-        </div>
-
         <input type="hidden" id="frm_cita_fecha" value="">
         <input type="hidden" id="frm_cita_hora" value="">
         <input type="hidden" id="frm_indicaciones" value="">
         <div class="d-none" id="invalid_frm_indicaciones"></div>
 
-        <div class="d-flex justify-content-end flex-wrap align-items-center gap-2 mt-3">
+        <div class="d-flex justify-content-between flex-wrap align-items-center gap-2 mt-3">
+            <button class="btn btn-secondary" id="prev-step" style="display: none;">Anterior</button>
+            <button class="btn btn-primary" id="next-step">Siguiente</button>
             <input type="hidden" id="cita_id" value="">
             <input type="hidden" id="doctor_id" value="">
             <input type="hidden" id="doc_info" value="">
@@ -333,6 +354,34 @@ $user = include(__DIR__ . '/../src/user_session.php');
         window.GuardarConsulta = window.GuardarConsulta || GuardarConsulta;
         window.EditarSignosVitales = window.EditarSignosVitales || EditarSignosVitales;
         window.CerrarConsulta = window.CerrarConsulta || CerrarConsulta;
+        
+        let currentStep = 1;
+        const totalSteps = 3;
+        const nextButton = document.getElementById('next-step');
+        const prevButton = document.getElementById('prev-step');
+        const saveButton = document.querySelector('button[onclick="GuardarConsulta()"]');
+
+        function updateWizardButtons() {
+            prevButton.style.display = currentStep > 1 ? 'inline-block' : 'none';
+            nextButton.style.display = currentStep < totalSteps ? 'inline-block' : 'none';
+            saveButton.style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                new bootstrap.Tab(document.getElementById(`step${currentStep}-tab`)).show();
+                updateWizardButtons();
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                new bootstrap.Tab(document.getElementById(`step${currentStep}-tab`)).show();
+                updateWizardButtons();
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             const inputServiciosMedicos = document.getElementById('frm_servicio_nombre');
@@ -377,6 +426,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
             }
 
             loadEvent();
+            updateWizardButtons();
         });
 
         function loadEvent() {
