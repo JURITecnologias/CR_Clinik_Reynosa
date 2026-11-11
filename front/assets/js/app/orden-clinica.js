@@ -138,6 +138,24 @@ async function updateEstadoOrdenClinica(ordenId,idusuario, nuevoEstado) {
     }
 }
 
+async function aplicarSalidaInventarioConsumibles(ordenId) {
+    try {
+        const url = new URL(apiHost + apiPath + `/ordenes-clinicas/${ordenId}/consumibles/aplicar`);
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: headersRequest
+        });
+        if (!response.ok) {
+            throw new Error('Error en la solicitud: ' + response.status);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al aplicar la salida de inventario por consumibles de la orden clínica:', error);
+        throw error;
+    }
+}
+
 function getUserId() {
     const user = JSON.parse(sessionStorage.getItem('user'));
     return user ? user.user.id : null;
@@ -480,9 +498,13 @@ async function TerminarOrden(){
     const userId = user ? user.user.id : null;
 
     try {
+
+        await aplicarSalidaInventarioConsumibles(ordenId);
+
         await updateEstadoOrdenClinica(ordenId, userId,'completada');
         //TODO: cerrar consulta si aun esta en estado enfermeria
         //TODO: descontar de inventario los consumibles usados
+
         window.location.href = 'ordenes-clinicas.php';
     } catch (error) {
         console.error('Error al terminar la orden clínica:', error);

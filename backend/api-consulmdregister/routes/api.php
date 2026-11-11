@@ -371,6 +371,7 @@ Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera'])
     Route::post('ordenes-clinicas', [\App\Http\Controllers\OrdenClinicaController::class, 'store']);
     Route::put('ordenes-clinicas/{id}', [\App\Http\Controllers\OrdenClinicaController::class, 'update']);
     Route::patch('ordenes-clinicas/{id}/estado', [\App\Http\Controllers\OrdenClinicaController::class, 'updateEstado']);
+    Route::patch('ordenes-clinicas/{id}/consumibles/aplicar', [\App\Http\Controllers\OrdenClinicaController::class, 'aplicarSalidaConsumibles']);
 });
 
 Route::middleware(['basic.auth','check.role:Main Admin|Admon|Doctor|Enfermera','check.permission:borrar'])->group(function () {

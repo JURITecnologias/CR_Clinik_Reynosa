@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrdenClinica;
+use App\Models\OrdenClinicaConsumo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrdenClinicaController extends Controller
 {
+    private \App\Services\InventarioService $InventarioService;
+
+    public function __construct(\App\Services\InventarioService $inventarioService)
+    {
+        $this->InventarioService = $inventarioService;
+    }
+
     // Listar órdenes clínicas con paginación y búsqueda
     public function index(Request $request)
     {
@@ -152,5 +160,35 @@ class OrdenClinicaController extends Controller
         }
         $orden->update($validator->validated());
         return response()->json($orden);
+    }
+
+    public function aplicarSalidaConsumibles($id)
+    {
+        $orden = OrdenClinica::findOrFail($id);
+        $consumibles_orden=OrdenClinicaConsumo::with(['consumible','kit.kit','kit.kit.consumibles'])->where('orden_clinica_id',$id)->get();
+        foreach($consumibles_orden as $consumo) {
+            if($consumo->consumible_id) {
+                $this->InventarioService->registrarMovimiento($consumo->consumible_id, 'salida', $consumo->cantidad, ['motivo' => 'Salida por consumo en orden clínica ID: '.$id, 'referencia_tipo' => 'orden_clinica', 'referencia_id' => $orden->id]);
+            }elseif($consumo->kit_id) {
+                $kit= $consumo->kit;
+                foreach($kit->kit->consumibles as $consumible_kit) {
+                    $cantidad_salida=$consumible_kit->pivot->cantidad * $consumo->cantidad;
+                    $this->InventarioService->registrarMovimiento($consumible_kit->id, 'salida', $cantidad_salida, ['motivo' => 'Salida por consumo de kit en orden clínica ID: '.$id, 'referencia_tipo' => 'orden_clinica', 'referencia_id' => $orden->id]);
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Salida de consumibles aplicada en inventario para la orden clínica']);
+        // $consumosData = $validator->validated()['consumos'];
+        // foreach ($consumosData as $consumoData) {
+        //     $consumo = $orden->consumos()->where('id', $consumoData['id'])->first();
+        //     if ($consumo) {
+        //         $consumo->update([
+        //             'cantidad_aplicada' => $consumoData['cantidad_aplicada'] ?? 0,
+        //             'atencion_usuario_id' => $validator->validated()['atencion_usuario_id'] ?? null,
+        //         ]);
+        //     }
+        // }
+        // return response()->json($orden->load(['paciente', 'consulta', 'doctor', 'usuario', 'consumos']));
     }
 }
