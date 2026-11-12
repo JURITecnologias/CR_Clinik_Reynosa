@@ -178,6 +178,9 @@ $page = end( $link_array );
 
     <!-- App JS -->
     <script src="assets/js/app/common.js"></script>
+    <?php if ($apiHostOverride = getenv('CLINIK_API_HOST')) { ?>
+    <script>window.CLINIK_API_HOST = <?= json_encode($apiHostOverride, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+    <?php } ?>
     <script src="assets/js/app/config.js"></script>
     <script src="assets/js/app/auth.js"></script>
     

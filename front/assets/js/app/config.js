@@ -1,6 +1,7 @@
-const apiHost="http://localhost/backend/api-consulmdregister/public/";
-// production
-//const apiHost="https://crclinik.juritecnologias.com/bkend/public/";
+const defaultApiPath = ['localhost', '127.0.0.1'].includes(window.location.hostname) && !window.location.port
+    ? '/backend/api-consulmdregister/public/'
+    : '/bkend/public/';
+const apiHost = new URL(window.CLINIK_API_HOST || defaultApiPath, window.location.origin).href;
 const apiPath="api";
 
 function getDeviceName() {

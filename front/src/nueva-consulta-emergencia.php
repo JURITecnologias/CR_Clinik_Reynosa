@@ -84,6 +84,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
                 <button class="nav-link active" id="step1-tab" data-bs-toggle="pill" data-bs-target="#step1" type="button" role="tab" aria-controls="step1" aria-selected="true"><b>Paso 1:</b> Signos Vitales</button>
                 <button class="nav-link" id="step2-tab" data-bs-toggle="pill" data-bs-target="#step2" type="button" role="tab" aria-controls="step2" aria-selected="false"><b>Paso 2:</b> Motivo de Consulta</button>
                 <button class="nav-link" id="step3-tab" data-bs-toggle="pill" data-bs-target="#step3" type="button" role="tab" aria-controls="step3" aria-selected="false"><b>Paso 3:</b> Orden Clínica</button>
+                <button class="nav-link" id="step4-tab" data-bs-toggle="pill" data-bs-target="#step4" type="button" role="tab" aria-controls="step4" aria-selected="false"><b>Paso 4:</b> Consumibles</button>
             </div>
             <div class="tab-content mt-3" id="wizard-content">
                 <!-- Paso 1: Signos Vitales -->
@@ -206,6 +207,9 @@ $user = include(__DIR__ . '/../src/user_session.php');
                                             <textarea class="form-control" id="frm_motivo_consulta" rows="2"></textarea>
                                             <div class="invalid-feedback" id="invalid_frm_motivo_consulta"></div>
                                         </div>
+                                        <div class="text-end mt-3">
+                                            <button onclick="GuardarConsulta()" class="btn btn-primary btn-lg btn-save" style="display: none;">Guardar Datos de Consulta</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -249,6 +253,68 @@ $user = include(__DIR__ . '/../src/user_session.php');
                         </div>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
+                    <div class="row mb-3" id="orden_clinica_container_details_emergencia">
+                        <div class="col-12 col-md-3">
+                            <div class="card">
+                                <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                                    <h5 class="d-inline-flex align-items-center mb-0">Servicios Solicitados</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group" id="servicios_solicitados_list_emergencia"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-9">
+                            <div class="card">
+                                <div class="card-header d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                                    <h5 class="d-inline-flex align-items-center mb-0">Consumibles Solicitados</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card bg-light mb-3" id="consumible_add_control_emergencia">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" id="consumible_buscar_emergencia" placeholder="Buscar consumible" style="width: 350px; max-width: 100%;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <input type="number" class="form-control" id="consumible_cantidad_emergencia" placeholder="Cantidad" value="1" min="1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1 text-center">
+                                                    <input type="hidden" id="consumible_seleccionado_emergencia" value="">
+                                                    <input type="hidden" id="orden_clinica_id_emergencia" value="">
+                                                    <button class="btn-save btn btn-icon btn-primary btn-lg rounded-circle d-none d-md-inline-flex" onclick="AddConsumibleSolicitadoEmergencia()">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                    <button class="btn-save btn btn-primary btn-block d-md-none" style="width: 100%;" onclick="AddConsumibleSolicitadoEmergencia()">
+                                                        <i class="ti ti-plus"></i> Agregar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Consumible / Kit</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="consumibles_solicitados_table_body_emergencia"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -265,7 +331,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
         <input type="hidden" id="frm_indicaciones" value="">
         <div class="d-none" id="invalid_frm_indicaciones"></div>
 
-        <div class="d-flex justify-content-between flex-wrap align-items-center gap-2 mt-3">
+        <div class="d-flex justify-content-end flex-wrap align-items-center gap-2 mt-3">
             <button class="btn btn-secondary" id="prev-step" style="display: none;">Anterior</button>
             <button class="btn btn-primary" id="next-step">Siguiente</button>
             <input type="hidden" id="cita_id" value="">
@@ -273,7 +339,6 @@ $user = include(__DIR__ . '/../src/user_session.php');
             <input type="hidden" id="doc_info" value="">
             <input type="hidden" id="paciente_info" value="">
             <input type="hidden" id="receta" value="">
-            <button onclick="GuardarConsulta()" class="btn btn-primary btn-lg btn-save">Guardar Datos de Consulta</button>
             <button onclick="CerrarConsulta()" class="btn btn-warning btn-lg d-none" id="btn_cerrar_consulta">Cerrar Consulta</button>
         </div>
 
@@ -347,6 +412,9 @@ $user = include(__DIR__ . '/../src/user_session.php');
     <script src="assets/js/app/servicios.js"></script>
     <script src="assets/js/app/consultas.js"></script>
     <script src="assets/js/app/signos-vitales.js"></script>
+    <script src="assets/js/app/consumibles.js"></script>
+    <script src="assets/js/app/kit-consumibles.js"></script>
+    <script src="assets/js/app/nueva-consulta-emergencia-consumibles.js"></script>
     <script>
         window.searchCitaByConsulta = window.searchCitaByConsulta || searchCitaByConsulta;
         window.getRecetaByConsultaId = window.getRecetaByConsultaId || getRecetaByConsultaId;
@@ -356,7 +424,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
         window.CerrarConsulta = window.CerrarConsulta || CerrarConsulta;
         
         let currentStep = 1;
-        const totalSteps = 3;
+        const totalSteps = 4;
         const nextButton = document.getElementById('next-step');
         const prevButton = document.getElementById('prev-step');
         const saveButton = document.querySelector('button[onclick="GuardarConsulta()"]');
@@ -364,7 +432,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
         function updateWizardButtons() {
             prevButton.style.display = currentStep > 1 ? 'inline-block' : 'none';
             nextButton.style.display = currentStep < totalSteps ? 'inline-block' : 'none';
-            saveButton.style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+            saveButton.style.display = currentStep === 2 ? 'inline-block' : 'none';
         }
 
         nextButton.addEventListener('click', () => {
@@ -427,6 +495,10 @@ $user = include(__DIR__ . '/../src/user_session.php');
 
             loadEvent();
             updateWizardButtons();
+
+            if (typeof window.initConsultaEmergenciaConsumiblesStep === 'function') {
+                window.initConsultaEmergenciaConsumiblesStep();
+            }
         });
 
         function loadEvent() {

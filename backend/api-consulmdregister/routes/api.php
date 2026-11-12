@@ -178,7 +178,8 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
 });
 
 //consultas
-Route::middleware(['basic.auth', 'check.role:Doctor', 'check.permission:escribir'])->group(function () {
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera'])->group(function () {
+    Route::post('/consultas/emergencia', [\App\Http\Controllers\ConsultasController::class, 'storeEmergencia']);
     Route::post('/consultas', [\App\Http\Controllers\ConsultasController::class, 'store']); // Crear consulta + signos vitales
    Route::put('/consultas/{id}', [\App\Http\Controllers\ConsultasController::class, 'update']); // Actualizar consulta + signos vitales
 });
@@ -218,7 +219,7 @@ Route::middleware(['basic.auth', 'check.permission:ver'])->group(function () {
     Route::get('/signos-vitales/paciente/{pacienteId}', [\App\Http\Controllers\SignosVitalesController::class, 'getByPacienteId']);
 });
 
-Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor', 'check.permission:modificar|escribir'])->group(function () {
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera'])->group(function () {
     Route::post('/signos-vitales', [\App\Http\Controllers\SignosVitalesController::class, 'store']);
     Route::put('/signos-vitales/{id}', [\App\Http\Controllers\SignosVitalesController::class, 'update']);
 });
@@ -248,7 +249,7 @@ Route::middleware(['basic.auth','check.role:Doctor', 'check.permission:escribir'
 });
 
 // Receta Medica routes
-Route::middleware(['basic.auth', 'check.role:Doctor','check.permission:ver'])->group(function () {
+Route::middleware(['basic.auth', 'check.role:Main Admin|Admon|Doctor|Enfermera', 'check.permission:ver'])->group(function () {
     Route::get('/receta-medica/uuid/{uuid}', [\App\Http\Controllers\RecetaMedicaController::class, 'showByUuid']);
     Route::get('/receta-medica/consulta/{consultaId}', [\App\Http\Controllers\RecetaMedicaController::class, 'showByConsultaId']);
 });

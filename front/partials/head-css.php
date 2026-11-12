@@ -153,7 +153,7 @@ $page = end( $link_array );
     <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
 <?php }?>     
 
-<?php if( $page == 'nueva-consulta.php' || $page == 'citas.php' || $page=='patients.php' || $page=="agregar-kit.php" || $page=="orden-clinica.php") { ?>
+<?php if( $page == 'nueva-consulta.php' || $page == 'nueva-consulta-emergencia.php' || $page == 'citas.php' || $page=='patients.php' || $page=="agregar-kit.php" || $page=="orden-clinica.php") { ?>
     <!-- Awesomplete CSS -->
     <link rel="stylesheet" href="assets/plugins/awesomplete/awesomplete.css" />
     <script src="assets/plugins/awesomplete/awesomplete.js"></script>
