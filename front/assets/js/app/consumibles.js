@@ -1,8 +1,10 @@
 async function getConsumibles(per_page = 50, page = 1,busqueda='',activo=false) {
     try {
-        const url=(busqueda && busqueda.trim() !=='') ? apiHost + apiPath + `/consumibles?per_page=${per_page}&page=${page}&search=${encodeURIComponent(busqueda)}` : apiHost + apiPath + `/consumibles?per_page=${per_page}&page=${page}`;
+        let url = (busqueda && busqueda.trim() !=='')
+            ? apiHost + apiPath + `/consumibles?per_page=${per_page}&page=${page}&search=${encodeURIComponent(busqueda)}`
+            : apiHost + apiPath + `/consumibles?per_page=${per_page}&page=${page}`;
         if(activo){
-            url.concat('&activo=true');
+            url += '&activo=true';
         }
         const response = await fetch(url, {
             method: 'GET',

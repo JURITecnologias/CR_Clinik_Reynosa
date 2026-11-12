@@ -1,6 +1,9 @@
 <?php
-return $config = [
-    // production API URL
-    //'api_base_url' => 'https://crclinik.juritecnologias.com/bkend/public/api',
-    'api_base_url' => 'http://localhost/backend/api-consulmdregister/public/api',
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$legacyLocal = in_array($host, ['localhost', '127.0.0.1'], true);
+$apiPath = $legacyLocal ? '/backend/api-consulmdregister/public/api' : '/bkend/public/api';
+
+return [
+    'api_base_url' => getenv('CLINIK_API_BASE_URL') ?: $scheme . '://' . $host . $apiPath,
 ];

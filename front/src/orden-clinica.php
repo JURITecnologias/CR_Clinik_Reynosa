@@ -185,7 +185,7 @@ $user = include(__DIR__ . '/../src/user_session.php');
         inputConsumibleABuscar.addEventListener("input", async function() {
 
             const term = inputConsumibleABuscar.value.trim();
-            if (term.length < 3) return;
+            if (term.length < 2) return;
 
             const result = await getConsumibles(100, 1, term, true);
             const consumibles = result.data.map(c => ({
