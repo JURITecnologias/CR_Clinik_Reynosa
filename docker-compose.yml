@@ -19,6 +19,7 @@ services:
       DB_PASSWORD: ${CLINIK_DB_PASSWORD:-clinik_local_only}
       CLINIK_API_HOST: /bkend/public/
       CLINIK_API_BASE_URL: http://127.0.0.1/bkend/public/api
+      RECETA_SIGNING_KEY_B64: ${CLINIK_RECETA_KEY_B64:-}
     depends_on:
       db:
         condition: service_healthy
