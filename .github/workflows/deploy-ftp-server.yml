@@ -31,6 +31,7 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_DATABASE: ${{ secrets.DB_DATABASE }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      RECETA_PRIVATE_KEY_B64: ${{ secrets.RECETA_PRIVATE_KEY_B64 }}
 
     steps:
     - name: Checkout code
@@ -147,6 +148,17 @@ jobs:
         });
         EOF
 
+    - name: Inject receta signing key
+      run: |
+        if [ -z "${RECETA_PRIVATE_KEY_B64}" ]; then
+          echo "::warning::RECETA_PRIVATE_KEY_B64 no está configurado; la firma de recetas fallará en este entorno."
+          exit 0
+        fi
+        mkdir -p backend/api-consulmdregister/storage/app/keys
+        printf '%s' "${RECETA_PRIVATE_KEY_B64}" | base64 -d > backend/api-consulmdregister/storage/app/keys/private.pem
+        chmod 600 backend/api-consulmdregister/storage/app/keys/private.pem
+        echo "Llave de firma de recetas inyectada desde el secret."
+
     - name: Upload backend to FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.6
       with:
@@ -179,6 +191,10 @@ jobs:
 #      run: |
 #        cd backend/api-consulmdregister
 #        php artisan cache:clear
+
+    - name: Remove injected signing key
+      if: always()
+      run: rm -rf backend/api-consulmdregister/storage/app/keys
 
     - name: Preparar artefacto del nuevo deploy
       run: |
