@@ -43,6 +43,13 @@ class add_default_configuracion_sistema extends Seeder
                 'tipo' => 'boolean',
                 'created_at' => now(),
             ],
+            [
+                'variable' => 'marca_agua_receta',
+                'valor' => 'false',
+                'descripcion' => 'Muestra la marca de agua "DEMO DE SISTEMA" en el PDF de la receta médica',
+                'tipo' => 'boolean',
+                'created_at' => now(),
+            ],
 
         ];
 

@@ -258,19 +258,23 @@ class PdfRecetaController extends Controller
         // Insertar el QR en el PDF
         $pdf->Image($tempPath, 183, 57, 25, 25); // Ajusta posición y tamaño
 
-        // marca de agua diciendo demo de sistema
-        // Marca de agua "DEMO DE SISTEMA"
-        $pdf->SetFont('Arial', 'B', 50);
-        $pdf->SetTextColor(200, 200, 200); // Gris claro
-        // Imprimir texto de marca de agua sin rotación
-        $pdf->Text(20, 85, 'DEMO DE SISTEMA');
-        $pdf->SetTextColor(0, 0, 0); // Restaurar color
+        // Marca de agua "DEMO DE SISTEMA" (se controla con configuracion_sistema.marca_agua_receta)
+        $valorMarcaAgua = DB::table('configuracion_sistema')
+            ->where('variable', 'marca_agua_receta')
+            ->value('valor');
 
-        $pdf->SetFont('Arial', 'B', 50);
-        $pdf->SetTextColor(200, 200, 200); // Gris claro
-        // Imprimir texto de marca de agua sin rotación
-        $pdf->Text(20, 115, 'DEMO DE SISTEMA');
-        $pdf->SetTextColor(0, 0, 0); // Restaurar color
+        // Si la variable no existe o no es un booleano válido, no se imprime la marca de agua
+        $mostrarMarcaAgua = $valorMarcaAgua === null
+            ? false
+            : filter_var($valorMarcaAgua, FILTER_VALIDATE_BOOLEAN);
+
+        if ($mostrarMarcaAgua) {
+            $pdf->SetFont('Arial', 'B', 50);
+            $pdf->SetTextColor(200, 200, 200); // Gris claro
+            $pdf->Text(20, 85, 'DEMO DE SISTEMA');
+            $pdf->Text(20, 115, 'DEMO DE SISTEMA');
+            $pdf->SetTextColor(0, 0, 0); // Restaurar color
+        }
 
         // Opcional: eliminar el archivo temporal después
         unlink($tempPath);
